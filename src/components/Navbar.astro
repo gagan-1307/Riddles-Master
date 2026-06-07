@@ -1,0 +1,43 @@
+---
+const navLinks = [
+  { href: "/problems", label: "Problems" },
+  { href: "/daily", label: "Daily Riddle" },
+  { href: "/pricing", label: "Pricing" },
+];
+---
+
+<nav class="sticky top-0 z-50 w-full border-b border-hairline bg-canvas/80 backdrop-blur-md">
+  <div class="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6">
+    <div class="flex items-center gap-8">
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-xl font-bold tracking-tighter text-ink">RiddlesMaster</span>
+      </a>
+      
+      <div class="hidden md:flex items-center gap-1">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="rounded-full px-4 py-2 text-sm text-body transition-colors hover:bg-canvas-soft hover:text-ink"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a
+        href="/login"
+        class="rounded-sm px-4 py-1.5 text-sm font-medium text-ink transition-colors hover:bg-canvas-soft"
+      >
+        Log In
+      </a>
+      <a
+        href="/signup"
+        class="bg-primary text-on-primary rounded-sm px-4 py-1.5 text-sm font-medium transition-opacity hover:opacity-90"
+      >
+        Sign Up
+      </a>
+    </div>
+  </div>
+</nav>

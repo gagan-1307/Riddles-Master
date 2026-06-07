@@ -1,0 +1,161 @@
+Interview Riddle Platform
+Product Requirements Document (PRD)
+Version 1.0  •  June 2026  •  MVP Scope
+1. Product Overview
+
+Interview Riddle Platform is a web-based practice platform focused on technical puzzles and brain teasers used in real engineering interviews. Unlike LeetCode which focuses on DSA/coding, this platform targets logical reasoning, lateral thinking, and problem-solving questions — the riddle-style questions increasingly used by top tech companies and to enhance the thinking ability.
+
+🎯 Target Users	Riddles Lover, All students, job seekers prepping for technical interviews
+🧩 Problem Type	Technical puzzles, brain teasers, logic riddles, estimation problems
+💡 Core Value	Daily practice with curated riddles, editorial solutions, and company tagging
+💰 Monetisation	Freemium — free tier with daily limits, premium tiers with full access
+
+2. User Roles & Access Levels
+
+👤 Guest (Not Logged In)	🔑 Registered User (Free)
+•	Browse all questions (read-only)	•	Full question browsing
+•	View problem statement & tags	•	Submit answers & view solutions
+•	1 Daily Streak question (random)	•	View editorials (premium)
+•	See up to 5 questions/day	•	Daily streak tracking
+•	Cannot view solutions or editorials	•	Personal liked/bookmarked list
+•	Cannot submit or bookmark problems	•	Git-style activity graph on profile
+
+⭐ Premium User	🛡️ Admin
+•	All Free features	•	Add / edit / delete problems
+•	Unlimited daily questions	•	Add editorials and solutions
+•	Access to all editorials	•	Manage tags (Company, Type)
+•	Access to premium problems	•	View all user activity
+•	Company-wise problem sets	•	Admin login via secret URL
+•	No daily limits	•	No admin option in main UI/app
+
+3. Authentication
+
+Login & Registration
+•	JWT-based authentication (stateless, scalable)
+•	Continue with Google (OAuth 2.0) — primary social login
+•	Email/password registration with forgot password flow
+•	Temp mail blocking — only allow Gmail, Yahoo, Outlook (official providers only)
+•	On registration, validate email domain against approved whitelist
+•	Admin login only accessible via a secret, hard-to-guess URL — not exposed in UI or app navigation
+
+4. Problem Schema
+
+Each problem on the platform will have the following fields:
+
+Field	Type	Notes
+Problem Number	Integer (auto)	Auto-incremented, used in URL & ordering
+Problem Name	String	Short, descriptive title
+Problem Statement	Rich Text	Full description with formatting support
+Tags — Company	Multi-select	e.g. Google, Amazon, Microsoft, Adobe
+Tags — Type	Multi-select	e.g. Logic, Math, Estimation, Lateral Thinking
+Difficulty	Enum	Easy / Medium / Hard
+Answer / Hint	Text	Short answer or hint (free tier)
+Editorial (Solution)	Rich Text	Step-by-step solution — premium only
+Is Premium	Boolean	Locks full content behind premium paywall
+Created At / Updated At	Timestamp	For admin tracking and sorting
+
+5. Core Features
+
+5.1 Problem Listing Page (Home / All Problems)
+
+•	Multi-page website — all problems listed in ascending order by problem number
+•	SEO-optimised — each problem has its own page/URL (e.g. /problems/42-the-bridge-riddle)
+•	Filter by: Company tag, Type tag, Difficulty
+•	Search by problem name or keyword
+•	Free users: can browse all, but solution/editorial gated
+•	Problems per page with pagination
+
+5.2 Problem Detail Page
+
+•	Problem number, title, tags, difficulty badge
+•	Full problem statement
+•	Answer / Hint — visible to logged-in free users
+•	Editorial (full solution) — premium only
+•	Like / Bookmark button — requires login
+•	Submit / attempt tracking — requires login
+
+5.3 Daily Streak System
+
+•	One random riddle served daily to all users (including guests)
+•	Logged-in users can track their daily streak (consecutive days)
+•	User profile shows: streak count, max streak, active days heatmap (Git-style graph)
+•	Streak resets at midnight if user skips a day
+
+5.4 User Profile
+
+•	Total problems solved / attempted
+•	Liked / bookmarked problems list
+•	Activity heatmap (Git contribution graph style)
+•	Active days count, current streak, max streak
+•	User can maintain their own list of liked questions
+
+5.5 Admin Panel
+
+•	Accessible only via secret URL (not linked from UI or app navigation)
+•	Admin can: Add new problems, Edit existing problems, Delete problems
+•	Can post/update editorials and solutions
+•	Can approve or deny reported problems / flagged content
+•	Can manage tags (add/remove company and type tags)
+•	Admin credentials: separate from regular users, not accessible from frontend
+
+6. Premium Plans & Pricing
+
+Freemium model with 4 subscription options:
+
+Free
+₹0	1 Month
+₹99/mo	3 Months
+₹249 (₹83/mo)	6 Months
+₹449 (₹83/mo)
+5 questions/day	Unlimited questions	Unlimited questions	Unlimited questions
+View problem statement	All editorials	All editorials	All editorials
+No editorial access	All premium problems	All premium problems	All premium problems
+No premium problems	Company-wise sets	Company-wise sets	Company-wise sets
+Daily streak tracking	Daily streak tracking	Daily streak tracking	Daily streak tracking
+—	Cancel anytime	Save ₹50 vs monthly	Save ₹101 vs monthly
+
+Note: Annual plan (₹799/year) to be considered for v2.
+
+Premium Features Unlocked
+•	Unlimited daily questions (no 5/day cap)
+•	Full editorial / step-by-step solutions for all problems
+•	Access to premium-tagged problems
+•	Company-wise filtered problem sets (e.g. all Amazon riddles)
+•	Priority access to new problems added each week
+
+8. SEO Requirements
+
+SEO Must-Haves
+•	Each problem has a unique, descriptive URL: /problems/[id]-[slug]
+•	Server-side rendered problem pages (for Google indexing)
+•	Meta tags: title, description, og:image per problem page
+•	Sitemap.xml auto-generated from all problem slugs
+•	robots.txt configured to allow indexing of problem pages
+•	Page load speed optimised (Core Web Vitals) — Next.js ISR recommended
+•	Structured data (JSON-LD) for rich snippets in search results
+•	Ascending order of Q. no. across paginated listing pages
+
+9. Out of Scope for MVP (v1)
+
+The following will NOT be built in the first version:
+
+•	Discussion / comments section per problem
+•	User-submitted problems (community contributions)
+•	Annual pricing plan
+•	Mobile app (iOS / Android)
+•	Leaderboards / rankings
+•	Email notifications / newsletters
+•	Team/group practice mode
+•	Interview scheduling or mock interview features
+
+10. Open Questions & Decisions Needed
+
+#	Question	Options / Notes
+1	Payment gateway for India?	Razorpay (recommended) or Stripe India
+2	How many problems at launch?	Minimum 50-100 to feel complete
+3	Who writes initial editorials?	Founder manually, or AI-assisted drafts?
+4	Free tier daily limit — hard reset or rolling?	Hard reset at midnight IST recommended
+5	Will the platform name be 'Interview Riddle' or custom brand?	Domain availability check needed
+6	Mobile-responsive web or native app?	Mobile-responsive web for v1
+
+Interview Riddle Platform  •  PRD v1.0  •  Confidential

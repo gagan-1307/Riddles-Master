@@ -1,0 +1,67 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import ProblemCard from '../../components/ProblemCard.astro';
+
+// Mock data for initial UI
+const problems = [
+  {
+    problem_number: 1,
+    name: "The Bridge Riddle",
+    difficulty: "Medium",
+    tags_company: ["Google", "Amazon"],
+    tags_type: ["Logic", "Timing"],
+    is_premium: false
+  },
+  {
+    problem_number: 2,
+    name: "Burning Ropes",
+    difficulty: "Easy",
+    tags_company: ["Microsoft"],
+    tags_type: ["Math", "Timing"],
+    is_premium: false
+  },
+  {
+    problem_number: 3,
+    name: "The 100 Prisoners",
+    difficulty: "Hard",
+    tags_company: ["Adobe", "Facebook"],
+    tags_type: ["Probability", "Logic"],
+    is_premium: true
+  },
+];
+---
+
+<Layout title="All Problems | RiddlesMaster">
+  <Navbar />
+  
+  <main class="mx-auto max-w-[1400px] px-6 py-12">
+    <div class="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+      <div>
+        <h1 class="text-4xl font-bold tracking-tight">Practice Problems</h1>
+        <p class="mt-2 text-body">Master the art of lateral thinking with {problems.length} curated riddles.</p>
+      </div>
+      
+      <div class="flex gap-4">
+        <select class="rounded-sm border border-hairline bg-canvas px-4 py-2 text-sm text-body focus:outline-none focus:ring-2 focus:ring-link">
+          <option>All Difficulties</option>
+          <option>Easy</option>
+          <option>Medium</option>
+          <option>Hard</option>
+        </select>
+        <select class="rounded-sm border border-hairline bg-canvas px-4 py-2 text-sm text-body focus:outline-none focus:ring-2 focus:ring-link">
+          <option>All Companies</option>
+          <option>Google</option>
+          <option>Amazon</option>
+          <option>Microsoft</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {problems.map(problem => (
+        <ProblemCard problem={problem} />
+      ))}
+    </div>
+  </main>
+</Layout>

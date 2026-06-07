@@ -1,0 +1,44 @@
+---
+interface Props {
+  problem: {
+    problem_number: number;
+    name: string;
+    difficulty: 'Easy' | 'Medium' | 'Hard';
+    tags_company: string[];
+    tags_type: string[];
+    is_premium: boolean;
+  }
+}
+
+const { problem } = Astro.props;
+
+const difficultyColor = {
+  Easy: 'text-success',
+  Medium: 'text-warning',
+  Hard: 'text-error'
+};
+---
+
+<div class="group relative flex flex-col border border-hairline bg-canvas p-6 transition-all hover:border-hairline-strong hover:shadow-md rounded-lg">
+  <div class="flex items-center justify-between mb-4">
+    <span class="text-xs font-mono text-mute uppercase tracking-widest">Q.{problem.problem_number}</span>
+    <div class="flex items-center gap-2">
+      {problem.is_premium && (
+        <span class="bg-violet-soft text-violet-deep rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">Premium</span>
+      )}
+      <span class={`text-xs font-semibold ${difficultyColor[problem.difficulty]}`}>{problem.difficulty}</span>
+    </div>
+  </div>
+  
+  <h3 class="text-xl font-semibold mb-2 group-hover:text-link transition-colors">
+    <a href={`/problems/${problem.problem_number}`}>
+      {problem.name}
+    </a>
+  </h3>
+  
+  <div class="flex flex-wrap gap-2 mt-auto">
+    {problem.tags_company.map(tag => (
+      <span class="bg-canvas-soft border border-hairline rounded-full px-2 py-0.5 text-[10px] text-body">{tag}</span>
+    ))}
+  </div>
+</div>

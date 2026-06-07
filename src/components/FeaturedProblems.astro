@@ -1,0 +1,50 @@
+---
+import ProblemCard from './ProblemCard.astro';
+
+const featuredProblems = [
+  {
+    problem_number: 1,
+    name: "The Bridge Riddle",
+    difficulty: "Medium",
+    tags_company: ["Google", "Amazon"],
+    tags_type: ["Logic", "Timing"],
+    is_premium: false
+  },
+  {
+    problem_number: 2,
+    name: "Burning Ropes",
+    difficulty: "Easy",
+    tags_company: ["Microsoft"],
+    tags_type: ["Math", "Timing"],
+    is_premium: false
+  },
+  {
+    problem_number: 3,
+    name: "The 100 Prisoners",
+    difficulty: "Hard",
+    tags_company: ["Adobe", "Facebook"],
+    tags_type: ["Probability", "Logic"],
+    is_premium: true
+  },
+];
+---
+
+<section class="bg-canvas py-24 sm:py-32">
+  <div class="mx-auto max-w-[1400px] px-6">
+    <div class="mb-12 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
+      <div>
+        <h2 class="text-3xl font-bold tracking-tight">Recent Problems.</h2>
+        <p class="mt-4 text-lg text-body">Jump straight into the latest technical brain teasers.</p>
+      </div>
+      <a href="/problems" class="text-sm font-semibold text-link hover:underline">
+        View all problems →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {featuredProblems.map(problem => (
+        <ProblemCard problem={problem} />
+      ))}
+    </div>
+  </div>
+</section>
