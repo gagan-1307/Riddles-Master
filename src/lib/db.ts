@@ -8,7 +8,7 @@ const globalForPrisma = globalThis as unknown as {
 
 let prismaInstance: PrismaClient;
 
-const databaseUrl = process.env.DATABASE_URL || import.meta.env.DATABASE_URL || '';
+const databaseUrl = process.env.DATABASE_URL || (typeof import.meta !== 'undefined' && import.meta && (import.meta as any).env ? (import.meta as any).env.DATABASE_URL : '') || '';
 
 if (databaseUrl.startsWith('prisma://') || databaseUrl.startsWith('prisma+postgres://')) {
   prismaInstance = new PrismaClient({

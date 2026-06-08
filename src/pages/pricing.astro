@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Pricing from '../components/Pricing.astro';
+import { getUser } from '../lib/auth/getUser';
+import { checkPremium } from '../lib/auth/checkPremium';
+
+const dbUser = await getUser(Astro.cookies);
+const isPremium = dbUser ? await checkPremium(dbUser.id) : false;
+const userRole = dbUser ? dbUser.role : 'guest';
+const hasPremiumAccess = isPremium || userRole === 'admin' || userRole === 'ADMIN';
+
+// If user is already premium, we can display their premium status or a message, but we still render the options.
+---
+
+<Layout title="Pricing | RiddlesMaster" description="Upgrade to RiddlesMaster Premium to unlock all features, detailed step-by-step solutions, and company-specific riddle sets.">
+  <main class="mx-auto max-w-[1400px] px-6 py-12">
+    {hasPremiumAccess && (
+      <div class="mb-8 p-4 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-center font-medium max-w-xl mx-auto">
+        ✨ You have active Premium Access! Thank you for supporting RiddlesMaster.
+      </div>
+    )}
+    <Pricing />
+  </main>
+</Layout>

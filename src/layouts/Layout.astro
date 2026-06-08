@@ -46,6 +46,7 @@ const serializedUser = user ? {
     <!-- Geist Font Family -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/sans.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/mono.min.css" />
+    <slot name="head" />
 	</head>
 	<body class="min-h-screen bg-canvas-soft font-geist text-ink antialiased">
 		<Navbar user={serializedUser} role={role} streakCount={streakCount} />
