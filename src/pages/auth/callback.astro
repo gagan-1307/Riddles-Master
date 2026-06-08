@@ -1,12 +1,19 @@
 ---
+import { syncUser } from "../../lib/auth/syncUser";
+
 const { supabase } = Astro.locals;
 
 const code = Astro.url.searchParams.get("code");
-const next = Astro.url.searchParams.get("next") || "/";
+const next = Astro.url.searchParams.get("next") || "/problems";
 
 if (code) {
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
-  if (!error) {
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+  if (!error && data.user) {
+    try {
+      await syncUser(data.user);
+    } catch (dbError) {
+      console.error("Failed to sync user with database:", dbError);
+    }
     return Astro.redirect(next);
   }
 }
@@ -14,3 +21,4 @@ if (code) {
 // return the user to an error page with instructions
 return Astro.redirect("/auth/auth-code-error");
 ---
+

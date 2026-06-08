@@ -1,6 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Navbar from "../components/Navbar.astro";
 
 const { supabase, user } = Astro.locals;
 
@@ -38,14 +37,13 @@ if (Astro.request.method === "POST") {
     if (error) {
       errorMsg = error.message;
     } else {
-      return Astro.redirect("/");
+      return Astro.redirect("/problems");
     }
   }
 }
 ---
 
 <Layout title="Log In | RiddlesMaster">
-  <Navbar />
   <main class="flex min-h-[calc(100vh-64px)] items-center justify-center bg-canvas-soft p-6">
     <div class="w-full max-w-[400px] animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div class="mb-10 text-center">

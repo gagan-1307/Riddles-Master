@@ -1,0 +1,36 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Page Not Found | RiddlesMaster">
+  <main class="flex min-h-[calc(100vh-64px)] items-center justify-center bg-[#faf9f5] px-6 py-24 text-center">
+    <div class="w-full max-w-[600px] animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* Large Serif Title */}
+      <h1 class="font-serif text-8xl font-normal tracking-[-0.04em] text-[#141413]/10">404</h1>
+      <h2 class="mt-4 font-serif text-3xl font-normal tracking-[-0.03em] text-[#141413] sm:text-4xl">
+        Lost in the labyrinth
+      </h2>
+      
+      {/* Humanist Sans Paragraph */}
+      <p class="mt-6 text-[16px] leading-relaxed text-[#3d3d3a] max-w-[480px] w-full mx-auto font-sans">
+        The riddle you seek is currently out of reach. The page might have been solved, relocated, or never existed in this timeline.
+      </p>
+
+      {/* Action Buttons */}
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href="/problems"
+          class="w-full sm:w-auto inline-flex h-10 items-center justify-center rounded-[8px] bg-[#cc785c] px-6 text-[14px] font-semibold text-white shadow-lg shadow-[#cc785c]/10 transition-all hover:bg-[#a9583e] active:scale-[0.98]"
+        >
+          Browse Problems
+        </a>
+        <a
+          href="/"
+          class="w-full sm:w-auto inline-flex h-10 items-center justify-center rounded-[8px] border border-[#e6dfd8] bg-[#faf9f5] px-6 text-[14px] font-semibold text-[#141413] transition-all hover:bg-[#efe9de]/30 active:scale-[0.98]"
+        >
+          Go Back Home
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>

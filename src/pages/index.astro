@@ -4,11 +4,25 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout>
 	<main class="flex min-h-screen flex-col items-center justify-center bg-canvas p-6 text-center">
-		<h1 class="text-4xl font-black tracking-tight text-ink sm:text-6xl">
+		<h1 class="text-4xl font-black tracking-tight text-ink sm:text-6xl font-serif">
 			Interview Riddle Platform
 		</h1>
 		<p class="mt-4 text-xl text-mute">
 			Coming Soon
 		</p>
+		<div class="mt-8 flex gap-4">
+			<a
+				href="/login"
+				class="flex h-10 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-white transition-all hover:bg-primary-active active:scale-[0.98]"
+			>
+				Log In
+			</a>
+			<a
+				href="/signup"
+				class="flex h-10 items-center justify-center rounded-md border border-hairline bg-canvas px-6 text-sm font-medium text-ink transition-all hover:bg-surface-soft active:scale-[0.98]"
+			>
+				Sign Up
+			</a>
+		</div>
 	</main>
 </Layout>

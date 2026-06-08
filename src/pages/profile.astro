@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const { user } = Astro.locals;
+---
+
+<Layout title="Your Profile | RiddlesMaster">
+  <main class="mx-auto max-w-[600px] px-6 py-12">
+    <div class="rounded-lg border border-[#e6dfd8] bg-[#faf9f5] p-8 shadow-sm">
+      <h1 class="text-3xl font-bold tracking-[-0.04em] text-[#181715]">Your Profile</h1>
+      <p class="mt-2 text-sm text-[#6c6a64]">Testing route protection and database integration.</p>
+      
+      <div class="mt-6 border-t border-[#e6dfd8] pt-6 space-y-4">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-[#6c6a64]">Email address</span>
+          <p class="mt-1 text-base font-medium text-[#181715]">{user?.email}</p>
+        </div>
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-[#6c6a64]">User ID</span>
+          <p class="mt-1 text-sm font-mono text-[#6c6a64] break-all">{user?.id}</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>

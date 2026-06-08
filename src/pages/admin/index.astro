@@ -1,6 +1,5 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Navbar from "../components/Navbar.astro";
+import Layout from "../../layouts/Layout.astro";
 
 const { role } = Astro.locals;
 
@@ -10,7 +9,6 @@ if (role !== 'admin') {
 ---
 
 <Layout title="Admin Dashboard | RiddlesMaster">
-  <Navbar />
   <main class="mx-auto max-w-[1400px] px-6 py-12">
     <h1 class="text-3xl font-bold text-ink">Admin Dashboard</h1>
     <p class="mt-4 text-body">Welcome to the secret admin area.</p>
