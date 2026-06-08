@@ -4,6 +4,9 @@ create extension if not exists "uuid-ossp";
 -- Difficulty Enum
 create type difficulty_level as enum ('Easy', 'Medium', 'Hard');
 
+-- User Role Enum
+create type user_role as enum ('user', 'premium', 'admin');
+
 -- Problems Table
 create table problems (
   id bigint primary key generated always as identity,
@@ -25,6 +28,7 @@ create table profiles (
   id uuid primary key references auth.users on delete cascade,
   username text unique,
   email text unique,
+  role user_role not null default 'user',
   streak_count int default 0,
   max_streak int default 0,
   is_premium boolean default false,
@@ -74,3 +78,28 @@ create policy "Users can record their own activity" on user_activity
 -- User Bookmarks: Users can manage their own bookmarks
 create policy "Users can manage their own bookmarks" on user_bookmarks
   for all using (auth.uid() = user_id);
+
+-- Function to handle new user signup
+create or replace function public.handle_new_user()
+returns trigger as $$
+declare
+  email_domain text;
+begin
+  -- Extract domain
+  email_domain := lower(split_part(new.email, '@', 2));
+  
+  -- Validate domain (Gmail, Yahoo, Outlook, Hotmail)
+  if email_domain not in ('gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com') then
+    raise exception 'Registration only allowed for Gmail, Yahoo, or Outlook domains.';
+  end if;
+
+  insert into public.profiles (id, email, role)
+  values (new.id, new.email, 'user');
+  return new;
+end;
+$$ language plpgsql security definer;
+
+-- Trigger for new user
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();

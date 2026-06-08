@@ -24,25 +24,32 @@ const {
 		<!-- SEO -->
 		<title>{title}</title>
 		<meta name="description" content={description} />
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+    <!-- Geist Font Family -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/sans.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/mono.min.css" />
 	</head>
-	<body>
+	<body class="min-h-screen bg-canvas-soft font-geist text-ink antialiased">
 		<slot />
 	</body>
 </html>
 
 <style is:global>
 	:root {
-		--font-geist: "Inter", system-ui, -apple-system, sans-serif;
-		--font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+		--font-geist: "Geist Sans", "Inter", system-ui, -apple-system, sans-serif;
+		--font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
 	}
 	
 	html,
 	body {
 		margin: 0;
 		width: 100%;
-		min-height: 100%;
+		height: 100%;
 	}
+
+  /* Custom selection color */
+  ::selection {
+    background-color: #000;
+    color: #fff;
+  }
 </style>

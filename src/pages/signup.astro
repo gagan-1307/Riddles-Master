@@ -1,0 +1,129 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+
+const { supabase, user } = Astro.locals;
+
+if (user) {
+  return Astro.redirect("/");
+}
+
+let errorMsg = "";
+let successMsg = "";
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const email = formData.get("email")?.toString();
+  const password = formData.get("password")?.toString();
+
+  if (email && password) {
+    const domain = email.split("@")[1]?.toLowerCase();
+    const allowedDomains = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com"];
+    
+    if (!allowedDomains.includes(domain)) {
+      errorMsg = "Registration is currently restricted to Gmail, Yahoo, or Outlook.";
+    } else {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${Astro.url.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        errorMsg = error.message;
+      } else {
+        successMsg = "Success! Please check your inbox to verify your account.";
+      }
+    }
+  }
+}
+---
+
+<Layout title="Sign Up | RiddlesMaster">
+  <Navbar />
+  <main class="flex min-h-[calc(100vh-64px)] items-center justify-center bg-canvas-soft p-6">
+    <div class="w-full max-w-[400px] animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div class="mb-10 text-center">
+        <h1 class="text-3xl font-bold tracking-[-0.06em] text-ink">Create account</h1>
+        <p class="mt-3 text-[15px] leading-relaxed text-body">
+          Join the community of elite technical thinkers.
+        </p>
+      </div>
+
+      <div class="space-y-6">
+        {successMsg ? (
+          <div class="rounded-lg border border-success/20 bg-success/5 p-6 text-center animate-in zoom-in-95 duration-500">
+            <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <h3 class="text-lg font-bold text-ink">Verify your email</h3>
+            <p class="mt-2 text-sm leading-relaxed text-body">
+              {successMsg}
+            </p>
+            <a href="/login" class="mt-6 inline-block text-sm font-semibold text-link hover:underline">
+              Back to login
+            </a>
+          </div>
+        ) : (
+          <form method="POST" class="space-y-5">
+            <div class="space-y-1.5">
+              <label for="email" class="text-xs font-semibold uppercase tracking-wider text-mute">Email address</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                class="block w-full rounded-md border border-hairline bg-canvas px-4 py-2.5 text-[15px] placeholder-body/30 shadow-inner-sm transition-all focus:border-ink focus:ring-0"
+                placeholder="name@gmail.com"
+              />
+              <p class="text-[11px] font-medium text-mute italic">Only Gmail, Yahoo, or Outlook domains are accepted.</p>
+            </div>
+            <div class="space-y-1.5">
+              <label for="password" class="text-xs font-semibold uppercase tracking-wider text-mute">Password</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                class="block w-full rounded-md border border-hairline bg-canvas px-4 py-2.5 text-[15px] placeholder-body/30 shadow-inner-sm transition-all focus:border-ink focus:ring-0"
+                placeholder="••••••••"
+              />
+            </div>
+
+            {errorMsg && (
+              <div class="rounded-md border border-error/20 bg-error/5 p-3 text-sm font-medium text-error animate-in fade-in zoom-in-95 duration-200">
+                {errorMsg}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              class="w-full rounded-md bg-ink py-2.5 text-[15px] font-semibold text-canvas shadow-lg shadow-ink/10 transition-all hover:opacity-90 active:scale-[0.99]"
+            >
+              Get Started
+            </button>
+          </form>
+        )}
+
+        <div class="relative flex items-center py-2">
+          <div class="flex-grow border-t border-hairline"></div>
+        </div>
+
+        <p class="text-center text-[14px] text-body">
+          Already have an account?{" "}
+          <a href="/login" class="font-semibold text-ink transition-colors hover:underline">
+            Log in
+          </a>
+        </p>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .shadow-inner-sm {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  }
+</style>

@@ -1,0 +1,7 @@
+---
+const { supabase } = Astro.locals;
+
+await supabase.auth.signOut();
+
+return Astro.redirect("/");
+---
