@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import type { APIContext } from 'astro';
+import { prisma } from '../db';
 
 export async function updateSession(context: APIContext) {
   const supabase = createServerClient(
@@ -28,13 +29,19 @@ export async function updateSession(context: APIContext) {
   context.locals.user = user;
 
   if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-    
-    context.locals.role = profile?.role ?? 'user';
+    try {
+      const dbUser = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: { role: true }
+      });
+      
+      console.log('[Middleware] Auth check success. User:', user.email, 'Role from DB:', dbUser?.role);
+      context.locals.role = dbUser?.role ?? 'USER';
+    } catch (dbError: any) {
+      console.error('[Middleware] Database query failed in middleware:', dbError.message);
+      // Fallback to guest/user if DB is temporarily unreachable
+      context.locals.role = 'USER';
+    }
   } else {
     context.locals.role = 'guest';
   }

@@ -1,9 +1,9 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import AdminLayout from "../../app/admin/layout";
-import AdminDashboard from "../../app/admin/page";
-import { prisma } from "../../lib/db";
-import { getUser } from "../../lib/auth/getUser";
+import Layout from "../../../layouts/Layout.astro";
+import AdminLayout from "../../../app/admin/layout";
+import AdminProblemsPage from "../../../app/admin/problems/page";
+import { prisma } from "../../../lib/db";
+import { getUser } from "../../../lib/auth/getUser";
 
 // Authenticate user
 const dbUser = await getUser(Astro.cookies);
@@ -17,41 +17,21 @@ if (!isAdmin) {
   Astro.response.statusText = "Not Found";
 }
 
-// Fetch stats only if admin
-let stats = {
-  totalProblems: 0,
-  totalUsers: 0,
-  activeSubscriptions: 0,
-  newUsersThisWeek: 0,
-};
-
+// Fetch problems with tags only if admin
+let problems = [];
 if (isAdmin) {
-  const [totalProblems, totalUsers, activeSubscriptions, newUsersThisWeek] = await Promise.all([
-    prisma.problem.count(),
-    prisma.user.count(),
-    prisma.subscription.count({
-      where: {
-        status: "ACTIVE",
-        endDate: {
-          gt: new Date(),
+  problems = await prisma.problem.findMany({
+    orderBy: {
+      number: "asc",
+    },
+    include: {
+      tags: {
+        include: {
+          tag: true,
         },
       },
-    }),
-    prisma.user.count({
-      where: {
-        createdAt: {
-          gt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        },
-      },
-    }),
-  ]);
-  
-  stats = {
-    totalProblems,
-    totalUsers,
-    activeSubscriptions,
-    newUsersThisWeek,
-  };
+    },
+  });
 }
 ---
 
@@ -79,9 +59,9 @@ if (isAdmin) {
       </main>
     </Layout>
   ) : (
-    <Layout title="Admin Dashboard | RiddlesMaster" hideNavbar={true}>
-      <AdminLayout currentPath="/admin" userRole={role} client:load>
-        <AdminDashboard stats={stats} client:load />
+    <Layout title="Manage Problems | RiddlesMaster" hideNavbar={true}>
+      <AdminLayout currentPath="/admin/problems" userRole={role} client:load>
+        <AdminProblemsPage initialProblems={problems} client:load />
       </AdminLayout>
     </Layout>
   )

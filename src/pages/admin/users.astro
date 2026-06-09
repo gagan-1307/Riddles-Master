@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import AdminLayout from "../../app/admin/layout";
-import AdminDashboard from "../../app/admin/page";
+import UsersPage from "../../app/admin/users/page";
 import { prisma } from "../../lib/db";
 import { getUser } from "../../lib/auth/getUser";
 
@@ -17,54 +17,53 @@ if (!isAdmin) {
   Astro.response.statusText = "Not Found";
 }
 
-// Fetch stats only if admin
-let stats = {
-  totalProblems: 0,
-  totalUsers: 0,
-  activeSubscriptions: 0,
-  newUsersThisWeek: 0,
-};
+// Paginated query only if admin
+let users = [];
+let totalUsers = 0;
+let totalPages = 0;
+let currentPage = 1;
+
+const PAGE_SIZE = 50;
 
 if (isAdmin) {
-  const [totalProblems, totalUsers, activeSubscriptions, newUsersThisWeek] = await Promise.all([
-    prisma.problem.count(),
-    prisma.user.count(),
-    prisma.subscription.count({
-      where: {
-        status: "ACTIVE",
-        endDate: {
-          gt: new Date(),
-        },
+  const pageParam = Astro.url.searchParams.get("page");
+  currentPage = parseInt(pageParam || "1", 10);
+  if (isNaN(currentPage) || currentPage < 1) {
+    currentPage = 1;
+  }
+
+  const skip = (currentPage - 1) * PAGE_SIZE;
+
+  const [usersData, totalCount] = await Promise.all([
+    prisma.user.findMany({
+      skip,
+      take: PAGE_SIZE,
+      orderBy: {
+        createdAt: "desc"
       },
+      include: {
+        subscription: true
+      }
     }),
-    prisma.user.count({
-      where: {
-        createdAt: {
-          gt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        },
-      },
-    }),
+    prisma.user.count()
   ]);
-  
-  stats = {
-    totalProblems,
-    totalUsers,
-    activeSubscriptions,
-    newUsersThisWeek,
-  };
+
+  users = usersData;
+  totalUsers = totalCount;
+  totalPages = Math.ceil(totalCount / PAGE_SIZE);
 }
 ---
 
 {
   !isAdmin ? (
     <Layout title="Page Not Found | RiddlesMaster">
-      <main class="flex min-h-[calc(100vh-64px)] items-center justify-center bg-[#faf9f5] px-6 py-24 text-center">
+      <main class="flex min-h-[calc(100vh-64px)] items-center justify-center bg-[#faf9f5] px-6 py-24 text-center font-sans">
         <div class="w-full max-w-[600px] animate-in fade-in slide-in-from-bottom-4 duration-700">
           <h1 class="font-serif text-8xl font-normal tracking-[-0.04em] text-[#141413]/10">404</h1>
           <h2 class="mt-4 font-serif text-3xl font-normal tracking-[-0.03em] text-[#141413] sm:text-4xl">
             Lost in the labyrinth
           </h2>
-          <p class="mt-6 text-[16px] leading-relaxed text-[#3d3d3a] max-w-[480px] w-full mx-auto font-sans">
+          <p class="mt-6 text-[16px] leading-relaxed text-[#3d3d3a] max-w-[480px] w-full mx-auto">
             The page you seek is currently out of reach. The page might have been solved, relocated, or never existed in this timeline.
           </p>
           <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -79,9 +78,15 @@ if (isAdmin) {
       </main>
     </Layout>
   ) : (
-    <Layout title="Admin Dashboard | RiddlesMaster" hideNavbar={true}>
-      <AdminLayout currentPath="/admin" userRole={role} client:load>
-        <AdminDashboard stats={stats} client:load />
+    <Layout title="User Directory | RiddlesMaster" hideNavbar={true}>
+      <AdminLayout currentPath="/admin/users" userRole={role} client:load>
+        <UsersPage 
+          users={users as any} 
+          currentPage={currentPage} 
+          totalPages={totalPages} 
+          totalUsers={totalUsers} 
+          client:load 
+        />
       </AdminLayout>
     </Layout>
   )

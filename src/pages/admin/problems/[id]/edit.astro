@@ -1,9 +1,15 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import AdminLayout from "../../app/admin/layout";
-import AdminDashboard from "../../app/admin/page";
-import { prisma } from "../../lib/db";
-import { getUser } from "../../lib/auth/getUser";
+import Layout from "../../../../layouts/Layout.astro";
+import AdminLayout from "../../../../app/admin/layout";
+import EditProblemPage from "../../../../app/admin/problems/[id]/edit/page";
+import { prisma } from "../../../../lib/db";
+import { getUser } from "../../../../lib/auth/getUser";
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/404");
+}
 
 // Authenticate user
 const dbUser = await getUser(Astro.cookies);
@@ -17,41 +23,35 @@ if (!isAdmin) {
   Astro.response.statusText = "Not Found";
 }
 
-// Fetch stats only if admin
-let stats = {
-  totalProblems: 0,
-  totalUsers: 0,
-  activeSubscriptions: 0,
-  newUsersThisWeek: 0,
-};
+// Fetch problem details and all tags only if admin
+let problem = null;
+let allTags = [];
 
 if (isAdmin) {
-  const [totalProblems, totalUsers, activeSubscriptions, newUsersThisWeek] = await Promise.all([
-    prisma.problem.count(),
-    prisma.user.count(),
-    prisma.subscription.count({
-      where: {
-        status: "ACTIVE",
-        endDate: {
-          gt: new Date(),
-        },
-      },
+  const [problemData, tagsData] = await Promise.all([
+    prisma.problem.findUnique({
+      where: { id },
+      include: {
+        tags: {
+          include: {
+            tag: true
+          }
+        }
+      }
     }),
-    prisma.user.count({
-      where: {
-        createdAt: {
-          gt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        },
-      },
-    }),
+    prisma.tag.findMany({
+      orderBy: {
+        name: "asc"
+      }
+    })
   ]);
-  
-  stats = {
-    totalProblems,
-    totalUsers,
-    activeSubscriptions,
-    newUsersThisWeek,
-  };
+
+  problem = problemData;
+  allTags = tagsData;
+}
+
+if (isAdmin && !problem) {
+  return Astro.redirect("/404");
 }
 ---
 
@@ -79,9 +79,9 @@ if (isAdmin) {
       </main>
     </Layout>
   ) : (
-    <Layout title="Admin Dashboard | RiddlesMaster" hideNavbar={true}>
-      <AdminLayout currentPath="/admin" userRole={role} client:load>
-        <AdminDashboard stats={stats} client:load />
+    <Layout title={`Edit Riddle #${problem?.number} | RiddlesMaster`} hideNavbar={true}>
+      <AdminLayout currentPath="/admin/problems" userRole={role} client:load>
+        <EditProblemPage problem={problem as any} allTags={allTags} client:load />
       </AdminLayout>
     </Layout>
   )

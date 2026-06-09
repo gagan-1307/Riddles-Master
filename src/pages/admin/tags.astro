@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import AdminLayout from "../../app/admin/layout";
-import AdminDashboard from "../../app/admin/page";
+import TagsPage from "../../app/admin/tags/page";
 import { prisma } from "../../lib/db";
 import { getUser } from "../../lib/auth/getUser";
 
@@ -17,41 +17,28 @@ if (!isAdmin) {
   Astro.response.statusText = "Not Found";
 }
 
-// Fetch stats only if admin
-let stats = {
-  totalProblems: 0,
-  totalUsers: 0,
-  activeSubscriptions: 0,
-  newUsersThisWeek: 0,
-};
-
+// Fetch all available tags and count of problems using them
+let serializedTags = [];
 if (isAdmin) {
-  const [totalProblems, totalUsers, activeSubscriptions, newUsersThisWeek] = await Promise.all([
-    prisma.problem.count(),
-    prisma.user.count(),
-    prisma.subscription.count({
-      where: {
-        status: "ACTIVE",
-        endDate: {
-          gt: new Date(),
-        },
-      },
-    }),
-    prisma.user.count({
-      where: {
-        createdAt: {
-          gt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        },
-      },
-    }),
-  ]);
-  
-  stats = {
-    totalProblems,
-    totalUsers,
-    activeSubscriptions,
-    newUsersThisWeek,
-  };
+  const tags = await prisma.tag.findMany({
+    include: {
+      _count: {
+        select: {
+          problems: true
+        }
+      }
+    },
+    orderBy: {
+      name: "asc"
+    }
+  });
+
+  serializedTags = tags.map((t) => ({
+    id: t.id,
+    name: t.name,
+    type: t.type,
+    problemsCount: t._count.problems
+  }));
 }
 ---
 
@@ -79,9 +66,9 @@ if (isAdmin) {
       </main>
     </Layout>
   ) : (
-    <Layout title="Admin Dashboard | RiddlesMaster" hideNavbar={true}>
-      <AdminLayout currentPath="/admin" userRole={role} client:load>
-        <AdminDashboard stats={stats} client:load />
+    <Layout title="Tags Administration | RiddlesMaster" hideNavbar={true}>
+      <AdminLayout currentPath="/admin/tags" userRole={role} client:load>
+        <TagsPage initialTags={serializedTags} client:load />
       </AdminLayout>
     </Layout>
   )

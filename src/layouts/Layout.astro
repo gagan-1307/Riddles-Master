@@ -5,11 +5,13 @@ import Navbar from "../components/Navbar.astro";
 interface Props {
 	title?: string;
 	description?: string;
+	hideNavbar?: boolean;
 }
 
 const { 
 	title = "RiddlesMaster | Technical Puzzles & Brain Teasers",
-	description = "Master your technical interview with curated riddles, logic puzzles, and brain teasers from top tech companies."
+	description = "Master your technical interview with curated riddles, logic puzzles, and brain teasers from tech companies.",
+	hideNavbar = false,
 } = Astro.props;
 
 const { user, role } = Astro.locals;
@@ -40,7 +42,7 @@ const serializedUser = user ? {
     <slot name="head" />
 	</head>
 	<body class="min-h-screen bg-canvas-soft font-geist text-ink antialiased">
-		<Navbar user={serializedUser} role={role} />
+		{!hideNavbar && <Navbar user={serializedUser} role={role} />}
 		<slot />
 	</body>
 </html>
