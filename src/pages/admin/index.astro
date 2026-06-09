@@ -7,10 +7,10 @@ import { getUser } from "../../lib/auth/getUser";
 
 // Authenticate user
 const dbUser = await getUser(Astro.cookies);
-const user = Astro.locals.user || dbUser;
+const _user = Astro.locals.user || dbUser;
 const role = Astro.locals.role || (dbUser ? dbUser.role : "guest");
 
-const isAdmin = role === "admin" || role === "ADMIN";
+const isAdmin = String(role).toLowerCase() === "admin";
 
 if (!isAdmin) {
   Astro.response.status = 404;

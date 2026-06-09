@@ -52,11 +52,11 @@ export const POST: APIRoute = async ({ request }) => {
       }
     });
 
-    return new Response(JSON.stringify({ 
-      success: true, 
+    return new Response(JSON.stringify({
+      success: true,
       message: `User "${email}" upgraded to ADMIN successfully.`,
       email: updatedUser.email,
-      role: updatedUser.role 
+      role: updatedUser.role
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

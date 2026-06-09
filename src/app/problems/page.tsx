@@ -121,7 +121,8 @@ export default function ProblemsPage({ initialProblems }: ProblemsPageProps) {
         types={types}
       />
 
-      <div className="overflow-x-auto rounded-lg border border-[#e6dfd8] bg-[#faf9f5]">
+      {/* Desktop Table View */}
+      <div className="hidden md:block overflow-x-auto rounded-lg border border-[#e6dfd8] bg-[#faf9f5]">
         <table className="w-full border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-[#e6dfd8] bg-[#f5f0e8] text-xs font-semibold uppercase tracking-wider text-[#6c6a64]">
@@ -194,6 +195,74 @@ export default function ProblemsPage({ initialProblems }: ProblemsPageProps) {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card List View */}
+      <div className="block md:hidden space-y-4">
+        {filteredProblems.length > 0 ? (
+          filteredProblems.map((problem) => {
+            const companyTags = problem.tags.filter(({ tag }) => tag.type === 'COMPANY');
+            const typeTags = problem.tags.filter(({ tag }) => tag.type === 'TYPE');
+
+            return (
+              <div
+                key={problem.id}
+                className="rounded-lg border border-[#e6dfd8] bg-[#faf9f5] p-5 shadow-sm hover:shadow-md transition-all duration-200"
+              >
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <span className="font-mono text-xs font-semibold text-[#6c6a64]">
+                    Riddle #{problem.number}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    {problem.isPremium && (
+                      <span className="inline-flex items-center justify-center rounded-sm bg-[#cc785c]/10 p-1 text-[#cc785c]" title="Premium Riddle">
+                        <Lock className="h-3 w-3" />
+                      </span>
+                    )}
+                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold ${getDifficultyStyles(problem.difficulty)}`}>
+                      {problem.difficulty}
+                    </span>
+                  </div>
+                </div>
+
+                <h3 className="text-base font-semibold text-[#141413] mb-3">
+                  <a
+                    href={`/problems/${problem.slug}`}
+                    className="hover:text-[#cc785c] hover:underline transition-colors duration-150"
+                  >
+                    {problem.title}
+                  </a>
+                </h3>
+
+                {/* Tags list */}
+                {problem.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {companyTags.map(({ tag }) => (
+                      <span
+                        key={tag.id}
+                        className="inline-flex items-center rounded-full bg-[#cc785c]/10 px-2.5 py-0.5 text-[10px] font-medium text-[#cc785c] border border-[#cc785c]/20"
+                      >
+                        {tag.name}
+                      </span>
+                    ))}
+                    {typeTags.map(({ tag }) => (
+                      <span
+                        key={tag.id}
+                        className="inline-flex items-center rounded-full bg-[#efe9de] px-2.5 py-0.5 text-[10px] font-medium text-[#141413] border border-[#e6dfd8]"
+                      >
+                        {tag.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })
+        ) : (
+          <div className="rounded-lg border border-[#e6dfd8] bg-[#faf9f5] px-6 py-12 text-center text-[#6c6a64] italic shadow-sm">
+            No problems found matching your filters.
+          </div>
+        )}
       </div>
     </div>
   );

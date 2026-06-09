@@ -1,0 +1,79 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="Contact Us | RiddlesMaster"
+  description="Get in touch with the RiddlesMaster support and editorial teams for feedback, inquiries, or problem submissions."
+>
+  <main class="mx-auto max-w-[800px] px-6 py-16 sm:py-24">
+    <div class="max-w-none">
+      <h1
+        class="text-3xl sm:text-5xl font-normal tracking-tight text-[#141413] font-serif mb-6 leading-tight"
+      >
+        Contact Us
+      </h1>
+
+      <p class="text-lg text-[#3d3d3a] leading-relaxed mb-10 font-normal">
+        Have feedback, questions, or a riddle you'd like to submit? We'd love to
+        hear from you.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
+        {/* Support Section */}
+        <div
+          class="rounded-xl border border-[#e6dfd8] bg-[#efe9de]/30 p-6 sm:p-8"
+        >
+          <h2 class="text-lg font-semibold text-[#141413] mb-3">
+            Support & Help
+          </h2>
+          <p class="text-sm text-[#3d3d3a] leading-relaxed mb-4">
+            Need help with your subscription, account settings, or login issues?
+            Our support team is here to help.
+          </p>
+          <a
+            href="mailto:support@riddlesmaster.com"
+            class="text-sm font-bold text-[#cc785c] hover:text-[#a9583e] transition-colors"
+          >
+            support@riddlesmaster.com
+          </a>
+        </div>
+
+        {/* Puzzle Submissions Section */}
+        <div
+          class="rounded-xl border border-[#e6dfd8] bg-[#efe9de]/30 p-6 sm:p-8"
+        >
+          <h2 class="text-lg font-semibold text-[#141413] mb-3">
+            Riddle Submissions
+          </h2>
+          <p class="text-sm text-[#3d3d3a] leading-relaxed mb-4">
+            Are you an interviewer or candidate with a great lateral thinking
+            question to share? Submit it to our editorial team!
+          </p>
+          <a
+            href="mailto:editor@riddlesmaster.com"
+            class="text-sm font-bold text-[#cc785c] hover:text-[#a9583e] transition-colors"
+          >
+            editor@riddlesmaster.com
+          </a>
+        </div>
+      </div>
+
+      <div
+        class="mt-12 p-8 border border-dashed border-[#e6dfd8] bg-[#faf9f5] rounded-xl text-center"
+      >
+        <h3 class="text-base font-semibold text-[#141413] mb-2">
+          Corporate Inquiries
+        </h3>
+        <p class="text-sm text-[#3d3d3a] max-w-lg mx-auto">
+          For business partnerships, API licensing, or team subscriptions for
+          universities and bootcamps, contact us at <a
+            href="mailto:partners@riddlesmaster.com"
+            class="text-[#cc785c] font-medium hover:underline"
+            >partners@riddlesmaster.com</a
+          >.
+        </p>
+      </div>
+    </div>
+  </main>
+</Layout>

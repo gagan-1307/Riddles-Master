@@ -17,7 +17,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // Protect /admin routes
   if (url.pathname.startsWith('/admin')) {
     const role = context.locals.role;
-    if (role !== 'admin' && role !== 'ADMIN') {
+    if (role !== 'admin') {
       return context.redirect('/404');
     }
   }

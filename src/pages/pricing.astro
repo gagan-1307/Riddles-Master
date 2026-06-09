@@ -8,7 +8,7 @@ const dbUser = await getUser(Astro.cookies);
 const isPremium = dbUser ? await checkPremium(dbUser.id) : false;
 const userRole = dbUser ? dbUser.role : "guest";
 const hasPremiumAccess =
-  isPremium || userRole === "admin" || userRole === "ADMIN";
+  isPremium || String(userRole).toLowerCase() === "admin";
 
 // If user is already premium, we can display their premium status or a message, but we still render the options.
 ---

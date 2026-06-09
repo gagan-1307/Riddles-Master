@@ -15,7 +15,7 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
   }
 
   const role = locals.role || user.role;
-  const isAdmin = role === 'admin' || role === 'ADMIN';
+  const isAdmin = String(role).toLowerCase() === 'admin';
 
   if (!isAdmin) {
     return new Response(JSON.stringify({ error: 'Not Found' }), {

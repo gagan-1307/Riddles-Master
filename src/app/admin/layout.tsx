@@ -1,5 +1,5 @@
-import React, { createContext, useContext } from 'react';
-import { LayoutDashboard, List, Plus, Tag, Users, ArrowLeft } from 'lucide-react';
+import React, { createContext, useContext, useState } from 'react';
+import { LayoutDashboard, List, Plus, Tag, Users, ArrowLeft, Menu } from 'lucide-react';
 
 const PathnameContext = createContext<string>('');
 
@@ -40,6 +40,7 @@ interface AdminLayoutProps {
 export default function AdminLayout({ children, userRole, currentPath }: AdminLayoutProps) {
   // Wrap in auth check — if user role !== ADMIN return notFound()
   const isAdmin = userRole === 'ADMIN' || userRole === 'admin';
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   if (!isAdmin) {
     return notFound();
@@ -56,8 +57,20 @@ export default function AdminLayout({ children, userRole, currentPath }: AdminLa
   return (
     <PathnameContext.Provider value={currentPath}>
       <div className="flex min-h-screen bg-[#faf9f5] text-[#141413]">
-        {/* Fixed Left Sidebar (240px wide) */}
-        <aside className="fixed inset-y-0 left-0 z-20 w-[240px] border-r border-[#e6dfd8] bg-[#f5f0e8]/50 flex flex-col">
+        {/* Dimmer Overlay for Mobile */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 z-20 bg-black/30 md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
+        {/* Collapsible Left Sidebar (240px wide) */}
+        <aside
+          className={`fixed inset-y-0 left-0 z-30 w-[240px] border-r border-[#e6dfd8] bg-[#f5f0e8] flex flex-col transition-transform duration-300 ease-in-out md:translate-x-0 ${
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
           {/* Logo Section */}
           <div className="h-16 flex items-center px-6 border-b border-[#e6dfd8]">
             <a href="/" className="flex items-center gap-2 group decoration-none">
@@ -78,6 +91,7 @@ export default function AdminLayout({ children, userRole, currentPath }: AdminLa
                 <a
                   key={link.href}
                   href={link.href}
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors decoration-none ${
                     isActive
                       ? 'bg-[#efe9de] text-[#141413] border border-[#e6dfd8]/50'
@@ -104,18 +118,28 @@ export default function AdminLayout({ children, userRole, currentPath }: AdminLa
         </aside>
 
         {/* Main Content Area */}
-        <div className="flex-1 pl-[240px]">
-          <header className="h-16 border-b border-[#e6dfd8] flex items-center justify-between px-8 bg-[#faf9f5]/80 backdrop-blur-md sticky top-0 z-10">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#6c6a64]">
-              Administrative Interface
-            </span>
+        <div className="flex-1 md:pl-[240px] min-w-0">
+          <header className="h-16 border-b border-[#e6dfd8] flex items-center justify-between px-4 md:px-8 bg-[#faf9f5]/80 backdrop-blur-md sticky top-0 z-10">
+            <div className="flex items-center gap-2.5">
+              <button
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="flex md:hidden items-center justify-center p-1.5 rounded-md text-[#6c6a64] hover:text-[#141413] hover:bg-[#efe9de]/60 transition-colors cursor-pointer"
+                aria-label="Toggle Sidebar"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+              <span className="text-xs font-bold uppercase tracking-widest text-[#6c6a64]">
+                Administrative Interface
+              </span>
+            </div>
             <div className="flex items-center gap-2 text-xs font-semibold text-[#3d3d3a] bg-[#efe9de] px-2.5 py-1 rounded-full border border-[#e6dfd8]">
               <span className="h-2 w-2 rounded-full bg-[#5db872]"></span>
-              Admin Session
+              <span className="hidden sm:inline">Admin Session</span>
+              <span className="inline sm:hidden">Admin</span>
             </div>
           </header>
           
-          <main className="p-8 max-w-[1200px] mx-auto animate-in fade-in duration-300">
+          <main className="p-4 sm:p-8 max-w-[1200px] mx-auto animate-in fade-in duration-300">
             {children}
           </main>
         </div>

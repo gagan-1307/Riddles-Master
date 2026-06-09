@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
 import { getUser } from "../lib/auth/getUser";
 import { prisma } from "../lib/db";
 import { getStreakCount, getMaxStreakCount } from "../lib/auth/streak";
@@ -69,7 +70,8 @@ const mediumPct = getPercentage(solvedCount.MEDIUM, totalCount.MEDIUM);
 const hardPct = getPercentage(solvedCount.HARD, totalCount.HARD);
 const totalPct = getPercentage(solvedCount.TOTAL, totalCount.TOTAL);
 
-const userDisplayName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0];
+const userDisplayName = (user as any).name || (user as any).user_metadata?.full_name || (user as any).user_metadata?.name || user.email?.split("@")[0];
+const userAvatarUrl = (user as any).avatarUrl || (user as any).user_metadata?.avatar_url || (user as any).user_metadata?.avatarUrl;
 const userAvatarLetter = user.email ? user.email[0].toUpperCase() : "U";
 ---
 
@@ -94,8 +96,8 @@ const userAvatarLetter = user.email ? user.email[0].toUpperCase() : "U";
         <!-- Account Info Card -->
         <div class="rounded-lg border border-[#e6dfd8] bg-[#faf9f5] p-6 shadow-sm flex flex-col items-center text-center">
           <div class="h-20 w-20 rounded-full bg-[#cc785c]/10 border border-[#cc785c]/20 flex items-center justify-center text-[#cc785c] mb-4 text-2xl font-bold font-serif shadow-inner">
-            {user.avatarUrl ? (
-              <img src={user.avatarUrl} alt="Avatar" class="h-full w-full rounded-full object-cover" />
+            {userAvatarUrl ? (
+              <Image src={userAvatarUrl} alt="Avatar" width={80} height={80} class="h-full w-full rounded-full object-cover" />
             ) : (
               <span>{userAvatarLetter}</span>
             )}
@@ -156,7 +158,7 @@ const userAvatarLetter = user.email ? user.email[0].toUpperCase() : "U";
       <!-- Right Column: Stats & Performance -->
       <div class="space-y-6 lg:col-span-2">
         <!-- Streak Milestone Cards -->
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- Current Streak Card -->
           <div class="rounded-lg border border-[#f5d996] bg-[#fdf6e2] p-5 shadow-sm flex items-center gap-4">
             <div class="h-12 w-12 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-600">

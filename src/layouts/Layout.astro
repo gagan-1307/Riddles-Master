@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer";
 
 interface Props {
 	title?: string;
@@ -8,19 +9,27 @@ interface Props {
 	hideNavbar?: boolean;
 }
 
-const { 
+const {
 	title = "RiddlesMaster | Technical Puzzles & Brain Teasers",
 	description = "Master your technical interview with curated riddles, logic puzzles, and brain teasers from tech companies.",
 	hideNavbar = false,
 } = Astro.props;
 
 const { user, role } = Astro.locals;
-const serializedUser = user ? {
-  id: user.id,
-  email: user.email || "",
-  name: user.user_metadata?.full_name || user.user_metadata?.name || null,
-  avatarUrl: user.user_metadata?.avatar_url || user.user_metadata?.avatarUrl || null,
-} : null;
+const serializedUser = user
+	? {
+			id: user.id,
+			email: user.email || "",
+			name:
+				user.user_metadata?.full_name ||
+				user.user_metadata?.name ||
+				null,
+			avatarUrl:
+				user.user_metadata?.avatar_url ||
+				user.user_metadata?.avatarUrl ||
+				null,
+		}
+	: null;
 ---
 
 <!doctype html>
@@ -31,28 +40,50 @@ const serializedUser = user ? {
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link class="favicon-fallback" rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		
+
 		<!-- SEO -->
 		<title>{title}</title>
 		<meta name="description" content={description} />
 
-    <!-- Geist Font Family -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/sans.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/mono.min.css" />
-    <slot name="head" />
+		<!-- Inter Font Google Fonts Preload -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="preload"
+			as="style"
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+		/>
+
+		<!-- Geist Font Family -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/sans.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/mono.min.css"
+		/>
+		<slot name="head" />
 	</head>
 	<body class="min-h-screen bg-canvas-soft font-geist text-ink antialiased">
 		{!hideNavbar && <Navbar user={serializedUser} role={role} />}
 		<slot />
+		<Footer />
 	</body>
 </html>
 
 <style is:global>
 	:root {
-		--font-geist: "Geist Sans", "Inter", system-ui, -apple-system, sans-serif;
-		--font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+		--font-geist:
+			"Geist Sans", "Inter", system-ui, -apple-system, sans-serif;
+		--font-mono:
+			"Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
 	}
-	
+
 	html,
 	body {
 		margin: 0;
@@ -60,9 +91,9 @@ const serializedUser = user ? {
 		height: 100%;
 	}
 
-  /* Custom selection color */
-  ::selection {
-    background-color: #000;
-    color: #fff;
-  }
+	/* Custom selection color */
+	::selection {
+		background-color: #000;
+		color: #fff;
+	}
 </style>

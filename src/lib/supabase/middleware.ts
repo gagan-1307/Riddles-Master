@@ -34,13 +34,13 @@ export async function updateSession(context: APIContext) {
         where: { id: user.id },
         select: { role: true }
       });
-      
-      console.log('[Middleware] Auth check success. User:', user.email, 'Role from DB:', dbUser?.role);
-      context.locals.role = dbUser?.role ?? 'USER';
+
+      const roleStr = dbUser?.role === 'ADMIN' ? 'admin' : 'user';
+      context.locals.role = roleStr;
     } catch (dbError: any) {
       console.error('[Middleware] Database query failed in middleware:', dbError.message);
       // Fallback to guest/user if DB is temporarily unreachable
-      context.locals.role = 'USER';
+      context.locals.role = 'user';
     }
   } else {
     context.locals.role = 'guest';

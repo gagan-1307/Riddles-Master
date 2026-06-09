@@ -1,28 +1,40 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import HomePage from '../app/page';
+import { getTodaysProblem } from '../lib/daily';
+import { getUser } from '../lib/auth/getUser';
+import { prisma } from '../lib/db';
+import { getStreakCount } from '../lib/auth/streak';
+
+// Fetch the user session to check streak count
+const dbUser = await getUser(Astro.cookies);
+const user = Astro.locals.user || dbUser;
+
+let streakCount = null;
+if (user) {
+  // Disable caching for logged-in users to display live streak information
+  Astro.response.headers.set('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  streakCount = await getStreakCount(user.id);
+} else {
+  // Cache the page for 1 hour for guests and search engine bots
+  Astro.response.headers.set('Cache-Control', 'public, max-age=3600, must-revalidate');
+}
+
+// Fetch stats & daily problem server-side
+const [problem, totalProblemsCount, totalUsersCount, totalCompanyTagsCount] = await Promise.all([
+  getTodaysProblem(),
+  prisma.problem.count(),
+  prisma.user.count(),
+  prisma.tag.count({ where: { type: 'COMPANY' } })
+]);
 ---
 
-<Layout>
-	<main class="flex min-h-screen flex-col items-center justify-center bg-canvas p-6 text-center">
-		<h1 class="text-4xl font-black tracking-tight text-ink sm:text-6xl font-serif">
-			Interview Riddle Platform
-		</h1>
-		<p class="mt-4 text-xl text-mute">
-			Coming Soon
-		</p>
-		<div class="mt-8 flex gap-4">
-			<a
-				href="/login"
-				class="flex h-10 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-white transition-all hover:bg-primary-active active:scale-[0.98]"
-			>
-				Log In
-			</a>
-			<a
-				href="/signup"
-				class="flex h-10 items-center justify-center rounded-md border border-hairline bg-canvas px-6 text-sm font-medium text-ink transition-all hover:bg-surface-soft active:scale-[0.98]"
-			>
-				Sign Up
-			</a>
-		</div>
-	</main>
+<Layout title="RiddlesMaster | Technical Puzzles & Brain Teasers">
+  <HomePage
+    todaysProblem={problem}
+    streakCount={streakCount}
+    totalProblemsCount={totalProblemsCount}
+    totalUsersCount={totalUsersCount}
+    totalCompanyTagsCount={totalCompanyTagsCount}
+  />
 </Layout>

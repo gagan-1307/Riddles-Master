@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 interface Props {
   user: {
     id: string;
@@ -9,7 +10,7 @@ interface Props {
   role?: string;
 }
 
-const { user, role = 'user' } = Astro.props;
+const { user, role = "user" } = Astro.props;
 
 const navLinks = [
   { href: "/problems", label: "Problems" },
@@ -18,135 +19,255 @@ const navLinks = [
 ];
 ---
 
-<nav class="sticky top-0 z-50 w-full border-b border-[#e6dfd8] bg-[#faf9f5]/80 backdrop-blur-md">
-  <div class="mx-auto flex h-14 max-w-[1400px] items-center justify-between px-6">
+<nav
+  class="sticky top-0 z-50 w-full border-b border-[#e6dfd8] bg-[#faf9f5]/80 backdrop-blur-md"
+>
+  <div
+    class="mx-auto flex h-14 max-w-[1400px] items-center justify-between px-6"
+  >
     <div class="flex items-center gap-6">
       <a href="/" class="flex items-center gap-2 group">
-        <div class="h-6 w-6 rounded-md bg-[#181715] flex items-center justify-center transition-transform group-hover:rotate-12">
+        <div
+          class="h-6 w-6 rounded-md bg-[#181715] flex items-center justify-center transition-transform group-hover:rotate-12"
+        >
           <span class="text-[#faf9f5] text-[10px] font-bold">R</span>
         </div>
-        <span class="text-[15px] font-bold tracking-[-0.03em] text-[#181715]">RiddlesMaster</span>
+        <span class="text-[15px] font-bold tracking-[-0.03em] text-[#181715]"
+          >RiddlesMaster</span
+        >
       </a>
-      
+
       <div class="hidden md:flex items-center gap-1">
-        {navLinks.map((link) => (
-          <a
-            href={link.href}
-            class="rounded-full px-3 py-1.5 text-[13px] font-medium text-[#6c6a64] transition-colors hover:bg-[#faf9f5] hover:text-[#181715]"
-          >
-            {link.label}
-          </a>
-        ))}
-        {role === 'admin' && (
-          <a
-            href="/admin"
-            class="rounded-full px-3 py-1.5 text-[13px] font-bold text-violet-600 transition-colors hover:bg-violet-50"
-          >
-            Admin
-          </a>
-        )}
+        {
+          navLinks.map((link) => (
+            <a
+              href={link.href}
+              class="rounded-full px-3 py-1.5 text-[13px] font-medium text-[#6c6a64] transition-colors hover:bg-[#faf9f5] hover:text-[#181715]"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+        {
+          role === "admin" && (
+            <a
+              href="/admin"
+              class="rounded-full px-3 py-1.5 text-[13px] font-bold text-violet-600 transition-colors hover:bg-violet-50"
+            >
+              Admin
+            </a>
+          )
+        }
       </div>
     </div>
 
     <div class="flex items-center gap-3">
-      {user ? (
-        <div class="flex items-center gap-4">
-
-          
-          <div class="relative" id="profile-dropdown-container">
-            <button
-              id="profile-dropdown-btn"
-              class="flex items-center gap-2 rounded-full px-3 py-1.5 text-[13px] font-medium text-[#181715] transition-colors hover:bg-[#e6dfd8]/30 border border-[#e6dfd8] bg-[#faf9f5]"
-            >
-              <div class="h-5 w-5 rounded-full bg-[#181715]/5 flex items-center justify-center border border-[#e6dfd8] overflow-hidden">
-                {user.avatarUrl ? (
-                  <img src={user.avatarUrl} alt={user.name || 'Avatar'} class="h-full w-full object-cover" />
-                ) : (
-                  <span class="text-[10px] font-bold text-[#181715]/40 capitalize">{user.email?.[0]}</span>
-                )}
-              </div>
-              <span class="max-w-[100px] truncate">{user.name || user.email?.split('@')[0]}</span>
-              <svg id="profile-dropdown-arrow" class="h-4 w-4 text-[#6c6a64] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            <div
-              id="profile-dropdown-menu"
-              class="hidden absolute right-0 mt-2 w-48 origin-top-right rounded-md border border-[#e6dfd8] bg-[#faf9f5] py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-            >
-              <div class="px-4 py-2 border-b border-[#e6dfd8] text-xs text-[#6c6a64] truncate">
-                Signed in as<br />
-                <span class="font-semibold text-[#181715]">{user.email}</span>
-              </div>
-              <a
-                href="/profile"
-                class="block px-4 py-2 text-sm text-[#181715] hover:bg-[#e6dfd8]/30"
+      {
+        user ? (
+          <div class="flex items-center gap-4">
+            <div class="relative" id="profile-dropdown-container">
+              <button
+                id="profile-dropdown-btn"
+                class="flex items-center gap-2 rounded-full px-3 py-1.5 text-[13px] font-medium text-[#181715] transition-colors hover:bg-[#e6dfd8]/30 border border-[#e6dfd8] bg-[#faf9f5]"
               >
-                Your Profile
-              </a>
-              {role === 'admin' && (
+                <div class="h-5 w-5 rounded-full bg-[#181715]/5 flex items-center justify-center border border-[#e6dfd8] overflow-hidden">
+                  {user.avatarUrl ? (
+                    <Image
+                      src={user.avatarUrl}
+                      alt={user.name || "Avatar"}
+                      width={20}
+                      height={20}
+                      class="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span class="text-[10px] font-bold text-[#181715]/40 capitalize">
+                      {user.email?.[0]}
+                    </span>
+                  )}
+                </div>
+                <span class="max-w-[100px] truncate">
+                  {user.name || user.email?.split("@")[0]}
+                </span>
+                <svg
+                  id="profile-dropdown-arrow"
+                  class="h-4 w-4 text-[#6c6a64] transition-transform"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <div
+                id="profile-dropdown-menu"
+                class="hidden absolute right-0 mt-2 w-48 origin-top-right rounded-md border border-[#e6dfd8] bg-[#faf9f5] py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+              >
+                <div class="px-4 py-2 border-b border-[#e6dfd8] text-xs text-[#6c6a64] truncate">
+                  Signed in as
+                  <br />
+                  <span class="font-semibold text-[#181715]">{user.email}</span>
+                </div>
                 <a
-                  href="/admin"
+                  href="/profile"
                   class="block px-4 py-2 text-sm text-[#181715] hover:bg-[#e6dfd8]/30"
                 >
-                  Admin Dashboard
+                  Your Profile
                 </a>
-              )}
-              <form action="/logout" method="POST" class="m-0 border-t border-[#e6dfd8]">
-                <button
-                  type="submit"
-                  class="block w-full text-left px-4 py-2 text-sm text-[#c64545] hover:bg-red-50 border-none bg-transparent cursor-pointer"
+                {role === "admin" && (
+                  <a
+                    href="/admin"
+                    class="block px-4 py-2 text-sm text-[#181715] hover:bg-[#e6dfd8]/30"
+                  >
+                    Admin Dashboard
+                  </a>
+                )}
+                <form
+                  action="/logout"
+                  method="POST"
+                  class="m-0 border-t border-[#e6dfd8]"
                 >
-                  Log Out
-                </button>
-              </form>
+                  <button
+                    type="submit"
+                    class="block w-full text-left px-4 py-2 text-sm text-[#c64545] hover:bg-red-50 border-none bg-transparent cursor-pointer"
+                  >
+                    Log Out
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <div class="flex items-center gap-3">
-          <a
-            href="/login"
-            class="rounded-full px-4 py-1.5 text-[13px] font-semibold text-[#6c6a64] hover:text-[#181715]"
-          >
-            Log In
-          </a>
-          <a
-            href="/signup"
-            class="rounded-full bg-[#cc785c] hover:bg-[#a9583e] px-4 py-1.5 text-[13px] font-semibold text-white shadow-lg shadow-[#cc785c]/10 transition-all hover:opacity-90 active:scale-[0.98]"
-          >
-            Sign Up
-          </a>
-        </div>
-      )}
+        ) : (
+          <div class="flex items-center gap-3">
+            <a
+              href="/login"
+              class="rounded-full px-4 py-1.5 text-[13px] font-semibold text-[#6c6a64] hover:text-[#181715]"
+            >
+              Log In
+            </a>
+            <a
+              href="/signup"
+              class="rounded-full bg-[#cc785c] hover:bg-[#a9583e] px-4 py-1.5 text-[13px] font-semibold text-white shadow-lg shadow-[#cc785c]/10 transition-all hover:opacity-90 active:scale-[0.98]"
+            >
+              Sign Up
+            </a>
+          </div>
+        )
+      }
+
+      <!-- Mobile menu button -->
+      <button
+        id="mobile-menu-btn"
+        class="flex md:hidden items-center justify-center p-1.5 rounded-md text-[#6c6a64] hover:text-[#181715] hover:bg-[#e6dfd8]/30 transition-colors cursor-pointer"
+        aria-label="Toggle Menu"
+      >
+        <svg
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          id="mobile-menu-icon"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
     </div>
+  </div>
+
+  <!-- Mobile Menu Drawer -->
+  <div
+    id="mobile-menu"
+    class="hidden md:hidden border-t border-[#e6dfd8] bg-[#faf9f5] px-6 py-4 space-y-2 shadow-inner animate-in fade-in slide-in-from-top-2 duration-200"
+  >
+    {
+      navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="block rounded-md px-3 py-2 text-[14px] font-medium text-[#6c6a64] hover:bg-[#e6dfd8]/30 hover:text-[#181715] transition-colors"
+        >
+          {link.label}
+        </a>
+      ))
+    }
+    {
+      role === "admin" && (
+        <a
+          href="/admin"
+          class="block rounded-md px-3 py-2 text-[14px] font-bold text-violet-600 hover:bg-violet-50 transition-colors"
+        >
+          Admin Panel
+        </a>
+      )
+    }
   </div>
 </nav>
 
 <script>
-  const btn = document.getElementById('profile-dropdown-btn');
-  const menu = document.getElementById('profile-dropdown-menu');
-  const arrow = document.getElementById('profile-dropdown-arrow');
-  const container = document.getElementById('profile-dropdown-container');
+  // Profile dropdown toggling
+  const btn = document.getElementById("profile-dropdown-btn");
+  const menu = document.getElementById("profile-dropdown-menu");
+  const arrow = document.getElementById("profile-dropdown-arrow");
+  const container = document.getElementById("profile-dropdown-container");
 
   if (btn && menu && arrow && container) {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      const isOpen = !menu.classList.contains('hidden');
+      const isOpen = !menu.classList.contains("hidden");
       if (isOpen) {
-        menu.classList.add('hidden');
-        arrow.classList.remove('rotate-180');
+        menu.classList.add("hidden");
+        arrow.classList.remove("rotate-180");
       } else {
-        menu.classList.remove('hidden');
-        arrow.classList.add('rotate-180');
+        menu.classList.remove("hidden");
+        arrow.classList.add("rotate-180");
       }
     });
 
-    document.addEventListener('click', (e) => {
+    document.addEventListener("click", (e) => {
       if (!container.contains(e.target as Node)) {
-        menu.classList.add('hidden');
-        arrow.classList.remove('rotate-180');
+        menu.classList.add("hidden");
+        arrow.classList.remove("rotate-180");
+      }
+    });
+  }
+
+  // Mobile menu toggling
+  const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const mobileMenuIcon = document.getElementById("mobile-menu-icon");
+
+  if (mobileMenuBtn && mobileMenu && mobileMenuIcon) {
+    mobileMenuBtn.addEventListener("click", () => {
+      const isHidden = mobileMenu.classList.contains("hidden");
+      if (isHidden) {
+        mobileMenu.classList.remove("hidden");
+        mobileMenuIcon.innerHTML = `
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        `;
+      } else {
+        mobileMenu.classList.add("hidden");
+        mobileMenuIcon.innerHTML = `
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        `;
       }
     });
   }

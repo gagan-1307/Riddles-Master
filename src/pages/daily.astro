@@ -46,7 +46,7 @@ const metaDescription = problem
     {problem ? (
       <DailyPage
         problem={problem}
-        user={user ? { id: user.id, email: user.email } : null}
+        user={user ? { id: user.id, email: user.email || "" } : null}
         isCompletedToday={isCompletedToday}
         initialStreak={currentStreak}
         dateStr={dateStr}
