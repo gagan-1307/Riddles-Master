@@ -70,13 +70,7 @@ export default function Navbar({ user, role = 'user', streakCount = 0 }: NavbarP
         <div className="flex items-center gap-3">
           {user ? (
             <div className="flex items-center gap-4">
-              {/* Streak Badge */}
-              {streakCount > 0 && (
-                <div className="flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2 py-0.5 text-xs font-semibold text-amber-700 shadow-sm animate-pulse">
-                  <span>🔥</span>
-                  <span>{streakCount}</span>
-                </div>
-              )}
+
 
               {/* Avatar Dropdown */}
               <div className="relative" ref={dropdownRef}>

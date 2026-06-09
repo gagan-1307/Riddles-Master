@@ -48,3 +48,45 @@ export async function getStreakCount(userId: string): Promise<number> {
     return 0;
   }
 }
+
+export async function getMaxStreakCount(userId: string): Promise<number> {
+  if (!userId) return 0;
+
+  try {
+    const streaks = await prisma.dailyStreak.findMany({
+      where: { userId },
+      orderBy: { date: 'asc' },
+    });
+
+    if (streaks.length === 0) return 0;
+
+    const dates = streaks.map(s => s.date);
+    let max = 0;
+    let current = 0;
+    let prevTime: number | null = null;
+
+    for (const dateStr of dates) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const time = Date.UTC(y, m - 1, d);
+
+      if (prevTime === null) {
+        current = 1;
+      } else {
+        const diffDays = (time - prevTime) / (1000 * 60 * 60 * 24);
+        if (diffDays === 1) {
+          current++;
+        } else if (diffDays > 1) {
+          max = Math.max(max, current);
+          current = 1;
+        }
+      }
+      prevTime = time;
+    }
+
+    return Math.max(max, current);
+  } catch (error) {
+    console.error('Error in getMaxStreakCount:', error);
+    return 0;
+  }
+}
+

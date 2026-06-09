@@ -1,7 +1,6 @@
 ---
 import "../styles/global.css";
 import Navbar from "../components/Navbar.astro";
-import { getStreakCount } from "../lib/auth/streak";
 
 interface Props {
 	title?: string;
@@ -14,14 +13,6 @@ const {
 } = Astro.props;
 
 const { user, role } = Astro.locals;
-let streakCount = 0;
-if (user) {
-  try {
-    streakCount = await getStreakCount(user.id);
-  } catch (err) {
-    console.error("Error fetching streak count in layout:", err);
-  }
-}
 const serializedUser = user ? {
   id: user.id,
   email: user.email || "",
@@ -49,7 +40,7 @@ const serializedUser = user ? {
     <slot name="head" />
 	</head>
 	<body class="min-h-screen bg-canvas-soft font-geist text-ink antialiased">
-		<Navbar user={serializedUser} role={role} streakCount={streakCount} />
+		<Navbar user={serializedUser} role={role} />
 		<slot />
 	</body>
 </html>

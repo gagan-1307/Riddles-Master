@@ -1,0 +1,61 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DailyPage from '../app/daily/page';
+import { getTodaysProblem, getISTDateString } from '../lib/daily';
+import { getUser } from '../lib/auth/getUser';
+import { prisma } from '../lib/db';
+import { getStreakCount } from '../lib/auth/streak';
+
+const problem = await getTodaysProblem();
+const dbUser = await getUser(Astro.cookies);
+const user = Astro.locals.user || dbUser;
+
+let isCompletedToday = false;
+let currentStreak = 0;
+const dateStr = getISTDateString();
+
+if (user) {
+  // Disable caching for authenticated users to show real-time progress and streak state
+  Astro.response.headers.set('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  currentStreak = await getStreakCount(user.id);
+  
+  const todayStreak = await prisma.dailyStreak.findUnique({
+    where: {
+      userId_date: {
+        userId: user.id,
+        date: dateStr,
+      },
+    },
+  });
+  isCompletedToday = !!todayStreak;
+} else {
+  // Enable public caching for 1 hour for guests/search engines (revalidate: 3600)
+  Astro.response.headers.set('Cache-Control', 'public, max-age=3600, must-revalidate');
+}
+
+const metaTitle = problem 
+  ? `Daily Riddle: ${problem.title} | RiddlesMaster` 
+  : "Daily Riddle | RiddlesMaster";
+const metaDescription = problem
+  ? `Solve today's daily interview brain teaser: ${problem.title}. ${problem.statement.substring(0, 120)}...`
+  : "Check out today's daily interview brain teaser and keep your streak alive!";
+---
+
+<Layout title={metaTitle} description={metaDescription}>
+  <main class="mx-auto max-w-[900px] px-6 py-12">
+    {problem ? (
+      <DailyPage
+        problem={problem}
+        user={user ? { id: user.id, email: user.email } : null}
+        isCompletedToday={isCompletedToday}
+        initialStreak={currentStreak}
+        dateStr={dateStr}
+        client:load
+      />
+    ) : (
+      <div class="rounded-lg border border-[#e6dfd8] bg-[#faf9f5] p-12 text-center text-[#6c6a64] italic">
+        No daily riddle is available for today. Please check back later.
+      </div>
+    )}
+  </main>
+</Layout>

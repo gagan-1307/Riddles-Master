@@ -35,7 +35,7 @@ export default function SolveButton({ problemId, initialSolved }: SolveButtonPro
       const data = await response.json();
       if (data.solved) {
         setSolved(true);
-        toast.success('Problem marked as solved! Streak updated! 🔥');
+        toast.success('Problem marked as solved! Streak updated!');
       }
     } catch (err) {
       toast.error('An error occurred. Please try again.');

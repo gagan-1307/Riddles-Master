@@ -6,14 +6,14 @@ export async function getUser(cookies: any) {
 
   try {
     const supabase = createSupabaseServer({ cookies });
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    if (!session?.user) {
+    if (!user) {
       return null;
     }
 
     const dbUser = await prisma.user.findUnique({
-      where: { id: session.user.id },
+      where: { id: user.id },
       include: {
         subscription: true,
       },
