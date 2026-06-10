@@ -7,56 +7,42 @@ const globalForPrisma = globalThis as unknown as {
   pgPool: pg.Pool | undefined;
 };
 
-let prismaInstance: PrismaClient;
+const databaseUrl = process.env.DATABASE_URL || (typeof import.meta !== 'undefined' && import.meta && (import.meta as any).env ? (import.meta as any).env.DATABASE_URL : '') || '';
+const shouldDisableTlsVerification = (() => {
+  if (!databaseUrl) return false;
 
-if (globalForPrisma.prisma) {
-  prismaInstance = globalForPrisma.prisma;
-} else {
-  const databaseUrl = process.env.DATABASE_URL || (typeof import.meta !== 'undefined' && import.meta && (import.meta as any).env ? (import.meta as any).env.DATABASE_URL : '') || '';
-  const shouldDisableTlsVerification = (() => {
-    if (!databaseUrl) return false;
-
-    try {
-      const url = new URL(databaseUrl);
-      return url.hostname.endsWith('supabase.co') || url.searchParams.get('sslmode') === 'require';
-    } catch {
-      return databaseUrl.includes('sslmode=require');
-    }
-  })();
-
-  if (shouldDisableTlsVerification) {
-    try {
-      process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    } catch (e) {
-      // ignore if environment cannot be mutated
-    }
+  try {
+    const url = new URL(databaseUrl);
+    return url.hostname.endsWith('supabase.co') || url.searchParams.get('sslmode') === 'require';
+  } catch {
+    return databaseUrl.includes('sslmode=require');
   }
+})();
 
-  if (databaseUrl.startsWith('prisma://') || databaseUrl.startsWith('prisma+postgres://')) {
-    prismaInstance = new PrismaClient({
-      accelerateUrl: databaseUrl,
-    });
-  } else {
-    // Strip query parameters (like ?sslmode=require) from connection string when bypassing TLS verification.
-    // Otherwise, the pg parser overrides our 'rejectUnauthorized: false' option with strict validation.
-    const cleanedDatabaseUrl = shouldDisableTlsVerification
-      ? databaseUrl.split('?')[0]
-      : databaseUrl;
-
-    const pool = new pg.Pool({
-      connectionString: cleanedDatabaseUrl,
-      ...(shouldDisableTlsVerification ? { ssl: { rejectUnauthorized: false } } : {}),
-    });
-
-    globalForPrisma.pgPool = pool;
-
-    const adapter = new PrismaPg(pool);
-    prismaInstance = new PrismaClient({ adapter });
-  }
-
-  if (process.env.NODE_ENV !== 'production') {
-    globalForPrisma.prisma = prismaInstance;
+if (shouldDisableTlsVerification) {
+  try {
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    // eslint-disable-next-line no-console
+    console.warn('Disabled TLS certificate verification for database connections (local dev only)');
+  } catch (e) {
+    // ignore if environment cannot be mutated
   }
 }
 
-export const prisma = prismaInstance;
+if (!globalForPrisma.prisma) {
+  if (databaseUrl.startsWith('prisma://') || databaseUrl.startsWith('prisma+postgres://')) {
+    globalForPrisma.prisma = new PrismaClient({
+      accelerateUrl: databaseUrl,
+    });
+  } else {
+    const pool = new pg.Pool({
+      connectionString: databaseUrl,
+      ...(shouldDisableTlsVerification ? { ssl: { rejectUnauthorized: false } } : {}),
+    });
+    const adapter = new PrismaPg(pool);
+    globalForPrisma.prisma = new PrismaClient({ adapter });
+    globalForPrisma.pgPool = pool;
+  }
+}
+
+export const prisma = globalForPrisma.prisma!;

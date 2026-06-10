@@ -1,24 +1,21 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import cloudflare from '@astrojs/cloudflare';
+import node from '@astrojs/node';
 
 import react from '@astrojs/react';
+
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   output: 'server',
 
-  adapter: cloudflare({
-    imageService: 'compile',
-    platformProxy: {
-      enabled: true,
-    },
-  }),
+  adapter: vercel(),
 
   vite: {
     plugins: [tailwindcss()],
     ssr: {
-      noExternal: ['@prisma/client', '.prisma/client'],
+      external: ['@prisma/client', '@prisma/adapter-pg', 'pg'],
     },
   },
 

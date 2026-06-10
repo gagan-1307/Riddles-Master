@@ -35,5 +35,6 @@ skills-lock.json
 
 /src/generated/prisma
 
-# Wrangler
+# Vercel and Wrangler directories
+.vercel/
 .wrangler/
