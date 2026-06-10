@@ -4,9 +4,8 @@ import pg from 'pg';
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
+  pgPool: pg.Pool | undefined;
 };
-
-let prismaInstance: PrismaClient;
 
 const databaseUrl = process.env.DATABASE_URL || (typeof import.meta !== 'undefined' && import.meta && (import.meta as any).env ? (import.meta as any).env.DATABASE_URL : '') || '';
 const shouldDisableTlsVerification = (() => {
@@ -30,19 +29,20 @@ if (shouldDisableTlsVerification) {
   }
 }
 
-if (databaseUrl.startsWith('prisma://') || databaseUrl.startsWith('prisma+postgres://')) {
-  prismaInstance = new PrismaClient({
-    accelerateUrl: databaseUrl,
-  });
-} else {
-  const pool = new pg.Pool({
-    connectionString: databaseUrl,
-    ...(shouldDisableTlsVerification ? { ssl: { rejectUnauthorized: false } } : {}),
-  });
-  const adapter = new PrismaPg(pool);
-  prismaInstance = new PrismaClient({ adapter });
+if (!globalForPrisma.prisma) {
+  if (databaseUrl.startsWith('prisma://') || databaseUrl.startsWith('prisma+postgres://')) {
+    globalForPrisma.prisma = new PrismaClient({
+      accelerateUrl: databaseUrl,
+    });
+  } else {
+    const pool = new pg.Pool({
+      connectionString: databaseUrl,
+      ...(shouldDisableTlsVerification ? { ssl: { rejectUnauthorized: false } } : {}),
+    });
+    const adapter = new PrismaPg(pool);
+    globalForPrisma.prisma = new PrismaClient({ adapter });
+    globalForPrisma.pgPool = pool;
+  }
 }
 
-export const prisma = globalForPrisma.prisma ?? prismaInstance;
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+export const prisma = globalForPrisma.prisma!;
