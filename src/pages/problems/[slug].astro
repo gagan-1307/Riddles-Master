@@ -10,17 +10,6 @@ import LikeButton from "../../components/LikeButton";
 import SolveButton from "../../components/SolveButton";
 import { Lock, ArrowLeft } from "lucide-react";
 
-// Required for SSR / getStaticPaths if Astro prerendering is triggered, but since output is 'server',
-// getStaticPaths is still useful for static analysis or if dynamic routing fallbacks are configured.
-export async function getStaticPaths() {
-  const problems = await prisma.problem.findMany({
-    select: { slug: true },
-  });
-  return problems.map((problem) => ({
-    params: { slug: problem.slug },
-  }));
-}
-
 const { slug } = Astro.params;
 
 if (!slug) {

@@ -23,8 +23,6 @@ const shouldDisableTlsVerification = (() => {
 if (shouldDisableTlsVerification) {
   try {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    // eslint-disable-next-line no-console
-    console.warn('Disabled TLS certificate verification for database connections (local dev only)');
   } catch (e) {
     // ignore if environment cannot be mutated
   }

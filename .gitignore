@@ -34,3 +34,6 @@ desktop.ini
 skills-lock.json
 
 /src/generated/prisma
+
+# Wrangler
+.wrangler/
