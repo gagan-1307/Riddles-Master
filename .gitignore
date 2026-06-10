@@ -34,3 +34,7 @@ desktop.ini
 skills-lock.json
 
 /src/generated/prisma
+
+# Vercel and Wrangler directories
+.vercel/
+.wrangler/
