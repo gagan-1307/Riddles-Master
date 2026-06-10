@@ -17,6 +17,9 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      noExternal: ['@prisma/client', '.prisma/client'],
+    },
   },
 
   integrations: [react()],
