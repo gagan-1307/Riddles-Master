@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "prisma generate && astro build",
+    "build": "node scripts/build.js",
     "preview": "astro preview",
     "astro": "astro",
     "generate-types": "wrangler types"
