@@ -1,0 +1,4 @@
+{
+  "framework": "astro",
+  "buildCommand": "prisma generate && astro build"
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search } from 'lucide-react';
+import { Search, Lock } from 'lucide-react';
 
 interface FilterBarProps {
   search: string;
@@ -12,6 +12,7 @@ interface FilterBarProps {
   setSelectedType: (val: string) => void;
   companies: string[];
   types: string[];
+  hasPremiumAccess?: boolean;
 }
 
 export default function FilterBar({
@@ -25,6 +26,7 @@ export default function FilterBar({
   setSelectedType,
   companies,
   types,
+  hasPremiumAccess = false,
 }: FilterBarProps) {
   return (
     <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-lg border border-[#e6dfd8] bg-[#f5f0e8] p-4 shadow-sm">
@@ -59,19 +61,34 @@ export default function FilterBar({
         </div>
 
         {/* Company Filter */}
-        <div className="flex flex-col min-w-[140px]">
+        <div className="flex flex-col min-w-[140px] relative">
           <select
             value={selectedCompany}
-            onChange={(e) => setSelectedCompany(e.target.value)}
-            className="h-10 rounded-md border border-[#e6dfd8] bg-[#faf9f5] px-3 text-[14px] font-medium text-[#3d3d3a] transition-all focus:border-[#cc785c] focus:outline-none"
+            onChange={(e) => {
+              if (hasPremiumAccess) {
+                setSelectedCompany(e.target.value);
+              }
+            }}
+            onMouseDown={(e) => {
+              if (!hasPremiumAccess) {
+                e.preventDefault();
+                window.location.href = '/pricing';
+              }
+            }}
+            className={`h-10 rounded-md border border-[#e6dfd8] bg-[#faf9f5] px-3 pr-10 text-[14px] font-medium text-[#3d3d3a] transition-all focus:border-[#cc785c] focus:outline-none ${!hasPremiumAccess ? 'cursor-pointer opacity-80' : ''}`}
           >
             <option value="">All Companies</option>
-            {companies.map((company) => (
+            {hasPremiumAccess && companies.map((company) => (
               <option key={company} value={company}>
                 {company}
               </option>
             ))}
           </select>
+          {!hasPremiumAccess && (
+            <span className="absolute right-8 top-1/2 -translate-y-1/2 text-[#cc785c] pointer-events-none">
+              <Lock className="h-3.5 w-3.5" />
+            </span>
+          )}
         </div>
 
         {/* Type Filter */}

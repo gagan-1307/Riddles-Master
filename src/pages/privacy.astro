@@ -15,70 +15,79 @@ import Layout from "../layouts/Layout.astro";
       </h1>
 
       <p class="text-sm text-[#6c6a64] italic mb-8">
-        Last Updated: June 9, 2026
+        Last Updated: June 10, 2026
       </p>
 
-      <div class="space-y-6 text-[#3d3d3a] leading-relaxed">
+      <div class="space-y-8 text-[#3d3d3a] leading-relaxed text-[15px]">
         <p>
-          At RiddlesMaster, we are committed to protecting your privacy. This
-          Privacy Policy describes how we collect, use, and safeguard your
-          personal information when you use our platform.
+          At RiddlesMaster, we are committed to protecting your privacy. This Privacy Policy describes how we collect, use, and safeguard your personal information when you use our platform.
         </p>
 
-        <h2
-          class="text-xl sm:text-2xl font-normal text-[#141413] font-serif mt-10 mb-4"
-        >
-          1. Information We Collect
+        <h2 class="text-xl sm:text-2xl font-normal text-[#141413] font-serif mt-10 mb-4 border-b border-[#e6dfd8] pb-2">
+          1. What Data We Collect
         </h2>
         <p>
-          We collect information you provide directly to us when creating an
-          account, upgrading to Premium, or interacting with our services:
+          We collect information to provide a personalized, functional experience on our platform. The types of data we collect include:
         </p>
-        <ul class="list-disc pl-6 space-y-1">
+        <ul class="list-disc pl-6 space-y-2">
           <li>
-            <strong>Account Information:</strong> Your email address, name, password,
-            and avatar/profile details.
+            <strong>Account Information:</strong> When you register, we collect your email address, your name, and your profile picture/avatar.
           </li>
           <li>
-            <strong>Usage Data:</strong> Puzzles viewed, solution status, daily streak
-            statistics, and interaction logs.
-          </li>
-          <li>
-            <strong>Billing Information:</strong> Payment details are processed directly
-            and securely by our billing partners (e.g., Razorpay) and are not stored
-            on our servers.
+            <strong>Usage & Activity Data:</strong> We track your progress, including which riddles you attempt, complete, or like, as well as your daily solving streak to maintain streak statistics.
           </li>
         </ul>
 
-        <h2
-          class="text-xl sm:text-2xl font-normal text-[#141413] font-serif mt-10 mb-4"
-        >
-          2. How We Use Your Information
+        <h2 class="text-xl sm:text-2xl font-normal text-[#141413] font-serif mt-10 mb-4 border-b border-[#e6dfd8] pb-2">
+          2. Why We Collect It
         </h2>
         <p>
-          We use the information we collect to operate, maintain, and improve
-          our services, including to:
+          We use your information solely for the following purposes:
         </p>
-        <ul class="list-disc pl-6 space-y-1">
-          <li>Track and maintain your progress and daily streak counts.</li>
+        <ul class="list-disc pl-6 space-y-2">
+          <li>To personalize and secure your user session.</li>
+          <li>To save your daily challenge progress, completed puzzles, and solve streaks.</li>
+          <li>To process premium upgrades and verify active subscriptions.</li>
+          <li>To communicate support alerts, password resets, and streak notifications.</li>
+        </ul>
+
+        <h2 class="text-xl sm:text-2xl font-normal text-[#141413] font-serif mt-10 mb-4 border-b border-[#e6dfd8] pb-2">
+          3. How We Store and Protect Your Data
+        </h2>
+        <p>
+          Your user profile, authentication, and puzzle activity are securely stored in the cloud. We utilize <strong>Supabase</strong>, a secure cloud infrastructure, to host our database. Access controls are strictly managed via Postgres Row-Level Security (RLS) policies to ensure that your private user data cannot be accessed by unauthorized parties.
+        </p>
+
+        <h2 class="text-xl sm:text-2xl font-normal text-[#141413] font-serif mt-10 mb-4 border-b border-[#e6dfd8] pb-2">
+          4. Third-Party Services
+        </h2>
+        <p>
+          We coordinate with leading, secure third-party services to power core functionalities of our app:
+        </p>
+        <ul class="list-disc pl-6 space-y-2">
           <li>
-            Authorize access to premium riddles and step-by-step solutions.
+            <strong>Google OAuth:</strong> To allow single sign-on and authenticate users securely using their Google accounts.
           </li>
           <li>
-            Send security alerts, administrative messages, and support updates.
+            <strong>Razorpay:</strong> To process premium subscription payments. RiddlesMaster does not store or process your credit card or financial details directly; all transactions are securely handled by Razorpay.
+          </li>
+          <li>
+            <strong>Resend:</strong> To deliver password reset links, email verifications, and streak reminders.
           </li>
         </ul>
 
-        <h2
-          class="text-xl sm:text-2xl font-normal text-[#141413] font-serif mt-10 mb-4"
-        >
-          3. Security
+        <h2 class="text-xl sm:text-2xl font-normal text-[#141413] font-serif mt-10 mb-4 border-b border-[#e6dfd8] pb-2">
+          5. Your Rights and Data Erasure
         </h2>
         <p>
-          We use industry-standard technical measures (including Supabase
-          Row-Level Security policies) to secure your account details and
-          progress logs. However, no database transmission over the internet can
-          be guaranteed to be 100% secure.
+          You retain full control over your data. You have the right to access your stored profile or request full deletion of your account and progress data. To request account deletion, please email us at <a href="mailto:riddlesmaster00@gmail.com" class="text-[#cc785c] hover:underline">riddlesmaster00@gmail.com</a>.
+        </p>
+
+        <h2 class="text-xl sm:text-2xl font-normal text-[#141413] font-serif mt-10 mb-4 border-b border-[#e6dfd8] pb-2">
+          6. Contact Information
+        </h2>
+        <p>
+          If you have any questions or feedback regarding this Privacy Policy, feel free to contact us at <a href="mailto:riddlesmaster00@gmail.com" class="text-[#cc785c] hover:underline">riddlesmaster00@gmail.com</a>.
         </p>
       </div>
     </article>

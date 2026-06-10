@@ -3,8 +3,17 @@ import Layout from '../../layouts/Layout.astro';
 import ProblemsPage from '../../app/problems/page';
 import { ErrorBoundary } from '../../app/problems/error';
 import { getAllProblems } from '../../lib/problems';
+import { getUser } from '../../lib/auth/getUser';
+import { checkPremium } from '../../lib/auth/checkPremium';
 
 const problems = await getAllProblems();
+
+// Check user's premium subscription status
+const dbUser = await getUser(Astro.cookies);
+const role = Astro.locals.role || (dbUser ? dbUser.role : "guest");
+const isUserPremium = dbUser ? await checkPremium(dbUser.id) : false;
+const isAdmin = String(role).toLowerCase() === "admin";
+const hasPremiumAccess = isUserPremium || isAdmin;
 ---
 
 <Layout title="All Problems | RiddlesMaster">
@@ -15,7 +24,7 @@ const problems = await getAllProblems();
     </div>
     
     <ErrorBoundary client:load>
-      <ProblemsPage initialProblems={problems} client:load />
+      <ProblemsPage initialProblems={problems} hasPremiumAccess={hasPremiumAccess} client:load />
     </ErrorBoundary>
   </main>
 </Layout>

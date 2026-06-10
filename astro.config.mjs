@@ -5,7 +5,6 @@ import node from '@astrojs/node';
 
 import react from '@astrojs/react';
 
-// https://astro.build/config
 export default defineConfig({
   output: 'server',
 
@@ -18,4 +17,8 @@ export default defineConfig({
   },
 
   integrations: [react()],
+
+  image: {
+    domains: ['lh3.googleusercontent.com', 'zockrnewltaiqzrnsbem.supabase.co'],
+  },
 });

@@ -10,9 +10,11 @@ export default function Footer() {
           {/* Logo & Description */}
           <div className="flex flex-col gap-3 max-w-sm">
             <a href="/" className="flex items-center gap-2 group w-fit">
-              <div className="h-6 w-6 rounded-md bg-[#faf9f5] flex items-center justify-center transition-transform group-hover:rotate-12">
-                <span className="text-[#181715] text-[10px] font-bold">R</span>
-              </div>
+              <img
+                src="/favicon.svg"
+                alt="RiddlesMaster Logo"
+                className="h-6 w-6 transition-transform group-hover:rotate-12"
+              />
               <span className="text-[15px] font-bold tracking-[-0.03em] text-[#faf9f5]">RiddlesMaster</span>
             </a>
             <p className="text-xs text-[#a09d96]/80 font-normal leading-relaxed">

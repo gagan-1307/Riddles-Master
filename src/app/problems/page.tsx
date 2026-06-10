@@ -31,9 +31,10 @@ interface Problem {
 
 interface ProblemsPageProps {
   initialProblems: Problem[];
+  hasPremiumAccess?: boolean;
 }
 
-export default function ProblemsPage({ initialProblems }: ProblemsPageProps) {
+export default function ProblemsPage({ initialProblems, hasPremiumAccess = false }: ProblemsPageProps) {
   const [search, setSearch] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
   const [selectedCompany, setSelectedCompany] = useState('');
@@ -119,6 +120,7 @@ export default function ProblemsPage({ initialProblems }: ProblemsPageProps) {
         setSelectedType={setSelectedType}
         companies={companies}
         types={types}
+        hasPremiumAccess={hasPremiumAccess}
       />
 
       {/* Desktop Table View */}

@@ -38,9 +38,11 @@ export default function Navbar({ user, role = 'user', streakCount = 0 }: NavbarP
         {/* Left: Logo */}
         <div className="flex items-center gap-6">
           <a href="/" className="flex items-center gap-2 group decoration-none">
-            <div className="h-6 w-6 rounded-md bg-[#181715] flex items-center justify-center transition-transform group-hover:rotate-12">
-              <span className="text-[#faf9f5] text-[10px] font-bold">R</span>
-            </div>
+            <img
+              src="/favicon.svg"
+              alt="RiddlesMaster Logo"
+              className="h-6 w-6 transition-transform group-hover:rotate-12"
+            />
             <span className="text-[15px] font-bold tracking-[-0.03em] text-[#181715]">RiddlesMaster</span>
           </a>
 

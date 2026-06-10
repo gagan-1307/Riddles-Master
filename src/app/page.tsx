@@ -306,7 +306,7 @@ export default function HomePage({
                     <svg className="h-4.5 w-4.5 text-[#cc785c]" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
-                    <span>Unlimited daily questions</span>
+                    <span>Limited questions</span>
                   </li>
                   <li className="flex items-center gap-2 text-sm text-[#3d3d3a]">
                     <svg className="h-4.5 w-4.5 text-[#cc785c]" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
@@ -550,6 +550,85 @@ export default function HomePage({
           </div>
         </div>
       </section>
+
+      {/* (h) SEO CONTENT SECTION */}
+      <section className="py-24 border-t border-[#e6dfd8] bg-[#efe9de]/15">
+        <div className="mx-auto max-w-[800px] px-6 text-left">
+          <h2 className="text-2xl sm:text-3xl font-normal tracking-tight text-[#141413] font-serif mb-6">
+            Riddles Master: The Ultimate Hub for Brain Teasers and Logic Puzzles
+          </h2>
+          <div className="text-sm sm:text-[15px] text-[#3d3d3a] leading-relaxed space-y-6">
+            <p>
+              In the fast-paced world of technical interviews and cognitive assessments, analytical thinking is your greatest asset. Welcome to <span className="font-semibold text-[#cc785c]">Riddles Master</span>, a premier platform designed to stretch your intellect, hone your lateral thinking, and prepare you for any analytical challenge. Whether you are seeking <span className="font-medium">hard riddles with answers</span> to test your limits or <span className="font-medium">easy riddles</span> for a quick warm-up, our extensive repository covers the full spectrum of cognitive training. We specialize in curating <span className="font-medium">riddles to test intelligence</span> that challenge conventional assumptions and build sharp problem-solving habits.
+            </p>
+            
+            <h3 className="text-lg font-serif text-[#141413] pt-4 font-normal">
+              Master Technical Prep with Actual Puzzle Interview Questions
+            </h3>
+            <p>
+              Are you preparing for a career at top tech firms? Riddles Master offers actual <span className="font-medium">puzzle interview questions</span> asked at major tech companies. Candidates often face complex logical scenarios, and our repository is structured to help you succeed. Try our <span className="font-medium">google interview riddles</span>, <span className="font-medium">amazon interview riddles</span>, and <span className="font-medium">microsoft interview riddles</span> to experience the exact challenges candidates face. These <span className="font-medium">logic riddles for interviews</span> are designed to test your deduction skills, grid reasoning, and algorithmic approach.
+            </p>
+            <p>
+              Beyond tech, we cater to finance and business roles. Our <span className="font-medium">consulting interview riddles</span> provide realistic case-study frameworks and problem-solving scenarios. Every riddle comes with detailed, step-by-step <span className="font-medium">puzzle answers</span> and editorials to help you break down the mathematical proofs and assumptions. By reviewing these detailed explanations, you’ll learn how to approach tricky questions with confidence.
+            </p>
+
+            <h3 className="text-lg font-serif text-[#141413] pt-4 font-normal">
+              Explore Diverse Categories: Math, Logic, and Lateral Thinking
+            </h3>
+            <p>
+              Puzzles come in all shapes and sizes. At Riddles Master, we categorize our content so you can focus on building specific skills:
+            </p>
+            <ul className="list-disc pl-5 space-y-3">
+              <li>
+                <strong>Math Puzzles & Math Riddles:</strong> Perfect for quantitative developers and finance professionals. Dive into probability distributions, game theory, and algebra. Try <span className="font-medium">math riddles for adults</span> to keep your math skills sharp.
+              </li>
+              <li>
+                <strong>Logic Puzzles & Logic Riddles:</strong> Classic deduction puzzles where you use grid analysis or boolean logic. These <span className="font-medium">logic puzzles</span> and riddles help build rigorous thinking.
+              </li>
+              <li>
+                <strong>Brain Puzzles & Brain Teasers:</strong> General problem-solving tasks. We host <span className="font-medium">brain teasers for adults</span> that demand a high degree of cognitive flexibility.
+              </li>
+              <li>
+                <strong>Lateral Thinking Puzzles:</strong> Problems that cannot be solved by direct calculation alone. These <span className="font-medium">lateral thinking riddles</span> force you to look at variables from entirely new angles.
+              </li>
+              <li>
+                <strong>Visual Puzzles & Mystery Puzzles:</strong> Build spatial awareness and detective deduction skills with visual and scenario-based queries.
+              </li>
+            </ul>
+
+            <p>
+              We understand that every learner is different. That is why you can filter challenges from simple <span className="font-medium">funny riddles</span> up to extremely hard and <span className="font-medium">impossible riddles with answers</span>. Each difficulty tier provides unique value to build a robust mindset.
+            </p>
+            <h3 className="text-lg font-serif text-[#141413] pt-4 font-normal">
+              Interactive Practice and Daily Puzzles
+            </h3>
+            <p>
+              We believe in building habits. Our <span className="font-medium">daily puzzles</span> keep your mind active with one handpicked challenge every single day, complete with streak tracking. If you are looking for flexibility, we offer <span className="font-medium">free puzzles</span> and <span className="font-medium">online puzzles</span> that can be solved directly on our platform. Prefer offline practice? Download <span className="font-medium">printable puzzles</span> to work away from your screen.
+            </p>
+            <p>
+              We also cater to a wide audience. Explore <span className="font-medium">puzzles for adults</span> for professional growth, or <span className="font-medium">puzzles for kids</span> to build logic early. Parents can find <span className="font-medium">funny riddles for kids</span> and <span className="font-medium">educational puzzles</span> to make learning a fun activity, creating memorable <span className="font-medium">family puzzles</span> that everyone can enjoy together.
+            </p>
+
+            <h3 className="text-lg font-serif text-[#141413] pt-4 font-normal">
+              Why Solve Riddles?
+            </h3>
+            <p>
+              Engaging with <span className="font-medium">tricky riddles with answers</span> stimulates neuroplasticity. When you solve <span className="font-medium">interview riddles with answers</span>, you develop frameworks that make you a better programmer, analyst, and strategist. Join Riddles Master today, start solving, and master your technical prep with the best logic challenges online.
+            </p>
+
+            <div className="pt-8 border-t border-[#e6dfd8] flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-semibold uppercase tracking-wider text-[#6c6a64]">
+              <span className="text-gray-400 normal-case font-normal">Explore:</span>
+              <a href="/about" className="hover:text-[#cc785c] transition-colors">About Us</a>
+              <a href="/contact" className="hover:text-[#cc785c] transition-colors">Contact Us</a>
+              <a href="/privacy" className="hover:text-[#cc785c] transition-colors">Privacy Policy</a>
+              <a href="/terms" className="hover:text-[#cc785c] transition-colors">Terms & Conditions</a>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
+
+
+

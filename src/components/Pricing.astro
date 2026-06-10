@@ -3,85 +3,140 @@ const plans = [
   {
     name: "Free",
     price: "₹0",
-    description: "Perfect for casual practice.",
+    description: "Perfect for casual practice and basic teasers.",
     features: [
-      "5 questions / day",
+      "Limited questions",
       "View problem statements",
       "Daily streak tracking",
-      "Community tags"
+      "Community tags access"
     ],
     cta: "Current Plan",
     featured: false,
+    href: "/signup",
+    isFree: true
   },
   {
-    name: "Premium",
+    name: "1 Month Premium",
     price: "₹99",
     period: "/mo",
-    description: "The complete interview prep toolkit.",
+    description: "The complete interview preparation toolkit.",
     features: [
       "Unlimited daily questions",
       "Full step-by-step solutions",
       "Access to all premium problems",
       "Company-wise filtered sets",
-      "Priority new problem access"
+      "Priority support and updates"
     ],
     cta: "Upgrade to Pro",
     featured: true,
+    href: "/signup"
   },
   {
-    name: "3 Months",
+    name: "3 Months Plan",
     price: "₹249",
-    description: "Save ₹50 vs monthly billing.",
+    description: "Save ₹50 vs monthly billing cycles.",
     features: [
       "Everything in Premium",
-      "Save ₹50 vs monthly",
-      "Best for intensive prep"
+      "Save ₹50 vs monthly billing",
+      "Best for intensive prep",
+      "Full archive offline support"
     ],
     cta: "Get 3 Months",
     featured: false,
+    href: "/signup"
+  },
+  {
+    name: "6 Months Plan",
+    price: "₹449",
+    description: "Save ₹145 vs monthly billing cycles.",
+    features: [
+      "Everything in Premium",
+      "Save ₹145 vs monthly billing",
+      "Best for comprehensive prep",
+      "Ultimate long-term value"
+    ],
+    cta: "Get 6 Months",
+    featured: false,
+    href: "/signup"
   }
 ];
 ---
 
-<section id="pricing" class="bg-canvas-soft py-24 sm:py-32">
-  <div class="mx-auto max-w-[1400px] px-6">
+<section id="pricing" class="bg-canvas-soft py-20 sm:py-28 border-b border-hairline">
+  <div class="mx-auto max-w-[1300px] px-6">
     <div class="mb-16 text-center">
-      <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Plans for every stage.</h2>
-      <p class="mt-4 text-lg text-body">Choose the plan that fits your interview preparation timeline.</p>
+      <h2 class="text-4xl sm:text-5xl font-normal font-serif tracking-tight text-ink mb-4">
+        Plans for every stage.
+      </h2>
+      <p class="mt-4 text-[16px] text-body max-w-xl mx-auto leading-relaxed">
+        Choose the plan that fits your interview preparation timeline. Unlock full step-by-step solutions, company tracks, and premium riddles.
+      </p>
     </div>
 
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
       {plans.map((plan) => (
-        <div class={`relative flex flex-col rounded-xl border p-8 shadow-sm transition-all hover:shadow-md ${plan.featured ? 'border-primary bg-primary text-on-primary ring-1 ring-primary' : 'border-hairline bg-canvas text-ink'}`}>
+        <div 
+          class={`relative flex flex-col justify-between rounded-xl border p-8 transition-all duration-300 ${
+            plan.featured 
+              ? 'border-surface-dark-elevated bg-surface-dark text-on-dark shadow-lg scale-[1.02] ring-1 ring-surface-dark-elevated hover:scale-[1.03]' 
+              : 'border-hairline bg-canvas text-ink hover:shadow-md hover:border-hairline-soft'
+          }`}
+        >
           {plan.featured && (
-            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-link text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+            <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-bold uppercase tracking-wider px-3.5 py-1 rounded-full shadow-sm">
               Most Popular
             </span>
           )}
           
-          <div class="mb-8">
-            <h3 class="text-xl font-bold">{plan.name}</h3>
-            <div class="mt-4 flex items-baseline gap-1">
-              <span class="text-4xl font-bold tracking-tight">{plan.price}</span>
-              {plan.period && <span class="text-sm opacity-80">{plan.period}</span>}
+          <div>
+            <div class="mb-6 pb-6 border-b border-hairline/10">
+              <h3 class={`text-xl font-bold font-serif ${plan.featured ? 'text-on-dark' : 'text-ink'}`}>
+                {plan.name}
+              </h3>
+              <p class={`mt-2 text-xs leading-relaxed ${plan.featured ? 'text-on-dark-soft' : 'text-muted'}`}>
+                {plan.description}
+              </p>
+              <div class="mt-6 flex items-baseline gap-1">
+                <span class={`text-4xl font-normal font-serif tracking-tight ${plan.featured ? 'text-on-dark' : 'text-ink'}`}>
+                  {plan.price}
+                </span>
+                {plan.period && (
+                  <span class={`text-sm ${plan.featured ? 'text-on-dark-soft' : 'text-muted'}`}>
+                    {plan.period}
+                  </span>
+                )}
+              </div>
             </div>
-            <p class={`mt-4 text-sm ${plan.featured ? 'text-on-primary/80' : 'text-body'}`}>{plan.description}</p>
+
+            <ul class="mb-8 space-y-4">
+              {plan.features.map((feature) => (
+                <li class="flex items-start gap-3 text-sm">
+                  <svg 
+                    class={`h-5 w-5 shrink-0 ${plan.featured ? 'text-accent-teal' : 'text-primary'}`} 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke-width="2.5" 
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                  </svg>
+                  <span class={plan.featured ? 'text-on-dark-soft' : 'text-body'}>
+                    {feature}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <ul class="mb-8 space-y-4 flex-1">
-            {plan.features.map((feature) => (
-              <li class="flex items-start gap-3 text-sm">
-                <svg class={`h-5 w-5 shrink-0 ${plan.featured ? 'text-cyan' : 'text-link'}`} fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                </svg>
-                <span class={plan.featured ? 'text-on-primary/90' : 'text-body'}>{feature}</span>
-              </li>
-            ))}
-          </ul>
-
           <a
-            href="/signup"
-            class={`block w-full rounded-full py-3 text-center text-sm font-semibold transition-opacity hover:opacity-90 ${plan.featured ? 'bg-canvas text-ink' : 'bg-primary text-on-primary'}`}
+            href={plan.href}
+            class={`block w-full py-3 text-center text-sm font-semibold rounded-md transition-all active:scale-[0.98] ${
+              plan.isFree 
+                ? 'bg-transparent text-ink border border-hairline hover:bg-surface-soft cursor-pointer' 
+                : plan.featured 
+                  ? 'bg-primary text-on-primary hover:bg-primary-active' 
+                  : 'bg-surface-dark text-on-dark hover:bg-surface-dark-elevated'
+            }`}
           >
             {plan.cta}
           </a>
@@ -89,8 +144,8 @@ const plans = [
       ))}
     </div>
     
-    <p class="mt-12 text-center text-sm text-mute">
-      All plans include daily streak tracking. Cancel anytime.
+    <p class="mt-16 text-center text-xs text-muted-soft font-mono">
+      All plans include daily streak tracking. Single-user license.
     </p>
   </div>
 </section>

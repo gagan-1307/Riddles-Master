@@ -7,12 +7,18 @@ interface Props {
 	title?: string;
 	description?: string;
 	hideNavbar?: boolean;
+	ogImage?: string;
+	ogType?: string;
+	canonicalUrl?: string;
 }
 
 const {
 	title = "RiddlesMaster | Technical Puzzles & Brain Teasers",
 	description = "Master your technical interview with curated riddles, logic puzzles, and brain teasers from tech companies.",
 	hideNavbar = false,
+	ogImage,
+	ogType = "website",
+	canonicalUrl,
 } = Astro.props;
 
 const { user, role } = Astro.locals;
@@ -30,6 +36,9 @@ const serializedUser = user
 				null,
 		}
 	: null;
+
+const resolvedCanonicalUrl = canonicalUrl || new URL(Astro.url.pathname, Astro.url.origin).toString();
+const resolvedOgImage = ogImage || new URL("/og-image.png", Astro.url.origin).toString();
 ---
 
 <!doctype html>
@@ -37,13 +46,32 @@ const serializedUser = user
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link class="favicon-fallback" rel="icon" href="/favicon.ico" />
+		<link rel="shortcut icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-title" content="Riddles" />
+		<link rel="manifest" href="/site.webmanifest" />
 		<meta name="generator" content={Astro.generator} />
 
 		<!-- SEO -->
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		<link rel="canonical" href={resolvedCanonicalUrl} />
+
+		<!-- OpenGraph Meta Tags -->
+		<meta property="og:site_name" content="RiddlesMaster" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content={ogType} />
+		<meta property="og:url" content={resolvedCanonicalUrl} />
+		<meta property="og:image" content={resolvedOgImage} />
+
+		<!-- Twitter Card Meta Tags -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={resolvedOgImage} />
 
 		<!-- Inter Font Google Fonts Preload -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
