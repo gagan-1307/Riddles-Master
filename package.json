@@ -7,10 +7,10 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "prisma generate && astro build",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "generate-types": "wrangler types"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
