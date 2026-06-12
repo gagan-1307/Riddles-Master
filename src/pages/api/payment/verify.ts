@@ -49,7 +49,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     // 3. Verify Razorpay HMAC SHA256 signature.
     const hmacSource = `${razorpay_order_id}|${razorpay_payment_id}`;
     const generated_signature = crypto
-      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || '')
+      .createHmac('sha256', import.meta.env.RAZORPAY_KEY_SECRET || process.env.RAZORPAY_KEY_SECRET || '')
       .update(hmacSource)
       .digest('hex');
 

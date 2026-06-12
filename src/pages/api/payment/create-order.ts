@@ -6,8 +6,8 @@ import { getPlanPrice, currencyMap } from '../../../lib/currency';
 // Initialize Razorpay client.
 // In SSR environment, keys must exist in process.env.
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || '',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || '',
+  key_id: import.meta.env.RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID || '',
+  key_secret: import.meta.env.RAZORPAY_KEY_SECRET || process.env.RAZORPAY_KEY_SECRET || '',
 });
 
 export const POST: APIRoute = async ({ request, cookies }) => {
@@ -86,7 +86,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         amount,
         currency: normalizedCurrency,
         symbol,
-        keyId: process.env.RAZORPAY_KEY_ID || '',
+        keyId: import.meta.env.RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID || '',
       }),
       {
         status: 200,
