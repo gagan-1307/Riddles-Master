@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Pricing from "../components/Pricing.astro";
 import { getUser } from "../lib/auth/getUser";
 import { checkPremium } from "../lib/auth/checkPremium";
+import { detectCurrency } from "../lib/currency";
 
 const dbUser = await getUser(Astro.cookies);
 const isPremium = dbUser ? await checkPremium(dbUser.id) : false;
@@ -10,6 +11,7 @@ const userRole = dbUser ? dbUser.role : "guest";
 const hasPremiumAccess =
   isPremium || String(userRole).toLowerCase() === "admin";
 
+const currency = await detectCurrency(Astro.request, Astro.cookies);
 // If user is already premium, we can display their premium status or a message, but we still render the options.
 ---
 
@@ -26,6 +28,10 @@ const hasPremiumAccess =
         </div>
       )
     }
-    <Pricing />
+    <Pricing 
+      currency={currency} 
+      isLoggedIn={!!dbUser} 
+      userEmail={dbUser?.email} 
+    />
   </main>
 </Layout>
