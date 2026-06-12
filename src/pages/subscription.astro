@@ -1,0 +1,26 @@
+---
+import Layout from "../layouts/Layout.astro";
+import SubscriptionPage from "../app/subscription/page";
+import { getUser } from "../lib/auth/getUser";
+
+const dbUser = await getUser(Astro.cookies);
+
+if (!dbUser) {
+  return Astro.redirect("/login");
+}
+
+const subscription = dbUser.subscription ? {
+  plan: dbUser.subscription.plan,
+  startDate: dbUser.subscription.startDate,
+  endDate: dbUser.subscription.endDate,
+  currency: dbUser.subscription.currency,
+  amountPaid: dbUser.subscription.amountPaid,
+  status: dbUser.subscription.status,
+} : null;
+---
+
+<Layout title="Your Subscription | RiddlesMaster">
+  <main class="mx-auto max-w-[1200px] px-6 py-12">
+    <SubscriptionPage subscription={subscription} />
+  </main>
+</Layout>

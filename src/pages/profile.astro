@@ -6,6 +6,7 @@ import { prisma } from "../lib/db";
 import { getStreakCount, getMaxStreakCount } from "../lib/auth/streak";
 import { checkPremium } from "../lib/auth/checkPremium";
 import { Flame, Award, CheckCircle2, Shield, Crown, ArrowRight, User } from "lucide-react";
+import { formatPrice } from "../lib/currency";
 
 // Authenticate user
 const dbUser = await getUser(Astro.cookies);
@@ -130,6 +131,11 @@ const userAvatarLetter = user.email ? user.email[0].toUpperCase() : "U";
               <p class="text-xs text-[#6c6a64] leading-relaxed">
                 You have unlimited access to all premium riddles, company filters, and step-by-step editorial explanations.
               </p>
+              {dbUser?.subscription && (
+                <p class="text-xs text-[#6c6a64] font-medium mt-1">
+                  You paid {formatPrice(dbUser.subscription.amountPaid, dbUser.subscription.currency)} ({dbUser.subscription.currency})
+                </p>
+              )}
             </div>
           ) : (
             <div class="space-y-4">

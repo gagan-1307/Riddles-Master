@@ -62,6 +62,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const amount = getPlanPrice(normalizedPlan, normalizedCurrency);
     const symbol = currencyMap[normalizedCurrency].symbol;
 
+    // Validate minimum amount (minimum 100 units/paise/cents)
+    if (amount < 100) {
+      return new Response(
+        JSON.stringify({ error: 'Amount must be at least 100 units (1.00 in main currency unit).' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     // 5. Create Razorpay order.
     const order = await razorpay.orders.create({
       amount: amount,
