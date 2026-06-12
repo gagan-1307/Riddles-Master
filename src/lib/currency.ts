@@ -75,8 +75,24 @@ export async function detectCurrency(request: Request, cookies?: any): Promise<s
     return currency;
   }
 
+  // Retrieve client IP from headers
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  const realIp = request.headers.get('x-real-ip');
+  const clientIp = (forwardedFor ? forwardedFor.split(',')[0].trim() : realIp || '').trim();
+
+  // If local or private IP, let ipapi.co detect the public gateway IP automatically.
+  const isLocalIp =
+    !clientIp ||
+    clientIp === '127.0.0.1' ||
+    clientIp === '::1' ||
+    clientIp.startsWith('localhost') ||
+    clientIp.startsWith('192.168.') ||
+    clientIp.startsWith('10.');
+
+  const apiUrl = isLocalIp ? 'https://ipapi.co/json/' : `https://ipapi.co/${clientIp}/json/`;
+
   try {
-    const res = await fetch('https://ipapi.co/json/');
+    const res = await fetch(apiUrl);
     if (res.ok) {
       const data = await res.json();
       currency = mapCountryToCurrency(data.country_code);
