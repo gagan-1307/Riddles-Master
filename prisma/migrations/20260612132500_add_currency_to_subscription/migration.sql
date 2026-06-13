@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Subscription" ADD COLUMN "amountPaid" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN "currency" TEXT NOT NULL DEFAULT 'INR';

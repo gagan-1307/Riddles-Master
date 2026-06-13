@@ -1,0 +1,48 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Check } from "lucide-react";
+---
+
+<Layout
+  title="Upgrade Successful | RiddlesMaster"
+  description="Your upgrade to RiddlesMaster Premium was successful. Welcome to unlimited riddles, step-by-step solutions, and company tracks!"
+>
+  <main class="mx-auto max-w-[600px] px-6 py-20 sm:py-32">
+    <div class="rounded-xl border border-[#e6dfd8] bg-[#efe9de]/30 p-8 sm:p-12 shadow-sm text-center relative overflow-hidden animate-in fade-in zoom-in-95 duration-500">
+      <!-- Ambient corner gradient -->
+      <div class="absolute top-0 right-0 w-32 h-32 bg-[#cc785c]/5 rounded-bl-full pointer-events-none"></div>
+
+      <!-- Success Checkmark Icon -->
+      <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#5db872]/15 text-[#2e7d32] border border-[#5db872]/20 animate-pulse">
+        <Check className="h-8 w-8" />
+      </div>
+
+      <!-- Headline -->
+      <h1 class="text-3xl sm:text-4xl font-normal tracking-tight text-[#141413] font-serif mb-4 leading-tight">
+        Welcome to Premium!
+      </h1>
+
+      <!-- Subtext -->
+      <p class="text-[15px] text-[#3d3d3a] leading-relaxed mb-10 max-w-md mx-auto">
+        Your payment has been verified successfully. Your premium access is now active! 
+        Enjoy unlimited daily challenges, detailed step-by-step editorial solutions, and company-wise filters.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href="/problems"
+          class="w-full sm:w-auto h-12 inline-flex items-center justify-center rounded-md bg-[#cc785c] px-8 text-sm font-semibold text-white transition-all hover:bg-[#a9583e] active:scale-[0.98] shadow-sm shadow-[#cc785c]/10"
+        >
+          Start Solving
+        </a>
+        <a
+          href="/"
+          class="w-full sm:w-auto h-12 inline-flex items-center justify-center rounded-md border border-[#e6dfd8] bg-[#faf9f5] px-8 text-sm font-semibold text-[#141413] transition-all hover:bg-[#efe9de]/50 active:scale-[0.98]"
+        >
+          Back to Home
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>
