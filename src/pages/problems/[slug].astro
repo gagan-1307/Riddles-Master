@@ -89,7 +89,7 @@ const getDifficultyStyles = (difficulty: string) => {
   }
 };
 
-const metaTitle = `Problem #${problem.number} — ${problem.title} | Interview Riddle`;
+const metaTitle = `Problem #${problem.number} — ${problem.title} | RiddlesMaster`;
 const metaDescription =
   problem.statement.substring(0, 160).replace(/\r?\n|\r/g, " ") + "...";
 const canonicalUrl = new URL(Astro.url.pathname, Astro.url.origin).toString();

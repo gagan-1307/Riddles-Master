@@ -78,7 +78,7 @@ export default function UpgradeButton({
         key: data.keyId,
         amount: amount,
         currency: currency,
-        name: 'Interview Riddle',
+        name: 'RiddlesMaster',
         description: planNameMap[plan] || plan,
         order_id: data.orderId,
         prefill: {
