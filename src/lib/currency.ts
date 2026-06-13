@@ -70,35 +70,69 @@ function mapCountryToCurrency(countryCode: string | undefined): string {
  * If a `cookies` object is passed, it sets the cookie for 30 days.
  */
 export async function detectCurrency(request: Request, cookies?: any): Promise<string> {
-  let currency = cookies ? cookies.get('user-currency')?.value : getCookie(request, 'user-currency');
+  let currency: string | null = null;
+
+  // 1. Check URL query parameters (useful for manual overrides and currency switching)
+  try {
+    const url = new URL(request.url);
+    const queryCurrency = url.searchParams.get('currency')?.toUpperCase();
+    if (queryCurrency && currencyMap[queryCurrency]) {
+      currency = queryCurrency;
+    }
+  } catch (e) {
+    // Ignore URL parsing errors
+  }
+
+  // 2. Check cookie if not set by query param
+  if (!currency) {
+    currency = cookies ? cookies.get('user-currency')?.value : getCookie(request, 'user-currency');
+  }
+
   if (currency) {
+    // Refresh or set cookie to keep preference saved
+    if (cookies) {
+      cookies.set('user-currency', currency, {
+        path: '/',
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+        httpOnly: false,
+        secure: true,
+        sameSite: 'lax',
+      });
+    }
     return currency;
   }
 
-  // Retrieve client IP from headers
-  const forwardedFor = request.headers.get('x-forwarded-for');
-  const realIp = request.headers.get('x-real-ip');
-  const clientIp = (forwardedFor ? forwardedFor.split(',')[0].trim() : realIp || '').trim();
+  // 3. Try Vercel or Cloudflare country headers first (fast & accurate in production)
+  const countryHeader = request.headers.get('x-vercel-ip-country') || request.headers.get('cf-ipcountry');
+  if (countryHeader) {
+    currency = mapCountryToCurrency(countryHeader);
+  }
 
-  // If local or private IP, let ipapi.co detect the public gateway IP automatically.
-  const isLocalIp =
-    !clientIp ||
-    clientIp === '127.0.0.1' ||
-    clientIp === '::1' ||
-    clientIp.startsWith('localhost') ||
-    clientIp.startsWith('192.168.') ||
-    clientIp.startsWith('10.');
+  // 4. Fall back to geo-ip api lookup
+  if (!currency) {
+    const forwardedFor = request.headers.get('x-forwarded-for');
+    const realIp = request.headers.get('x-real-ip');
+    const clientIp = (forwardedFor ? forwardedFor.split(',')[0].trim() : realIp || '').trim();
 
-  const apiUrl = isLocalIp ? 'https://ipapi.co/json/' : `https://ipapi.co/${clientIp}/json/`;
+    const isLocalIp =
+      !clientIp ||
+      clientIp === '127.0.0.1' ||
+      clientIp === '::1' ||
+      clientIp.startsWith('localhost') ||
+      clientIp.startsWith('192.168.') ||
+      clientIp.startsWith('10.');
 
-  try {
-    const res = await fetch(apiUrl);
-    if (res.ok) {
-      const data = await res.json();
-      currency = mapCountryToCurrency(data.country_code);
+    const apiUrl = isLocalIp ? 'https://ipapi.co/json/' : `https://ipapi.co/${clientIp}/json/`;
+
+    try {
+      const res = await fetch(apiUrl);
+      if (res.ok) {
+        const data = await res.json();
+        currency = mapCountryToCurrency(data.country_code);
+      }
+    } catch (err) {
+      console.error('Error fetching country from ipapi:', err);
     }
-  } catch (err) {
-    console.error('Error fetching country from ipapi:', err);
   }
 
   if (!currency) {
