@@ -3,7 +3,115 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgresql"
+  provider = "postgresql"
+}
+
+model User {
+  id             String              @id @default(uuid())
+  email          String              @unique
+  name           String?
+  avatarUrl      String?
+  role           UserRole            @default(USER)
+  createdAt      DateTime            @default(now())
+  streaks        DailyStreak[]
+  likedProblems  LikedProblem[]
+  problemViews   ProblemView[]
+  subscription   Subscription?
+  problemsStatus UserProblemStatus[]
+}
+
+model Problem {
+  id           String              @id @default(uuid())
+  number       Int                 @unique @default(autoincrement())
+  slug         String              @unique
+  title        String
+  statement    String
+  difficulty   Difficulty
+  isPremium    Boolean             @default(false)
+  answer       String?
+  editorial    String?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  streaks      DailyStreak[]
+  likes        LikedProblem[]
+  views        ProblemView[]
+  tags         ProblemsOnTags[]
+  userStatuses UserProblemStatus[]
+}
+
+model Tag {
+  id       String           @id @default(uuid())
+  name     String           @unique
+  type     TagType
+  problems ProblemsOnTags[]
+}
+
+model ProblemsOnTags {
+  problemId String
+  tagId     String
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([problemId, tagId])
+}
+
+model UserProblemStatus {
+  id        String    @id @default(uuid())
+  userId    String
+  problemId String
+  solved    Boolean   @default(false)
+  solvedAt  DateTime?
+  problem   Problem   @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, problemId])
+}
+
+model LikedProblem {
+  id        String   @id @default(uuid())
+  userId    String
+  problemId String
+  createdAt DateTime @default(now())
+  problem   Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, problemId])
+}
+
+model ProblemView {
+  id         String  @id @default(uuid())
+  userId     String
+  problemId  String
+  viewedDate String
+  problem    Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, problemId, viewedDate])
+}
+
+model Subscription {
+  id                String             @id @default(uuid())
+  userId            String             @unique
+  plan              SubscriptionPlan
+  startDate         DateTime
+  endDate           DateTime
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+  status            SubscriptionStatus @default(ACTIVE)
+  amountPaid        Int                @default(0)
+  currency          String             @default("INR")
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DailyStreak {
+  id        String  @id @default(uuid())
+  userId    String
+  date      String
+  problemId String
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
 }
 
 enum UserRole {
@@ -32,115 +140,4 @@ enum SubscriptionStatus {
   ACTIVE
   EXPIRED
   CANCELLED
-}
-
-model User {
-  id            String             @id @default(uuid())
-  email         String             @unique
-  name          String?
-  avatarUrl     String?
-  role          UserRole           @default(USER)
-  createdAt     DateTime           @default(now())
-  
-  problemsStatus UserProblemStatus[]
-  likedProblems  LikedProblem[]
-  problemViews   ProblemView[]
-  subscription   Subscription?
-  streaks        DailyStreak[]
-}
-
-model Problem {
-  id          String             @id @default(uuid())
-  number      Int                @unique @default(autoincrement())
-  slug        String             @unique
-  title       String
-  statement   String             @db.Text
-  difficulty  Difficulty
-  isPremium   Boolean            @default(false)
-  answer      String?            @db.Text
-  editorial   String?            @db.Text
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-
-  tags          ProblemsOnTags[]
-  userStatuses  UserProblemStatus[]
-  likes         LikedProblem[]
-  views         ProblemView[]
-  streaks       DailyStreak[]
-}
-
-model Tag {
-  id   String   @id @default(uuid())
-  name String   @unique
-  type TagType
-
-  problems ProblemsOnTags[]
-}
-
-model ProblemsOnTags {
-  problemId String
-  tagId     String
-  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
-  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  @@id([problemId, tagId])
-}
-
-model UserProblemStatus {
-  id        String    @id @default(uuid())
-  userId    String
-  problemId String
-  solved    Boolean   @default(false)
-  solvedAt  DateTime?
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  problem   Problem   @relation(fields: [problemId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, problemId])
-}
-
-model LikedProblem {
-  id        String   @id @default(uuid())
-  userId    String
-  problemId String
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  problem   Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, problemId])
-}
-
-model ProblemView {
-  id         String   @id @default(uuid())
-  userId     String
-  problemId  String
-  viewedDate String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  problem    Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, problemId, viewedDate])
-}
-
-model Subscription {
-  id                 String             @id @default(uuid())
-  userId             String             @unique
-  plan               SubscriptionPlan
-  startDate          DateTime
-  endDate            DateTime
-  razorpayOrderId    String?
-  razorpayPaymentId  String?
-  currency           String             @default("INR")
-  amountPaid         Int                @default(0)
-  status             SubscriptionStatus @default(ACTIVE)
-  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model DailyStreak {
-  id        String   @id @default(uuid())
-  userId    String
-  date      String
-  problemId String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  problem   Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, date])
 }

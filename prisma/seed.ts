@@ -411,6 +411,13 @@ async function main() {
   console.log('Seeding 15 problems...');
   for (const data of problemsData) {
     const { tags, ...problemFields } = data;
+    
+    // Ensure slug starts with "number-" prefix to match SEO conventions
+    const prefix = `${problemFields.number}-`;
+    if (!problemFields.slug.startsWith(prefix)) {
+      problemFields.slug = `${prefix}${problemFields.slug}`;
+    }
+
     const problem = await prisma.problem.create({
       data: {
         ...problemFields,
