@@ -2,6 +2,8 @@
 import "../styles/global.css";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer";
+import SpeedInsights from "@vercel/speed-insights/astro";
+import Analytics from "@vercel/analytics/astro";
 
 interface Props {
 	title?: string;
@@ -59,7 +61,7 @@ const resolvedOgImage = ogImage || new URL("/og-image.png", Astro.url.origin).to
 		<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="shortcut icon" href="/favicon.ico" />
-		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<link rel="navy-touch-icon" href="/apple-touch-icon.png" />
 		<meta name="apple-mobile-web-app-title" content="Riddles" />
 		<link rel="manifest" href="/site.webmanifest" />
 		<meta name="generator" content={Astro.generator} />
@@ -84,6 +86,8 @@ const resolvedOgImage = ogImage || new URL("/og-image.png", Astro.url.origin).to
 		<meta name="twitter:image" content={resolvedOgImage} />
 
 		<slot name="head" />
+		<SpeedInsights />
+		<Analytics />
 	</head>
 	<body class="min-h-screen bg-canvas-soft font-geist text-ink antialiased">
 		{!hideNavbar && <Navbar user={serializedUser} role={role} />}
@@ -95,7 +99,7 @@ const resolvedOgImage = ogImage || new URL("/og-image.png", Astro.url.origin).to
 <style is:global>
 	:root {
 		--font-geist:
-			"Geist Sans", "Inter", system-ui, -apple-system, sans-serif;
+			"Geist Variable", "Geist Sans", "Inter Variable", "Inter", system-ui, -apple-system, sans-serif;
 		--font-mono:
 			"Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
 	}
