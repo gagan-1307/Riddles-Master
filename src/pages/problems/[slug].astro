@@ -1,9 +1,9 @@
 ---
+export const prerender = false;
+
 import Layout from "../../layouts/Layout.astro";
 import { prisma } from "../../lib/db";
-import { getProblemBySlug } from "../../lib/problems";
 import { getUser } from "../../lib/auth/getUser";
-import { checkPremium } from "../../lib/auth/checkPremium";
 import LoginPrompt from "../../components/LoginPrompt.astro";
 import UpgradeCTA from "../../components/UpgradeCTA.astro";
 import LikeButton from "../../components/LikeButton";
@@ -16,51 +16,54 @@ if (!slug) {
   return Astro.redirect("/404");
 }
 
-// Fetch problem details
-const problem = await getProblemBySlug(slug);
+// Get user session via getUser helper (includes subscription relation)
+const dbUser = await getUser(Astro.cookies);
+const role = Astro.locals.role || (dbUser ? dbUser.role : "guest");
+
+// Fetch problem details and user actions in a single optimized database call
+const problem = await prisma.problem.findUnique({
+  where: { slug },
+  include: {
+    tags: {
+      include: {
+        tag: true,
+      },
+    },
+    likes: dbUser
+      ? {
+          where: { userId: dbUser.id },
+        }
+      : false,
+    userStatuses: dbUser
+      ? {
+          where: { userId: dbUser.id },
+        }
+      : false,
+    _count: {
+      select: {
+        likes: true,
+      },
+    },
+  },
+});
 
 if (!problem) {
   return Astro.redirect("/404");
 }
 
-// Get user session via getUser helper
-const dbUser = await getUser(Astro.cookies);
-const _user = Astro.locals.user || dbUser;
-const role = Astro.locals.role || (dbUser ? dbUser.role : "guest");
-
-// Check premium status
-const isUserPremium = dbUser ? await checkPremium(dbUser.id) : false;
+// Check premium status directly from the user's fetched subscription object to avoid extra query
+const isUserPremium = !!(
+  dbUser?.subscription &&
+  dbUser.subscription.status === "ACTIVE" &&
+  new Date(dbUser.subscription.endDate) > new Date()
+);
 const isAdmin = String(role).toLowerCase() === "admin";
 const hasPremiumAccess = isUserPremium || isAdmin;
 
-// Get Like / Solve status
-const isLiked = dbUser
-  ? (await prisma.likedProblem.findUnique({
-      where: {
-        userId_problemId: {
-          userId: dbUser.id,
-          problemId: problem.id,
-        },
-      },
-    })) !== null
-  : false;
-
-const problemStatus = dbUser
-  ? await prisma.userProblemStatus.findUnique({
-      where: {
-        userId_problemId: {
-          userId: dbUser.id,
-          problemId: problem.id,
-        },
-      },
-    })
-  : null;
-const isSolved = problemStatus ? problemStatus.solved : false;
-
-// Likes count
-const likesCount = await prisma.likedProblem.count({
-  where: { problemId: problem.id },
-});
+// Determine if the user has liked or solved this problem
+const isLiked = dbUser ? problem.likes.length > 0 : false;
+const isSolved = dbUser ? problem.userStatuses[0]?.solved || false : false;
+const likesCount = problem._count.likes;
 
 const companyTags = problem.tags.filter(({ tag }) => tag.type === "COMPANY");
 const typeTags = problem.tags.filter(({ tag }) => tag.type === "TYPE");
@@ -155,12 +158,12 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.url.origin).toString();
             problemId={problem.id}
             initialLiked={isLiked}
             initialLikesCount={likesCount}
-            client:load
+            client:visible
           />
           <SolveButton
             problemId={problem.id}
             initialSolved={isSolved}
-            client:load
+            client:visible
           />
         </div>
       </div>

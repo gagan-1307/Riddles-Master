@@ -1,11 +1,18 @@
 ---
+export const prerender = false;
+
 import Layout from "../layouts/Layout.astro";
-import Pricing from "../components/Pricing.astro";
+import PricingSection from "../components/Pricing.astro";
 import { getUser } from "../lib/auth/getUser";
-import { checkPremium } from "../lib/auth/checkPremium";
 
 const dbUser = await getUser(Astro.cookies);
-const isPremium = dbUser ? await checkPremium(dbUser.id) : false;
+
+// Check premium status directly from the user's fetched subscription object to avoid extra query
+const isPremium = !!(
+  dbUser?.subscription &&
+  dbUser.subscription.status === "ACTIVE" &&
+  new Date(dbUser.subscription.endDate) > new Date()
+);
 const userRole = dbUser ? dbUser.role : "guest";
 const hasPremiumAccess =
   isPremium || String(userRole).toLowerCase() === "admin";
@@ -26,6 +33,6 @@ const hasPremiumAccess =
         </div>
       )
     }
-    <Pricing />
+    <PricingSection />
   </main>
 </Layout>

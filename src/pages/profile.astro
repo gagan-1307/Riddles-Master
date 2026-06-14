@@ -1,13 +1,14 @@
 ---
+export const prerender = false;
+
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import { getUser } from "../lib/auth/getUser";
 import { prisma } from "../lib/db";
 import { getStreakCount, getMaxStreakCount } from "../lib/auth/streak";
-import { checkPremium } from "../lib/auth/checkPremium";
 import { Flame, Award, CheckCircle2, Shield, Crown, ArrowRight, User } from "lucide-react";
 
-// Authenticate user
+// Authenticate user (includes subscription relation)
 const dbUser = await getUser(Astro.cookies);
 const user = Astro.locals.user || dbUser;
 
@@ -19,8 +20,12 @@ if (!user) {
 const currentStreak = await getStreakCount(user.id);
 const maxStreak = await getMaxStreakCount(user.id);
 
-// Check premium status
-const isPremium = await checkPremium(user.id);
+// Check premium status directly from the user's fetched subscription object to avoid extra query
+const isPremium = !!(
+  dbUser?.subscription &&
+  dbUser.subscription.status === "ACTIVE" &&
+  new Date(dbUser.subscription.endDate) > new Date()
+);
 
 // Query solved problems for the user
 const solvedStatuses = await prisma.userProblemStatus.findMany({

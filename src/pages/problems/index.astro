@@ -1,17 +1,24 @@
 ---
+export const prerender = false;
+
 import Layout from '../../layouts/Layout.astro';
 import ProblemsPage from '../../app/problems/page';
 import { ErrorBoundary } from '../../app/problems/error';
 import { getAllProblems } from '../../lib/problems';
 import { getUser } from '../../lib/auth/getUser';
-import { checkPremium } from '../../lib/auth/checkPremium';
 
 const problems = await getAllProblems();
 
-// Check user's premium subscription status
+// Check user session via getUser helper (includes subscription relation)
 const dbUser = await getUser(Astro.cookies);
 const role = Astro.locals.role || (dbUser ? dbUser.role : "guest");
-const isUserPremium = dbUser ? await checkPremium(dbUser.id) : false;
+
+// Check premium status directly from the user's fetched subscription object to avoid extra query
+const isUserPremium = !!(
+  dbUser?.subscription &&
+  dbUser.subscription.status === "ACTIVE" &&
+  new Date(dbUser.subscription.endDate) > new Date()
+);
 const isAdmin = String(role).toLowerCase() === "admin";
 const hasPremiumAccess = isUserPremium || isAdmin;
 ---

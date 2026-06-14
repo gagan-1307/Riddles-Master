@@ -1,0 +1,40 @@
+---
+import { prisma } from '../lib/db';
+
+const [totalProblemsCount, totalUsersCount, totalCompanyTagsCount] = await Promise.all([
+  prisma.problem.count(),
+  prisma.user.count(),
+  prisma.tag.count({ where: { type: 'COMPANY' } })
+]);
+
+const formatNumber = (num: number) => {
+  return new Intl.NumberFormat('en-IN').format(num);
+};
+---
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 text-center md:divide-x md:divide-[#e6dfd8]">
+  <div class="flex flex-col items-center">
+    <span class="text-5xl font-light text-[#141413] font-serif mb-2">
+      {formatNumber(totalProblemsCount)}
+    </span>
+    <span class="text-xs uppercase tracking-[0.1em] font-semibold text-[#6c6a64]">
+      Curated Riddles
+    </span>
+  </div>
+  <div class="flex flex-col items-center">
+    <span class="text-5xl font-light text-[#141413] font-serif mb-2">
+      {formatNumber(totalUsersCount)}
+    </span>
+    <span class="text-xs uppercase tracking-[0.1em] font-semibold text-[#6c6a64]">
+      Active Thinkers
+    </span>
+  </div>
+  <div class="flex flex-col items-center">
+    <span class="text-5xl font-light text-[#141413] font-serif mb-2">
+      {formatNumber(totalCompanyTagsCount)}
+    </span>
+    <span class="text-xs uppercase tracking-[0.1em] font-semibold text-[#6c6a64]">
+      Company Tracks
+    </span>
+  </div>
+</div>
