@@ -21,75 +21,77 @@ if (!problem) {
   return Astro.redirect("/404");
 }
 
-// Get previous and next problems by number
-const prevProblem = await prisma.problem.findFirst({
-  where: {
-    number: {
-      lt: problem.number,
-    },
-  },
-  orderBy: {
-    number: "desc",
-  },
-  select: {
-    slug: true,
-    title: true,
-  },
-});
-
-const nextProblem = await prisma.problem.findFirst({
-  where: {
-    number: {
-      gt: problem.number,
-    },
-  },
-  orderBy: {
-    number: "asc",
-  },
-  select: {
-    slug: true,
-    title: true,
-  },
-});
-
 // Get user session via getUser helper
 const dbUser = await getUser(Astro.cookies);
 const _user = Astro.locals.user || dbUser;
 const role = Astro.locals.role || (dbUser ? dbUser.role : "guest");
-
-// Check premium status
-const isUserPremium = dbUser ? await checkPremium(dbUser.id) : false;
 const isAdmin = String(role).toLowerCase() === "admin";
+
+// Run remaining queries in parallel to eliminate database request waterfall
+const [
+  prevProblem,
+  nextProblem,
+  isUserPremium,
+  isLiked,
+  problemStatus,
+  likesCount
+] = await Promise.all([
+  prisma.problem.findFirst({
+    where: {
+      number: {
+        lt: problem.number,
+      },
+    },
+    orderBy: {
+      number: "desc",
+    },
+    select: {
+      slug: true,
+      title: true,
+    },
+  }),
+  prisma.problem.findFirst({
+    where: {
+      number: {
+        gt: problem.number,
+      },
+    },
+    orderBy: {
+      number: "asc",
+    },
+    select: {
+      slug: true,
+      title: true,
+    },
+  }),
+  dbUser ? checkPremium(dbUser.id) : Promise.resolve(false),
+  dbUser
+    ? prisma.likedProblem.findUnique({
+        where: {
+          userId_problemId: {
+            userId: dbUser.id,
+            problemId: problem.id,
+          },
+        },
+      }).then((res) => res !== null)
+    : Promise.resolve(false),
+  dbUser
+    ? prisma.userProblemStatus.findUnique({
+        where: {
+          userId_problemId: {
+            userId: dbUser.id,
+            problemId: problem.id,
+          },
+        },
+      })
+    : Promise.resolve(null),
+  prisma.likedProblem.count({
+    where: { problemId: problem.id },
+  }),
+]);
+
 const hasPremiumAccess = isUserPremium || isAdmin;
-
-// Get Like / Solve status
-const isLiked = dbUser
-  ? (await prisma.likedProblem.findUnique({
-      where: {
-        userId_problemId: {
-          userId: dbUser.id,
-          problemId: problem.id,
-        },
-      },
-    })) !== null
-  : false;
-
-const problemStatus = dbUser
-  ? await prisma.userProblemStatus.findUnique({
-      where: {
-        userId_problemId: {
-          userId: dbUser.id,
-          problemId: problem.id,
-        },
-      },
-    })
-  : null;
 const isSolved = problemStatus ? problemStatus.solved : false;
-
-// Likes count
-const likesCount = await prisma.likedProblem.count({
-  where: { problemId: problem.id },
-});
 
 const companyTags = problem.tags.filter(({ tag }) => tag.type === "COMPANY");
 const typeTags = problem.tags.filter(({ tag }) => tag.type === "TYPE");
