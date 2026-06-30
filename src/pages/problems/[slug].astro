@@ -6,7 +6,7 @@ import { getUser } from "../../lib/auth/getUser";
 import { checkPremium } from "../../lib/auth/checkPremium";
 import LikeButton from "../../components/LikeButton";
 import SolveButton from "../../components/SolveButton";
-import { Lock, ArrowLeft, Eye } from "lucide-react";
+import { Lock, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 
 const { slug } = Astro.params;
 
@@ -20,6 +20,37 @@ const problem = await getProblemBySlug(slug);
 if (!problem) {
   return Astro.redirect("/404");
 }
+
+// Get previous and next problems by number
+const prevProblem = await prisma.problem.findFirst({
+  where: {
+    number: {
+      lt: problem.number,
+    },
+  },
+  orderBy: {
+    number: "desc",
+  },
+  select: {
+    slug: true,
+    title: true,
+  },
+});
+
+const nextProblem = await prisma.problem.findFirst({
+  where: {
+    number: {
+      gt: problem.number,
+    },
+  },
+  orderBy: {
+    number: "asc",
+  },
+  select: {
+    slug: true,
+    title: true,
+  },
+});
 
 // Get user session via getUser helper
 const dbUser = await getUser(Astro.cookies);
@@ -106,13 +137,33 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.url.origin).toString();
         >
       </nav>
 
-      <a
-        href="/problems"
-        class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#cc785c] hover:text-[#a9583e] hover:underline transition-colors"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        All Problems
-      </a>
+      <div class="flex items-center gap-4">
+        {
+          prevProblem && (
+            <a
+              href={`/problems/${prevProblem.slug}`}
+              class="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-[#cc785c] hover:text-[#a9583e] hover:underline transition-colors"
+              title={prevProblem.title}
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+              Prev
+            </a>
+          )
+        }
+        {prevProblem && nextProblem && <span class="text-[#e6dfd8]">|</span>}
+        {
+          nextProblem && (
+            <a
+              href={`/problems/${nextProblem.slug}`}
+              class="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-[#cc785c] hover:text-[#a9583e] hover:underline transition-colors"
+              title={nextProblem.title}
+            >
+              Next
+              <ChevronRight className="h-3.5 w-3.5" />
+            </a>
+          )
+        }
+      </div>
     </div>
 
     <!-- Header Card -->
