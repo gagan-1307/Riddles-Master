@@ -49,11 +49,10 @@ export default function SolveButton({ problemId, initialSolved }: SolveButtonPro
     <button
       onClick={handleSolve}
       disabled={loading || solved}
-      className={`inline-flex h-9 items-center justify-center rounded-md border px-4 text-xs font-semibold transition-all active:scale-[0.98] cursor-pointer ${
-        solved
+      className={`inline-flex h-9 items-center justify-center rounded-md border px-4 text-xs font-semibold transition-all active:scale-[0.98] cursor-pointer ${solved
           ? 'border-[#5db872]/20 bg-[#5db872]/10 text-[#2e7d32] cursor-default'
           : 'border-[#cc785c] bg-[#cc785c] text-white hover:bg-[#a9583e]'
-      }`}
+        }`}
     >
       <CheckCircle className={`mr-1.5 h-3.5 w-3.5 ${solved ? 'text-[#2e7d32]' : 'text-white'}`} />
       <span>{solved ? 'Solved' : 'Mark as Solved'}</span>

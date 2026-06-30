@@ -6,8 +6,14 @@ import { getUser } from '../lib/auth/getUser';
 import { prisma } from '../lib/db';
 import { getStreakCount } from '../lib/auth/streak';
 
-// Fetch the user session to check streak count
-const dbUser = await getUser(Astro.cookies);
+// Fetch user, stats & daily problem in parallel
+const [dbUser, problem, totalProblemsCount, totalUsersCount, totalCompanyTagsCount] = await Promise.all([
+  getUser(Astro.cookies),
+  getTodaysProblem(),
+  prisma.problem.count(),
+  prisma.user.count(),
+  prisma.tag.count({ where: { type: 'COMPANY' } })
+]);
 const user = Astro.locals.user || dbUser;
 
 let streakCount = null;
@@ -19,14 +25,6 @@ if (user) {
   // Cache the page for 1 hour for guests and search engine bots
   Astro.response.headers.set('Cache-Control', 'public, max-age=3600, must-revalidate');
 }
-
-// Fetch stats & daily problem server-side
-const [problem, totalProblemsCount, totalUsersCount, totalCompanyTagsCount] = await Promise.all([
-  getTodaysProblem(),
-  prisma.problem.count(),
-  prisma.user.count(),
-  prisma.tag.count({ where: { type: 'COMPANY' } })
-]);
 ---
 
 <Layout 

@@ -6,8 +6,10 @@ import { getUser } from '../lib/auth/getUser';
 import { prisma } from '../lib/db';
 import { getStreakCount } from '../lib/auth/streak';
 
-const problem = await getTodaysProblem();
-const dbUser = await getUser(Astro.cookies);
+const [problem, dbUser] = await Promise.all([
+  getTodaysProblem(),
+  getUser(Astro.cookies)
+]);
 const user = Astro.locals.user || dbUser;
 
 let isCompletedToday = false;
@@ -17,16 +19,19 @@ const dateStr = getISTDateString();
 if (user) {
   // Disable caching for authenticated users to show real-time progress and streak state
   Astro.response.headers.set('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-  currentStreak = await getStreakCount(user.id);
   
-  const todayStreak = await prisma.dailyStreak.findUnique({
-    where: {
-      userId_date: {
-        userId: user.id,
-        date: dateStr,
+  const [streakVal, todayStreak] = await Promise.all([
+    getStreakCount(user.id),
+    prisma.dailyStreak.findUnique({
+      where: {
+        userId_date: {
+          userId: user.id,
+          date: dateStr,
+        },
       },
-    },
-  });
+    })
+  ]);
+  currentStreak = streakVal;
   isCompletedToday = !!todayStreak;
 } else {
   // Enable public caching for 1 hour for guests/search engines (revalidate: 3600)

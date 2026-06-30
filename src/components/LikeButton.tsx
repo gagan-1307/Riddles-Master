@@ -47,11 +47,10 @@ export default function LikeButton({ problemId, initialLiked, initialLikesCount 
     <button
       onClick={handleLike}
       disabled={loading}
-      className={`inline-flex h-9 items-center justify-center rounded-md border px-4 text-xs font-semibold transition-all active:scale-[0.98] cursor-pointer ${
-        liked
+      className={`inline-flex h-9 items-center justify-center rounded-md border px-4 text-xs font-semibold transition-all active:scale-[0.98] cursor-pointer ${liked
           ? 'border-red-200 bg-red-50 text-red-600 hover:bg-red-100/55'
           : 'border-[#e6dfd8] bg-[#faf9f5] text-[#3d3d3a] hover:bg-[#f5f0e8]/30'
-      }`}
+        }`}
     >
       <Heart className={`mr-1.5 h-3.5 w-3.5 ${liked ? 'fill-red-600 text-red-600' : 'text-[#6c6a64]'}`} />
       <span>{liked ? 'Liked' : 'Like'}</span>
