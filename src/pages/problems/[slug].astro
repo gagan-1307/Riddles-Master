@@ -109,9 +109,11 @@ const getDifficultyStyles = (difficulty: string) => {
   }
 };
 
+const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '').trim();
+
 const metaTitle = `Problem #${problem.number} — ${problem.title} | RiddlesMaster`;
 const metaDescription =
-  problem.statement.substring(0, 160).replace(/\r?\n|\r/g, " ") + "...";
+  stripHtml(problem.statement).substring(0, 160).replace(/\r?\n|\r/g, " ") + "...";
 const canonicalUrl = new URL(Astro.url.pathname, Astro.url.origin).toString();
 ---
 
@@ -244,7 +246,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.url.origin).toString();
             <h2 class="text-xl font-bold font-serif text-[#141413] mb-4 border-b border-[#e6dfd8] pb-3">
               Problem Statement
             </h2>
-            <div class="prose max-w-none text-[#3d3d3a] leading-relaxed space-y-4 whitespace-pre-line text-[16px]">
+            <div class="prose max-w-none text-[#3d3d3a] leading-relaxed whitespace-pre-line text-[16px]">
               {problem.statement}
             </div>
           </section>

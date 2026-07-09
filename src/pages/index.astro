@@ -3,16 +3,12 @@ import Layout from '../layouts/Layout.astro';
 import HomePage from '../app/page';
 import { getTodaysProblem } from '../lib/daily';
 import { getUser } from '../lib/auth/getUser';
-import { prisma } from '../lib/db';
 import { getStreakCount } from '../lib/auth/streak';
 
-// Fetch user, stats & daily problem in parallel
-const [dbUser, problem, totalProblemsCount, totalUsersCount, totalCompanyTagsCount] = await Promise.all([
+// Fetch user & daily problem in parallel
+const [dbUser, problem] = await Promise.all([
   getUser(Astro.cookies),
-  getTodaysProblem(),
-  prisma.problem.count(),
-  prisma.user.count(),
-  prisma.tag.count({ where: { type: 'COMPANY' } })
+  getTodaysProblem()
 ]);
 const user = Astro.locals.user || dbUser;
 
@@ -22,20 +18,18 @@ if (user) {
   Astro.response.headers.set('Cache-Control', 'private, no-cache, no-store, must-revalidate');
   streakCount = await getStreakCount(user.id);
 } else {
-  // Cache the page for 1 hour for guests and search engine bots
+  // Cache the page for 1 hour for guests and search engine bots, but vary by cookies so auth users get fresh content
   Astro.response.headers.set('Cache-Control', 'public, max-age=3600, must-revalidate');
+  Astro.response.headers.set('Vary', 'Cookie');
 }
 ---
 
 <Layout 
-  title="Riddles Master" 
-  description="Master technical prep with Riddles Master. Solve daily brain teasers, hard logic puzzles, math riddles, and interview riddles from Google, Amazon, and Microsoft with answers."
+  title="RiddlesMaster — Riddles, Brain Teasers & Aptitude Puzzles" 
+  description="RiddlesMaster offers daily riddles, brain teasers, aptitude questions, and reasoning puzzles — free for curious minds of all ages. Sharpen your thinking and ace any interview or exam."
 >
   <HomePage
     todaysProblem={problem}
     streakCount={streakCount}
-    totalProblemsCount={totalProblemsCount}
-    totalUsersCount={totalUsersCount}
-    totalCompanyTagsCount={totalCompanyTagsCount}
   />
 </Layout>

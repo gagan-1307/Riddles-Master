@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { 
@@ -19,6 +19,12 @@ interface TiptapEditorProps {
 }
 
 export default function TiptapEditor({ value, onChange, placeholder = 'Write statement here...' }: TiptapEditorProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -45,8 +51,8 @@ export default function TiptapEditor({ value, onChange, placeholder = 'Write sta
     }
   }, [value, editor]);
 
-  if (!editor) {
-    return null;
+  if (!isMounted || !editor) {
+    return <div className="h-[232px] w-full rounded-lg border border-[#e6dfd8] bg-[#faf9f5]/50 animate-pulse flex items-center justify-center text-xs text-[#6c6a64]">Loading editor...</div>;
   }
 
   const toggleButtonStyles = (isActive: boolean) => {
@@ -62,7 +68,7 @@ export default function TiptapEditor({ value, onChange, placeholder = 'Write sta
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
-          disabled={!editor.can().chain().focus().toggleBold().run()}
+          disabled={!editor.can().toggleBold()}
           className={toggleButtonStyles(editor.isActive('bold'))}
           title="Bold"
         >
@@ -71,7 +77,7 @@ export default function TiptapEditor({ value, onChange, placeholder = 'Write sta
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          disabled={!editor.can().chain().focus().toggleItalic().run()}
+          disabled={!editor.can().toggleItalic()}
           className={toggleButtonStyles(editor.isActive('italic'))}
           title="Italic"
         >
@@ -122,8 +128,8 @@ export default function TiptapEditor({ value, onChange, placeholder = 'Write sta
           <button
             type="button"
             onClick={() => editor.chain().focus().undo().run()}
-            disabled={!editor.can().chain().focus().undo().run()}
-            className="p-2 text-[#6c6a64] hover:text-[#141413] hover:bg-[#efe9de]/40 rounded disabled:opacity-40 disabled:hover:bg-transparent"
+            disabled={!editor.can().undo()}
+            className="p-2 text-[#6c6a64] hover:text-[#141413] hover:bg-[#efe9de]/40 rounded disabled:opacity-40"
             title="Undo"
           >
             <Undo className="h-4 w-4" />
@@ -131,8 +137,8 @@ export default function TiptapEditor({ value, onChange, placeholder = 'Write sta
           <button
             type="button"
             onClick={() => editor.chain().focus().redo().run()}
-            disabled={!editor.can().chain().focus().redo().run()}
-            className="p-2 text-[#6c6a64] hover:text-[#141413] hover:bg-[#efe9de]/40 rounded disabled:opacity-40 disabled:hover:bg-transparent"
+            disabled={!editor.can().redo()}
+            className="p-2 text-[#6c6a64] hover:text-[#141413] hover:bg-[#efe9de]/40 rounded disabled:opacity-40"
             title="Redo"
           >
             <Redo className="h-4 w-4" />
@@ -143,6 +149,12 @@ export default function TiptapEditor({ value, onChange, placeholder = 'Write sta
       {/* Editor Content Area */}
       <div className="bg-[#faf9f5]">
         <style dangerouslySetInnerHTML={{ __html: `
+          .tiptap {
+            min-height: 180px;
+            padding: 1rem;
+            outline: none;
+            background-color: #faf9f5;
+          }
           .ProseMirror h2 {
             font-family: Copernicus, Tiempos Headline, Georgia, serif;
             font-size: 1.45rem;

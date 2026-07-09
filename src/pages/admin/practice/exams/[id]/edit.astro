@@ -1,0 +1,379 @@
+---
+import Layout from "../../../../../layouts/Layout.astro";
+import AdminLayout from "../../../../../app/admin/layout";
+import { prisma } from "../../../../../lib/db";
+import { getUser } from "../../../../../lib/auth/getUser";
+import { PracticeGroup } from "@prisma/client";
+
+// Authenticate user
+const dbUser = await getUser(Astro.cookies);
+const _user = Astro.locals.user || dbUser;
+const role = Astro.locals.role || (dbUser ? dbUser.role : "guest");
+const isAdmin = String(role).toLowerCase() === "admin";
+
+if (!isAdmin) {
+  Astro.response.status = 404;
+  Astro.response.statusText = "Not Found";
+}
+
+const { id } = Astro.params;
+
+let exam: any = null;
+let topics: any[] = [];
+
+if (isAdmin && id) {
+  exam = await prisma.exam.findUnique({
+    where: { id },
+    include: {
+      topics: true
+    }
+  });
+
+  if (!exam) {
+    return Astro.redirect("/admin/practice/exams");
+  }
+
+  topics = await prisma.practiceTopic.findMany({
+    orderBy: { name: "asc" }
+  });
+}
+
+const selectedTopicIds = exam ? exam.topics.map((t: any) => t.topicId) : [];
+
+const aptitudeTopics = topics.filter(t => t.group === PracticeGroup.APTITUDE);
+const logicalTopics = topics.filter(t => t.group === PracticeGroup.LOGICAL_REASONING);
+const verbalTopics = topics.filter(t => t.group === PracticeGroup.VERBAL_REASONING);
+const nonVerbalTopics = topics.filter(t => t.group === PracticeGroup.NONVERBAL_REASONING);
+---
+
+{
+  !isAdmin || !exam ? (
+    <Layout title="Page Not Found | RiddlesMaster">
+      <main class="flex min-h-[calc(100vh-64px)] items-center justify-center bg-[#faf9f5] px-6 py-24 text-center">
+        <div class="w-full max-w-[600px]">
+          <h1 class="font-serif text-8xl font-normal tracking-[-0.04em] text-[#141413]/10">404</h1>
+          <h2 class="mt-4 font-serif text-3xl font-normal tracking-[-0.03em] text-[#141413] sm:text-4xl">
+            Lost in the labyrinth
+          </h2>
+          <p class="mt-6 text-[16px] leading-relaxed text-[#3d3d3a] max-w-[480px] w-full mx-auto font-sans">
+            The page you seek is currently out of reach.
+          </p>
+          <div class="mt-10">
+            <a
+              href="/admin/practice/exams"
+              class="inline-flex h-10 items-center justify-center rounded-[8px] border border-[#e6dfd8] bg-[#faf9f5] px-6 text-[14px] font-semibold text-[#141413] transition-all hover:bg-[#efe9de]/30 decoration-none"
+            >
+              Back to Exams
+            </a>
+          </div>
+        </div>
+      </main>
+    </Layout>
+  ) : (
+    <Layout title={`Edit Exam: ${exam.name} | RiddlesMaster`} hideNavbar={true}>
+      <AdminLayout currentPath={`/admin/practice/exams/${id}/edit`} userRole={role} client:load>
+        <div class="space-y-6 font-sans max-w-[600px] mx-auto">
+          <div class="flex items-center justify-between border-b border-[#e6dfd8] pb-5">
+            <div>
+              <a href="/admin/practice/exams" class="text-xs font-bold text-[#cc785c] hover:underline block mb-1">
+                &larr; Back to Exam Manager
+              </a>
+              <h2 class="text-2xl font-bold font-serif text-[#141413]">Edit Exam</h2>
+            </div>
+            <span class="text-xs font-mono text-[#8e8b82] font-semibold">ID: {exam.id}</span>
+          </div>
+
+          <form id="edit-exam-form" class="bg-white border border-[#e6dfd8] rounded-xl p-6 shadow-sm space-y-4">
+            <!-- Name & Auto-generated Slug -->
+            <div>
+              <label for="exam-name" class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-1.5">
+                Exam Name
+              </label>
+              <input
+                type="text"
+                id="exam-name"
+                required
+                value={exam.name}
+                placeholder="e.g. TCS NQT Aptitude Special"
+                class="w-full h-10 px-3 rounded-lg border border-[#e6dfd8] bg-[#faf9f5] text-sm text-[#141413] focus:border-[#cc785c] focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label for="exam-slug" class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-1.5">
+                URL Slug (Auto-generated)
+              </label>
+              <input
+                type="text"
+                id="exam-slug"
+                readonly
+                value={exam.slug}
+                placeholder="tcs-nqt-aptitude-special"
+                class="w-full h-10 px-3 rounded-lg border border-[#e6dfd8] bg-zinc-100 text-zinc-500 font-mono text-xs focus:outline-none cursor-not-allowed"
+              />
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label for="exam-desc" class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-1.5">
+                Description
+              </label>
+              <textarea
+                id="exam-desc"
+                rows="2"
+                placeholder="e.g. Curated test pattern for TCS NQT preparation."
+                class="w-full p-3 rounded-lg border border-[#e6dfd8] bg-[#faf9f5] text-sm text-[#141413] focus:border-[#cc785c] focus:outline-none resize-y"
+              >{exam.description}</textarea>
+            </div>
+
+            <!-- Duration & Total Questions -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="exam-duration" class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-1.5">
+                  Duration (mins)
+                </label>
+                <input
+                  type="number"
+                  id="exam-duration"
+                  min="1"
+                  required
+                  value={exam.duration}
+                  placeholder="60"
+                  class="w-full h-10 px-3 rounded-lg border border-[#e6dfd8] bg-[#faf9f5] text-sm text-[#141413] focus:border-[#cc785c] focus:outline-none"
+                />
+              </div>
+              <div>
+                <label for="exam-questions" class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-1.5">
+                  Total Questions
+                </label>
+                <input
+                  type="number"
+                  id="exam-questions"
+                  min="1"
+                  required
+                  value={exam.totalQuestions}
+                  placeholder="30"
+                  class="w-full h-10 px-3 rounded-lg border border-[#e6dfd8] bg-[#faf9f5] text-sm text-[#141413] focus:border-[#cc785c] focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <!-- Pattern Textarea -->
+            <div>
+              <label for="exam-pattern" class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-1.5">
+                Exam Pattern (section breakdown)
+              </label>
+              <textarea
+                id="exam-pattern"
+                rows="3"
+                placeholder="Aptitude: 15 questions (20 min)&#10;Reasoning: 10 questions (15 min)"
+                class="w-full p-3 rounded-lg border border-[#e6dfd8] bg-[#faf9f5] text-xs text-[#141413] font-mono focus:border-[#cc785c] focus:outline-none resize-y"
+              >{exam.pattern}</textarea>
+            </div>
+
+            <!-- Topics Checkboxes Multi-select -->
+            <div>
+              <label class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-2">
+                Included Topics
+              </label>
+              <div class="max-h-[220px] overflow-y-auto border border-[#e6dfd8] bg-[#faf9f5] rounded-lg p-3.5 space-y-4">
+                {aptitudeTopics.length > 0 && (
+                  <div>
+                    <div class="text-[10px] font-bold text-[#8e8b82] uppercase tracking-widest mb-1.5 border-b border-[#e6dfd8]/60 pb-0.5">
+                      Aptitude
+                    </div>
+                    <div class="space-y-1.5">
+                      {aptitudeTopics.map(t => (
+                        <label class="flex items-center gap-2 text-xs text-[#3d3d3a] cursor-pointer">
+                          <input
+                            type="checkbox"
+                            name="topic-checkbox"
+                            value={t.id}
+                            checked={selectedTopicIds.includes(t.id)}
+                            class="rounded border-[#e6dfd8] text-[#cc785c] focus:ring-[#cc785c]"
+                          />
+                          <span>{t.name}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {logicalTopics.length > 0 && (
+                  <div>
+                    <div class="text-[10px] font-bold text-[#8e8b82] uppercase tracking-widest mb-1.5 border-b border-[#e6dfd8]/60 pb-0.5">
+                      Logical Reasoning
+                    </div>
+                    <div class="space-y-1.5">
+                      {logicalTopics.map(t => (
+                        <label class="flex items-center gap-2 text-xs text-[#3d3d3a] cursor-pointer">
+                          <input
+                            type="checkbox"
+                            name="topic-checkbox"
+                            value={t.id}
+                            checked={selectedTopicIds.includes(t.id)}
+                            class="rounded border-[#e6dfd8] text-[#cc785c] focus:ring-[#cc785c]"
+                          />
+                          <span>{t.name}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {verbalTopics.length > 0 && (
+                  <div>
+                    <div class="text-[10px] font-bold text-[#8e8b82] uppercase tracking-widest mb-1.5 border-b border-[#e6dfd8]/60 pb-0.5">
+                      Verbal Reasoning
+                    </div>
+                    <div class="space-y-1.5">
+                      {verbalTopics.map(t => (
+                        <label class="flex items-center gap-2 text-xs text-[#3d3d3a] cursor-pointer">
+                          <input
+                            type="checkbox"
+                            name="topic-checkbox"
+                            value={t.id}
+                            checked={selectedTopicIds.includes(t.id)}
+                            class="rounded border-[#e6dfd8] text-[#cc785c] focus:ring-[#cc785c]"
+                          />
+                          <span>{t.name}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {nonVerbalTopics.length > 0 && (
+                  <div>
+                    <div class="text-[10px] font-bold text-[#8e8b82] uppercase tracking-widest mb-1.5 border-b border-[#e6dfd8]/60 pb-0.5">
+                      Non-Verbal Reasoning
+                    </div>
+                    <div class="space-y-1.5">
+                      {nonVerbalTopics.map(t => (
+                        <label class="flex items-center gap-2 text-xs text-[#3d3d3a] cursor-pointer">
+                          <input
+                            type="checkbox"
+                            name="topic-checkbox"
+                            value={t.id}
+                            checked={selectedTopicIds.includes(t.id)}
+                            class="rounded border-[#e6dfd8] text-[#cc785c] focus:ring-[#cc785c]"
+                          />
+                          <span>{t.name}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <!-- Published Toggle Switch -->
+            <div class="flex items-center justify-between border-t border-[#e6dfd8]/80 pt-3">
+              <span class="text-xs font-semibold text-[#3d3d3a]">Publish Exam</span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="exam-published"
+                  checked={exam.isPublished}
+                  class="sr-only peer"
+                />
+                <div class="w-9 h-5 bg-zinc-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#cc785c]"></div>
+              </label>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 pt-2">
+              <a
+                href="/admin/practice/exams"
+                class="flex-1 flex h-10 items-center justify-center rounded-lg border border-[#e6dfd8] text-xs font-semibold text-[#3d3d3a] hover:bg-[#faf9f5] active:scale-[0.99] transition-all decoration-none"
+              >
+                Cancel
+              </a>
+              <button
+                type="submit"
+                class="flex-1 h-10 rounded-lg bg-[#cc785c] hover:bg-[#a9583e] text-xs font-semibold text-white shadow-md active:scale-[0.99] transition-all cursor-pointer"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </AdminLayout>
+    </Layout>
+  )
+}
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const editForm = document.getElementById('edit-exam-form');
+    const nameInput = document.getElementById('exam-name');
+    const slugInput = document.getElementById('exam-slug');
+    const descInput = document.getElementById('exam-desc');
+    const durationInput = document.getElementById('exam-duration');
+    const questionsInput = document.getElementById('exam-questions');
+    const patternInput = document.getElementById('exam-pattern');
+    const publishedInput = document.getElementById('exam-published');
+
+    // Auto-generate Slug Client-Side
+    nameInput?.addEventListener('input', () => {
+      slugInput.value = nameInput.value
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    });
+
+    // Handle form submit
+    editForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = nameInput.value.trim();
+      const slug = slugInput.value.trim();
+      const description = descInput.value.trim();
+      const duration = parseInt(durationInput.value, 10);
+      const totalQuestions = parseInt(questionsInput.value, 10);
+      const pattern = patternInput.value.trim();
+      const isPublished = publishedInput.checked;
+
+      // Collect topic checkboxes
+      const checkedBoxes = document.querySelectorAll('input[name="topic-checkbox"]:checked');
+      const topicIds = Array.from(checkedBoxes).map(cb => cb.value);
+
+      // Extract Exam ID from URL path (matches: /admin/practice/exams/[id]/edit)
+      const pathParts = window.location.pathname.split('/');
+      // Path format: /admin/practice/exams/<id>/edit -> index of <id> is pathParts.length - 2
+      const examId = pathParts[pathParts.length - 2];
+
+      if (!examId) {
+        alert('Could not resolve Exam ID from URL.');
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/admin/practice/exams/${examId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            slug,
+            description,
+            duration,
+            totalQuestions,
+            pattern,
+            topicIds,
+            isPublished
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to update exam.');
+        }
+
+        alert('Changes saved successfully!');
+        window.location.href = '/admin/practice/exams';
+      } catch (err) {
+        alert(err.message || 'An error occurred.');
+      }
+    });
+
+  });
+</script>

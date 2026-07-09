@@ -12,8 +12,11 @@ export default function LikeButton({ problemId, initialLiked, initialLikesCount 
   const [liked, setLiked] = useState(initialLiked);
   const [likesCount, setLikesCount] = useState(initialLikesCount);
   const [loading, setLoading] = useState(false);
+  const [isPulsing, setIsPulsing] = useState(false);
 
   const handleLike = async () => {
+    setIsPulsing(true);
+    setTimeout(() => setIsPulsing(false), 250);
     setLoading(true);
     try {
       const response = await fetch(`/api/problems/${problemId}/like`, {
@@ -52,7 +55,7 @@ export default function LikeButton({ problemId, initialLiked, initialLikesCount 
           : 'border-[#e6dfd8] bg-[#faf9f5] text-[#3d3d3a] hover:bg-[#f5f0e8]/30'
         }`}
     >
-      <Heart className={`mr-1.5 h-3.5 w-3.5 ${liked ? 'fill-red-600 text-red-600' : 'text-[#6c6a64]'}`} />
+      <Heart className={`mr-1.5 h-3.5 w-3.5 ${liked ? 'fill-red-600 text-red-600' : 'text-[#6c6a64]'} ${isPulsing ? 'animate-heart-pulse' : ''}`} />
       <span>{liked ? 'Liked' : 'Like'}</span>
       {likesCount > 0 && <span className="ml-1.5 font-mono text-[10px] bg-[#e6dfd8]/50 px-1.5 py-0.5 rounded">{likesCount}</span>}
     </button>

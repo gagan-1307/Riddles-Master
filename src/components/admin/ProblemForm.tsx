@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import TiptapEditor from './TiptapEditor';
 import { toast } from 'sonner';
 
 interface Tag {
@@ -241,12 +240,20 @@ export default function ProblemForm({ initialData, allTags }: ProblemFormProps) 
 
       </div>
 
-      {/* statement (tiptap) */}
+      {/* statement (textarea) */}
       <div className="space-y-2">
-        <label className="text-xs font-bold uppercase tracking-wider text-[#6c6a64]">
-          Problem Statement * (Supports Rich Text)
+        <label htmlFor="statement" className="text-xs font-bold uppercase tracking-wider text-[#6c6a64]">
+          Problem Statement *
         </label>
-        <TiptapEditor value={statement} onChange={setStatement} placeholder="Write the puzzle/riddle statement..." />
+        <textarea
+          id="statement"
+          rows={6}
+          required
+          value={statement}
+          onChange={(e) => setStatement(e.target.value)}
+          placeholder="Write the puzzle/riddle statement..."
+          className="block w-full rounded-md border border-[#e6dfd8] bg-[#faf9f5] px-4 py-3 text-[15px] placeholder-[#8e8b82] shadow-inner-sm transition-all focus:border-[#cc785c] focus:outline-none focus:ring-0"
+        />
       </div>
 
       {/* Answer */}
@@ -264,12 +271,19 @@ export default function ProblemForm({ initialData, allTags }: ProblemFormProps) 
         />
       </div>
 
-      {/* Editorial (tiptap) */}
+      {/* Editorial (textarea) */}
       <div className="space-y-2">
-        <label className="text-xs font-bold uppercase tracking-wider text-[#6c6a64]">
+        <label htmlFor="editorial" className="text-xs font-bold uppercase tracking-wider text-[#6c6a64]">
           Detailed Editorial Solution (Premium analytical breakdown)
         </label>
-        <TiptapEditor value={editorial} onChange={setEditorial} placeholder="Write the complete analytical editorial breakdown..." />
+        <textarea
+          id="editorial"
+          rows={8}
+          value={editorial}
+          onChange={(e) => setEditorial(e.target.value)}
+          placeholder="Write the complete analytical editorial breakdown..."
+          className="block w-full rounded-md border border-[#e6dfd8] bg-[#faf9f5] px-4 py-3 text-[15px] placeholder-[#8e8b82] shadow-inner-sm transition-all focus:border-[#cc785c] focus:outline-none focus:ring-0"
+        />
       </div>
 
       {/* Tags section */}

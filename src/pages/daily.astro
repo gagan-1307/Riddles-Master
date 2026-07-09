@@ -34,15 +34,18 @@ if (user) {
   currentStreak = streakVal;
   isCompletedToday = !!todayStreak;
 } else {
-  // Enable public caching for 1 hour for guests/search engines (revalidate: 3600)
+  // Enable public caching for 1 hour for guests/search engines (revalidate: 3600), but vary by cookies
   Astro.response.headers.set('Cache-Control', 'public, max-age=3600, must-revalidate');
+  Astro.response.headers.set('Vary', 'Cookie');
 }
 
 const metaTitle = problem 
   ? `Daily Riddle: ${problem.title} | RiddlesMaster` 
   : "Daily Riddle | RiddlesMaster";
+const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '').trim();
+
 const metaDescription = problem
-  ? `Solve today's daily interview brain teaser: ${problem.title}. ${problem.statement.substring(0, 120)}...`
+  ? `Solve today's daily interview brain teaser: ${problem.title}. ${stripHtml(problem.statement).substring(0, 120)}...`
   : "Check out today's daily interview brain teaser and keep your streak alive!";
 ---
 

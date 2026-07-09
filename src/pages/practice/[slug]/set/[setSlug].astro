@@ -1,0 +1,109 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { prisma } from '@/lib/db';
+import { getUser } from '@/lib/auth/getUser';
+import QuizInterface from '@/components/practice/QuizInterface';
+
+const { slug, setSlug } = Astro.params;
+
+if (!slug || !setSlug) {
+  return Astro.redirect('/404');
+}
+
+// Fetch topic
+const topic = await prisma.practiceTopic.findUnique({
+  where: { slug }
+});
+
+if (!topic) {
+  return Astro.redirect('/404');
+}
+
+// Fetch PracticeSet using topicId and setSlug
+const set = await prisma.practiceSet.findUnique({
+  where: {
+    topicId_setSlug: {
+      topicId: topic.id,
+      setSlug: setSlug
+    }
+  },
+  include: {
+    _count: {
+      select: { questions: true }
+    }
+  }
+});
+
+if (!set) {
+  return Astro.redirect('/404');
+}
+
+// Fetch questions
+const questions = await prisma.practiceQuestion.findMany({
+  where: {
+    setId: set.id
+  },
+  orderBy: {
+    order: 'asc'
+  }
+});
+
+const _questionsCount = questions.length;
+
+// Check user session
+const dbUser = await getUser(Astro.cookies);
+const user = Astro.locals.user || dbUser;
+
+const metaTitle = `${topic.name} — Set #${set.setNumber} | Practice | RiddlesMaster`;
+const metaDescription = `Attempt practice set #${set.setNumber} on topic ${topic.name}.`;
+---
+
+<Layout title={metaTitle} description={metaDescription}>
+  <main class="mx-auto max-w-[800px] px-6 py-12">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-[#6c6a64] mb-8 font-sans">
+      <a href="/practice" class="hover:text-[#cc785c] transition-colors decoration-none">Practice</a>
+      <span class="text-[#e6dfd8]">&gt;</span>
+      <a href={`/practice/${topic.slug}`} class="hover:text-[#cc785c] transition-colors decoration-none">{topic.name}</a>
+      <span class="text-[#e6dfd8]">&gt;</span>
+      <span class="text-[#141413] font-medium">Set #{set.setNumber}</span>
+    </nav>
+
+    <!-- Page Title for SEO (Visually Hidden) -->
+    <h1 class="sr-only">{topic.name} — Set #{set.setNumber} | Practice</h1>
+
+    <!-- Inline Questions JSON directly in the HTML for the client-side quiz interface -->
+    <div id="quiz-data" class="hidden" data-raw-set-id={set.id}>
+      {JSON.stringify({
+        setId: set.id,
+        setTitle: set.setTitle,
+        topicName: topic.name,
+        topicSlug: topic.slug,
+        setNumber: set.setNumber,
+        totalQuestions: questions.length,
+        questions: questions.map(q => ({
+          id: q.id,
+          order: q.order,
+          statement: q.statement,
+          options: {
+            A: q.optionA,
+            B: q.optionB,
+            C: q.optionC,
+            D: q.optionD
+          },
+          correctOption: q.correctOption,
+          solution: q.solution
+        }))
+      })}
+    </div>
+
+    <div id="quiz-root">
+      <QuizInterface 
+        client:load
+        userId={user?.id || null}
+        setId={set.id}
+        mode="practice"
+      />
+    </div>
+  </main>
+</Layout>

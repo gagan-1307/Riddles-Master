@@ -1,0 +1,110 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
+// Enable hybrid caching: 5 min max-age, 10 min stale-while-revalidate, vary by user session cookie
+Astro.response.headers.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+Astro.response.headers.set('Vary', 'Cookie');
+
+// Fetch non-draft posts (include drafts in development)
+const posts = await getCollection('blog', ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
+
+// Sort by pubDate descending
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Date formatting helper
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+---
+
+<Layout 
+  title="Articles & Brain Training Guides | RiddlesMaster" 
+  description="Master logic puzzles, interview riddles, and mathematical conundrums with our expert guides and preparation strategies."
+>
+  <main class="mx-auto max-w-[1200px] px-6 py-12">
+    <!-- Header -->
+    <div class="mb-12 text-center sm:text-left">
+      <h1 class="text-4xl font-bold tracking-tight font-serif text-[#141413]">Articles & Guides</h1>
+      <p class="mt-2 text-[#6c6a64] max-w-[600px] font-sans text-sm">
+        Explore deep dives into interview riddle mechanics, logical reasoning structures, and cognitive preparation strategies.
+      </p>
+    </div>
+
+    <!-- Posts Grid -->
+    {sortedPosts.length === 0 ? (
+      <div class="rounded-2xl border border-[#e6dfd8] bg-white p-12 text-center text-[#6c6a64] font-sans">
+        <p class="italic text-base">No articles published yet. Check back soon!</p>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sortedPosts.map((post) => (
+          <article class="group flex flex-col bg-white border border-[#e6dfd8] rounded-2xl overflow-hidden transition-all duration-200 hover:shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:border-[#cc785c]/30 hover:-translate-y-0.5 justify-between min-h-[380px]">
+            <div>
+              <!-- Cover Image -->
+              {post.data.coverImage && (
+                <a href={`/articles/${post.id}`} class="block overflow-hidden aspect-[16/9]">
+                  <Image 
+                    src={post.data.coverImage} 
+                    alt={post.data.title}
+                    width={600}
+                    height={338}
+                    class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-102"
+                  />
+                </a>
+              )}
+
+              <div class="p-6">
+                <!-- Pub Date -->
+                <span class="text-[11px] font-semibold text-[#8e8b82] uppercase tracking-wider font-sans">
+                  {formatDate(post.data.pubDate)}
+                </span>
+
+                <!-- Title -->
+                <h3 class="font-semibold text-lg text-[#141413] group-hover:text-[#cc785c] transition-colors leading-snug font-serif mt-2">
+                  <a href={`/articles/${post.id}`} class="decoration-none text-inherit">
+                    {post.data.title}
+                  </a>
+                </h3>
+
+                <!-- Description -->
+                <p class="text-xs text-[#6c6a64] mt-2 font-sans leading-relaxed line-clamp-3">
+                  {post.data.description}
+                </p>
+
+                <!-- Tags -->
+                {post.data.tags && post.data.tags.length > 0 && (
+                  <div class="flex flex-wrap gap-1.5 mt-4">
+                    {post.data.tags.map((tag) => (
+                      <span class="text-[10px] bg-[#f5f0e8] text-[#6c6a64] px-2 py-0.5 rounded-[4px] font-medium font-sans">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <!-- Read More Link -->
+            <div class="px-6 pb-6 pt-2">
+              <a 
+                href={`/articles/${post.id}`} 
+                class="inline-flex items-center gap-1 text-xs font-semibold text-[#cc785c] hover:text-[#a9583e] transition-colors decoration-none group/link"
+              >
+                Read Article 
+                <span class="transition-transform group-hover/link:translate-x-0.5 duration-200">→</span>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    )}
+  </main>
+</Layout>

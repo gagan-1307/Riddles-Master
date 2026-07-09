@@ -1,0 +1,236 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Badge } from '@/components/ui/badge';
+import { prisma } from '@/lib/db';
+import { LeaderboardTable } from '@/components/practice/LeaderboardTable';
+
+import { getTopicIcon } from '@/lib/practice/icons';
+
+const { slug } = Astro.params;
+
+const topic = await prisma.practiceTopic.findUnique({
+  where: { slug },
+  include: {
+    sets: {
+      orderBy: {
+        setNumber: 'asc'
+      },
+      include: {
+        _count: {
+          select: { questions: true }
+        }
+      }
+    }
+  }
+});
+
+if (!topic) {
+  return Astro.redirect('/404');
+}
+
+const formatGroup = (group: string) => {
+  switch (group) {
+    case 'APTITUDE': return 'Aptitude';
+    case 'LOGICAL_REASONING': return 'Logical';
+    case 'VERBAL_REASONING': return 'Verbal';
+    case 'NONVERBAL_REASONING': return 'Non-Verbal';
+    default: return group;
+  }
+};
+
+const formatGroupHeading = (group: string) => {
+  switch (group) {
+    case 'APTITUDE': return 'Aptitude';
+    case 'LOGICAL_REASONING': return 'Logical Reasoning';
+    case 'VERBAL_REASONING': return 'Verbal Reasoning';
+    case 'NONVERBAL_REASONING': return 'Non-Verbal Reasoning';
+    default: return group;
+  }
+};
+
+let pageTitle = `${topic.name} | Practice | RiddlesMaster`;
+let pageDescription = `Practice sets and prepare for interviews on ${topic.name}.`;
+
+if (topic.group === 'APTITUDE') {
+  pageTitle = `${topic.name} Aptitude Test Questions | RiddlesMaster`;
+  pageDescription = `Master ${topic.name} aptitude test questions. Solve free practice sets with solutions to prepare for job assessment tests.`;
+} else if (topic.group === 'LOGICAL_REASONING') {
+  pageTitle = `${topic.name} Logical Reasoning Practice | RiddlesMaster`;
+  pageDescription = `Practice ${topic.name} logical reasoning puzzles. Improve your deductive, inductive, or abductive reasoning with solved interview questions.`;
+} else if (topic.group === 'VERBAL_REASONING') {
+  pageTitle = `${topic.name} Verbal Reasoning Questions | RiddlesMaster`;
+  pageDescription = `Master ${topic.name} verbal reasoning test questions. Improve sentence correction, synonyms, and antonyms for placements.`;
+} else if (topic.group === 'NONVERBAL_REASONING') {
+  pageTitle = `${topic.name} Non-Verbal Reasoning Test | RiddlesMaster`;
+  pageDescription = `Practice ${topic.name} non-verbal reasoning test questions. Solve pattern completion and mirror images puzzles for exam prep.`;
+}
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Metadata carrier to share page identifiers with client-side script -->
+  <div id="topic-data" class="hidden" data-topic-id={topic.id} data-topic-slug={topic.slug}></div>
+
+  <main class="mx-auto max-w-[1000px] px-6 py-12">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-[#6c6a64] mb-8 font-sans">
+      <a href="/practice" class="hover:text-[#cc785c] transition-colors decoration-none">Practice</a>
+      <span class="text-[#e6dfd8]">&gt;</span>
+      <span>{formatGroupHeading(topic.group)}</span>
+      <span class="text-[#e6dfd8]">&gt;</span>
+      <span class="text-[#141413] font-medium">{topic.name}</span>
+    </nav>
+
+    <!-- Topic Header -->
+    <div class="flex flex-col gap-4 mb-8">
+      <div class="flex items-start gap-4">
+        <div class="p-3 rounded-xl bg-white border border-[#e6dfd8] flex items-center justify-center text-[#181715] shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+          <Fragment set:html={getTopicIcon(topic.slug)} />
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-3">
+            <h1 class="text-3xl font-bold tracking-tight font-serif text-[#141413] leading-tight">
+              {topic.name}
+            </h1>
+            <Badge variant="outline" className="border-[#e6dfd8] text-[#6c6a64] bg-transparent font-sans">
+              {formatGroup(topic.group)}
+            </Badge>
+          </div>
+          {topic.description && (
+            <p class="text-[#3d3d3a] mt-2 font-sans text-sm leading-relaxed">{topic.description}</p>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <hr class="border-[#e6dfd8] my-8" />
+
+    <!-- Practice Sets Section -->
+    <div class="mb-12">
+      <h2 class="text-2xl font-serif text-[#141413] font-normal mb-6">Practice Sets</h2>
+
+      {topic.sets.length === 0 ? (
+        <div class="rounded-lg border border-[#e6dfd8] bg-[#faf9f5] p-8 text-center text-[#6c6a64] italic font-sans">
+          No sets available yet. Check back soon.
+        </div>
+      ) : (
+        <div class="space-y-4">
+          {topic.sets.map((set) => (
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6 border border-[#e6dfd8] rounded-xl bg-white gap-4 hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-200">
+              {/* Left Column: Details */}
+              <div class="flex-1">
+                <span class="inline-flex items-center rounded-full bg-[#f5f0e8] px-2 py-0.5 text-[10px] font-medium text-[#6c6a64] border border-[#e6dfd8] font-sans">
+                  Set #{set.setNumber}
+                </span>
+                <h3 class="text-[15px] font-semibold text-[#141413] mt-1.5 leading-snug">
+                  {set.setTitle}
+                </h3>
+                <p class="text-xs text-[#6c6a64] mt-0.5 font-sans">
+                  {set._count.questions} questions
+                </p>
+                {/* User Attempt Status Placeholder */}
+                <div 
+                  class="user-attempt-placeholder text-xs text-[#8e8b82] font-sans mt-3 animate-pulse bg-muted/20 w-48 h-4.5 rounded"
+                  data-set-id={set.id}
+                >
+                  Loading status...
+                </div>
+              </div>
+
+              {/* Right Column: Controls */}
+              <div class="flex items-center justify-end w-full sm:w-auto">
+                <!-- CTA Button Container (with hover tooltip) -->
+                <div class="relative group/tooltip w-full sm:w-auto">
+                  <a
+                    href={`/practice/${topic.slug}/set/${set.setSlug}`}
+                    class="inline-flex h-9 items-center justify-center rounded-[8px] bg-[#cc785c] px-6 text-xs font-semibold text-white transition-all hover:bg-[#a9583e] active:scale-[0.98] cursor-pointer decoration-none cta-button w-full sm:w-auto text-center"
+                    data-set-id={set.id}
+                    data-set-slug={set.setSlug}
+                    data-topic-slug={topic.slug}
+                    id={`cta-${set.id}`}
+                  >
+                    Start Quiz →
+                  </a>
+                  <div 
+                    class="absolute bottom-full right-1/2 translate-x-1/2 sm:translate-x-0 sm:right-0 mb-2 hidden group-hover/tooltip:block bg-zinc-900 text-white text-[10px] rounded py-1.5 px-2.5 whitespace-normal sm:whitespace-nowrap z-50 shadow-md tooltip-text font-sans w-48 sm:w-auto text-center pointer-events-none"
+                    id={`tooltip-${set.id}`}
+                  >
+                    Login required
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <hr class="border-[#e6dfd8] my-8" />
+
+    <!-- Leaderboard Section -->
+    <div class="mb-12">
+      <h2 class="text-2xl font-serif text-[#141413] font-normal mb-1">
+        {topic.name} Leaderboard
+      </h2>
+      <p class="text-xs text-[#6c6a64] font-sans mb-6">
+        Ranked by accuracy across all completed sets
+      </p>
+      <LeaderboardTable topicId={topic.id} client:load />
+    </div>
+  </main>
+</Layout>
+
+<script is:inline>
+  document.addEventListener('astro:page-load', () => {
+    // 1. Fetch logged-in user state and attempts
+    const topicData = document.getElementById('topic-data');
+    if (!topicData) return;
+    const topicId = topicData.getAttribute('data-topic-id');
+
+    fetch(`/api/practice/user-state?topicId=${topicId}`)
+      .then(res => res.json())
+      .then(data => {
+        window.userState = data;
+        
+        const placeholders = document.querySelectorAll('.user-attempt-placeholder');
+        placeholders.forEach(placeholder => {
+          const setId = placeholder.getAttribute('data-set-id');
+          placeholder.classList.remove('animate-pulse', 'bg-muted/20', 'w-48', 'h-4.5', 'rounded');
+          
+          if (!data.isLoggedIn) {
+            placeholder.textContent = 'Login to view attempts';
+            const tooltip = document.getElementById(`tooltip-${setId}`);
+            if (tooltip) {
+              tooltip.textContent = '';
+              tooltip.parentElement.classList.remove('group/tooltip');
+            }
+            return;
+          }
+
+          const attempts = data.attempts[setId] || [];
+          if (attempts.length > 0) {
+            const lastAttempt = attempts[attempts.length - 1];
+            placeholder.textContent = `Attempted ${attempts.length} ${attempts.length === 1 ? 'time' : 'times'} · Last score: ${lastAttempt.score}/${lastAttempt.totalAttempted}`;
+          } else {
+            placeholder.textContent = 'Not attempted yet';
+          }
+
+          const cta = document.getElementById(`cta-${setId}`);
+          if (cta) {
+            const setSlug = cta.getAttribute('data-set-slug');
+            const topicSlug = cta.getAttribute('data-topic-slug');
+            cta.textContent = 'Start Quiz →';
+            cta.href = `/practice/${topicSlug}/set/${setSlug}`;
+            cta.classList.remove('opacity-50', 'pointer-events-none');
+          }
+          const tooltip = document.getElementById(`tooltip-${setId}`);
+          if (tooltip) {
+            tooltip.textContent = '';
+            tooltip.parentElement.classList.remove('group/tooltip');
+          }
+        });
+      })
+      .catch(err => {
+        console.error('Error fetching user attempts:', err);
+      });
+  });
+</script>

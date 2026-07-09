@@ -28,6 +28,8 @@ export default function Navbar({ user, role = 'user', streakCount = 0 }: NavbarP
   const navLinks = [
     { href: '/problems', label: 'Problems' },
     { href: '/daily', label: 'Daily Riddle' },
+    { href: '/practice', label: 'Practice' },
+    { href: '/exams', label: 'Exams' },
     { href: '/pricing', label: 'Pricing' },
   ];
 

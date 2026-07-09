@@ -27,23 +27,12 @@ interface Problem {
 interface HomePageProps {
   todaysProblem: Problem | null;
   streakCount: number | null;
-  totalProblemsCount: number;
-  totalUsersCount: number;
-  totalCompanyTagsCount: number;
 }
 
 export default function HomePage({
   todaysProblem,
   streakCount,
-  totalProblemsCount,
-  totalUsersCount,
-  totalCompanyTagsCount,
 }: HomePageProps) {
-
-  // Format numbers to have commas
-  const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('en-IN').format(num);
-  };
 
   return (
     <div className="w-full bg-[#faf9f5] text-[#141413] font-sans antialiased overflow-x-hidden">
@@ -78,10 +67,10 @@ export default function HomePage({
 
         <div className="relative z-10 mx-auto max-w-[1200px] px-6 text-center">
           <h1 className="text-4xl sm:text-6xl font-normal tracking-tight text-[#141413] font-serif max-w-4xl mx-auto leading-[1.08] mb-6">
-            Crack the Riddles That Crack Interviews
+            Riddles, Brain Teasers & Aptitude Puzzles for Every Curious Mind
           </h1>
           <p className="text-lg sm:text-xl text-[#3d3d3a] max-w-2xl mx-auto leading-relaxed mb-10 font-normal">
-            Master the brain teasers and logic puzzles used in real technical interviews at Google, Amazon, and Microsoft.
+            Practice daily riddles, logic puzzles, aptitude questions, and reasoning tests — free for curious minds of all ages.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
@@ -132,7 +121,7 @@ export default function HomePage({
                   {todaysProblem.title}
                 </h3>
                 <p className="text-sm sm:text-base text-[#3d3d3a] leading-relaxed mb-6 italic">
-                  "{todaysProblem.statement.substring(0, 150)}..."
+                  "{todaysProblem.statement.replace(/<[^>]*>/g, '').substring(0, 150)}..."
                 </p>
                 <div className="flex items-center justify-between">
                   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold border ${todaysProblem.difficulty === 'EASY' ? 'bg-[#5db872]/10 text-[#2e7d32] border-[#5db872]/20' :
@@ -158,13 +147,133 @@ export default function HomePage({
         </div>
       </section>
 
+      {/* PRACTICE BY CATEGORY SECTION */}
+      <section className="py-20 bg-[#f5f0e8]/20 border-t border-[#e6dfd8]">
+        <div className="mx-auto max-w-[1200px] px-6">
+          <div className="mb-16 text-center">
+            <h2 className="text-3xl sm:text-4xl font-normal tracking-tight text-[#141413] font-serif mb-4 animate-in fade-in duration-700">
+              Practice by Assessment Category
+            </h2>
+            <p className="text-base text-[#6c6a64] max-w-xl mx-auto font-sans">
+              Strengthen your cognitive framework with our free career aptitude and reasoning mock tests.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Aptitude Card */}
+            <a 
+              href="/practice?category=aptitude" 
+              className="group flex flex-col justify-between bg-[#fdfcf7] border border-[#e6dfd8] rounded-xl p-8 transition-all duration-300 hover:bg-white hover:border-[#cc785c] hover:shadow-[0_8px_30px_rgba(204,120,92,0.06)] hover:-translate-y-1 cursor-pointer decoration-none"
+            >
+              <div>
+                <div className="w-12 h-12 rounded-lg bg-[#efe9de]/40 border border-[#e6dfd8] flex items-center justify-center text-[#6c6a64] mb-6 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#cc785c]/10 group-hover:border-[#cc785c]/20 group-hover:text-[#cc785c]">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.75">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="font-serif text-lg font-normal text-[#141413] group-hover:text-[#cc785c] transition-colors leading-tight mb-3">
+                  Quantitative Aptitude
+                </h3>
+                <p className="text-sm text-[#5c5952] font-sans leading-relaxed">
+                  Practice numerical reasoning, percentage charts, averages, and job aptitude tests with solved examples.
+                </p>
+              </div>
+              <div className="mt-8 flex items-center gap-1.5 text-xs font-bold text-[#cc785c] transition-colors group-hover:text-[#a9583e]">
+                <span>Practice Aptitude</span>
+                <svg className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </div>
+            </a>
+
+            {/* Logical Reasoning Card */}
+            <a 
+              href="/practice?category=logical_reasoning" 
+              className="group flex flex-col justify-between bg-[#fdfcf7] border border-[#e6dfd8] rounded-xl p-8 transition-all duration-300 hover:bg-white hover:border-[#cc785c] hover:shadow-[0_8px_30px_rgba(204,120,92,0.06)] hover:-translate-y-1 cursor-pointer decoration-none"
+            >
+              <div>
+                <div className="w-12 h-12 rounded-lg bg-[#efe9de]/40 border border-[#e6dfd8] flex items-center justify-center text-[#6c6a64] mb-6 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#cc785c]/10 group-hover:border-[#cc785c]/20 group-hover:text-[#cc785c]">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.75">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <h3 className="font-serif text-lg font-normal text-[#141413] group-hover:text-[#cc785c] transition-colors leading-tight mb-3">
+                  Logical Reasoning
+                </h3>
+                <p className="text-sm text-[#5c5952] font-sans leading-relaxed">
+                  Improve deductive vs inductive reasoning, syllogisms, circular reasoning fallacies, and abductive scenarios.
+                </p>
+              </div>
+              <div className="mt-8 flex items-center gap-1.5 text-xs font-bold text-[#cc785c] transition-colors group-hover:text-[#a9583e]">
+                <span>Practice Logic</span>
+                <svg className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </div>
+            </a>
+
+            {/* Verbal Reasoning Card */}
+            <a 
+              href="/practice?category=verbal_reasoning" 
+              className="group flex flex-col justify-between bg-[#fdfcf7] border border-[#e6dfd8] rounded-xl p-8 transition-all duration-300 hover:bg-white hover:border-[#cc785c] hover:shadow-[0_8px_30px_rgba(204,120,92,0.06)] hover:-translate-y-1 cursor-pointer decoration-none"
+            >
+              <div>
+                <div className="w-12 h-12 rounded-lg bg-[#efe9de]/40 border border-[#e6dfd8] flex items-center justify-center text-[#6c6a64] mb-6 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#cc785c]/10 group-hover:border-[#cc785c]/20 group-hover:text-[#cc785c]">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.75">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <h3 className="font-serif text-lg font-normal text-[#141413] group-hover:text-[#cc785c] transition-colors leading-tight mb-3">
+                  Verbal Reasoning
+                </h3>
+                <p className="text-sm text-[#5c5952] font-sans leading-relaxed">
+                  Succeed in verbal reasoning tests with analogies, sentence correction, reading comprehension, synonyms & antonyms.
+                </p>
+              </div>
+              <div className="mt-8 flex items-center gap-1.5 text-xs font-bold text-[#cc785c] transition-colors group-hover:text-[#a9583e]">
+                <span>Practice Verbal</span>
+                <svg className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </div>
+            </a>
+
+            {/* Non-Verbal Reasoning Card */}
+            <a 
+              href="/practice?category=nonverbal_reasoning" 
+              className="group flex flex-col justify-between bg-[#fdfcf7] border border-[#e6dfd8] rounded-xl p-8 transition-all duration-300 hover:bg-white hover:border-[#cc785c] hover:shadow-[0_8px_30px_rgba(204,120,92,0.06)] hover:-translate-y-1 cursor-pointer decoration-none"
+            >
+              <div>
+                <div className="w-12 h-12 rounded-lg bg-[#efe9de]/40 border border-[#e6dfd8] flex items-center justify-center text-[#6c6a64] mb-6 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#cc785c]/10 group-hover:border-[#cc785c]/20 group-hover:text-[#cc785c]">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.75">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                  </svg>
+                </div>
+                <h3 className="font-serif text-lg font-normal text-[#141413] group-hover:text-[#cc785c] transition-colors leading-tight mb-3">
+                  Non-Verbal Reasoning
+                </h3>
+                <p className="text-sm text-[#5c5952] font-sans leading-relaxed">
+                  Solve visual non-verbal reasoning questions, mirror images, figure matrix grids, and shape pattern completions.
+                </p>
+              </div>
+              <div className="mt-8 flex items-center gap-1.5 text-xs font-bold text-[#cc785c] transition-colors group-hover:text-[#a9583e]">
+                <span>Practice Visual</span>
+                <svg className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* (c) STATS BAR */}
       <section className="border-y border-[#e6dfd8] bg-[#f5f0e8]/30 py-16">
         <div className="mx-auto max-w-[1200px] px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 text-center md:divide-x md:divide-[#e6dfd8]">
             <div className="flex flex-col items-center">
               <span className="text-5xl font-light text-[#141413] font-serif mb-2">
-                {formatNumber(totalProblemsCount)}
+                105
               </span>
               <span className="text-xs uppercase tracking-[0.1em] font-semibold text-[#6c6a64]">
                 Curated Riddles
@@ -172,7 +281,7 @@ export default function HomePage({
             </div>
             <div className="flex flex-col items-center">
               <span className="text-5xl font-light text-[#141413] font-serif mb-2">
-                {formatNumber(totalUsersCount)}
+                117
               </span>
               <span className="text-xs uppercase tracking-[0.1em] font-semibold text-[#6c6a64]">
                 Active Thinkers
@@ -180,7 +289,7 @@ export default function HomePage({
             </div>
             <div className="flex flex-col items-center">
               <span className="text-5xl font-light text-[#141413] font-serif mb-2">
-                {formatNumber(totalCompanyTagsCount)}
+                12
               </span>
               <span className="text-xs uppercase tracking-[0.1em] font-semibold text-[#6c6a64]">
                 Company Tracks
@@ -195,44 +304,44 @@ export default function HomePage({
         <div className="mx-auto max-w-[1200px] px-6">
           <div className="mb-16 text-center">
             <h2 className="text-3xl sm:text-4xl font-normal tracking-tight text-[#141413] font-serif mb-4">
-              Everything you need to succeed
+              Everything you need to grow
             </h2>
-            <p className="text-base text-[#6c6a64] max-w-xl mx-auto">
-              Our platform is designed specifically to help software developers and analysts build key logic frameworks.
+            <p className="text-base text-[#6c6a64] max-w-xl mx-auto font-sans">
+              Our platform is designed specifically to help curious minds build critical reasoning, logical deduction, and spatial awareness.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Card 1 */}
-            <div className="rounded-xl border border-[#e6dfd8] bg-[#efe9de] p-8 sm:p-10 flex flex-col items-start shadow-sm">
-              <div className="h-10 w-10 rounded-lg bg-[#cc785c]/10 flex items-center justify-center text-[#cc785c] mb-6">
+            <div className="group flex flex-col items-start bg-[#fdfcf7] border border-[#e6dfd8] rounded-xl p-8 sm:p-10 transition-all duration-300 hover:bg-white hover:border-[#cc785c] hover:shadow-[0_8px_30px_rgba(204,120,92,0.06)] hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-lg bg-[#efe9de]/40 border border-[#e6dfd8] flex items-center justify-center text-[#6c6a64] mb-6 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#cc785c]/10 group-hover:border-[#cc785c]/20 group-hover:text-[#cc785c]">
                 <Zap className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-semibold text-[#141413] mb-3">Daily Riddles</h3>
-              <p className="text-sm text-[#3d3d3a] leading-relaxed">
-                Receive a fresh handpicked logic puzzle every single day to build a habit of structured troubleshooting and sharp analytical execution.
+              <h3 className="font-serif text-lg font-normal text-[#141413] group-hover:text-[#cc785c] transition-colors mb-3">Daily Puzzles</h3>
+              <p className="text-sm text-[#5c5952] font-sans leading-relaxed">
+                Receive a fresh, handpicked logic challenge or riddle every single day to form a consistent and engaging daily brain training habit.
               </p>
             </div>
 
             {/* Card 2 */}
-            <div className="rounded-xl border border-[#e6dfd8] bg-[#efe9de] p-8 sm:p-10 flex flex-col items-start shadow-sm">
-              <div className="h-10 w-10 rounded-lg bg-[#cc785c]/10 flex items-center justify-center text-[#cc785c] mb-6">
+            <div className="group flex flex-col items-start bg-[#fdfcf7] border border-[#e6dfd8] rounded-xl p-8 sm:p-10 transition-all duration-300 hover:bg-white hover:border-[#cc785c] hover:shadow-[0_8px_30px_rgba(204,120,92,0.06)] hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-lg bg-[#efe9de]/40 border border-[#e6dfd8] flex items-center justify-center text-[#6c6a64] mb-6 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#cc785c]/10 group-hover:border-[#cc785c]/20 group-hover:text-[#cc785c]">
                 <Target className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-semibold text-[#141413] mb-3">Company Tagged</h3>
-              <p className="text-sm text-[#3d3d3a] leading-relaxed">
-                Filter and browse challenges tagged with Google, Microsoft, Netflix, or Jane Street. Target the actual questions asked by your dream companies.
+              <h3 className="font-serif text-lg font-normal text-[#141413] group-hover:text-[#cc785c] transition-colors mb-3">Curated Tracks</h3>
+              <p className="text-sm text-[#5c5952] font-sans leading-relaxed">
+                Browse categories from math riddles for adults to puzzles for kids, or target specific interview brain teasers and placement exams.
               </p>
             </div>
 
             {/* Card 3 */}
-            <div className="rounded-xl border border-[#e6dfd8] bg-[#efe9de] p-8 sm:p-10 flex flex-col items-start shadow-sm">
-              <div className="h-10 w-10 rounded-lg bg-[#cc785c]/10 flex items-center justify-center text-[#cc785c] mb-6">
+            <div className="group flex flex-col items-start bg-[#fdfcf7] border border-[#e6dfd8] rounded-xl p-8 sm:p-10 transition-all duration-300 hover:bg-white hover:border-[#cc785c] hover:shadow-[0_8px_30px_rgba(204,120,92,0.06)] hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-lg bg-[#efe9de]/40 border border-[#e6dfd8] flex items-center justify-center text-[#6c6a64] mb-6 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#cc785c]/10 group-hover:border-[#cc785c]/20 group-hover:text-[#cc785c]">
                 <BookOpen className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-semibold text-[#141413] mb-3">Full Editorials</h3>
-              <p className="text-sm text-[#3d3d3a] leading-relaxed">
-                Learn the mental model behind every puzzle. Our detailed editorials cover the mathematical derivations, edge cases, and lateral thinking techniques.
+              <h3 className="font-serif text-lg font-normal text-[#141413] group-hover:text-[#cc785c] transition-colors mb-3">In-Depth Editorials</h3>
+              <p className="text-sm text-[#5c5952] font-sans leading-relaxed">
+                Learn the step-by-step logic behind every puzzle. Explore mathematical derivations, conceptual models, and lateral thinking techniques.
               </p>
             </div>
           </div>
@@ -246,34 +355,58 @@ export default function HomePage({
             <h2 className="text-3xl sm:text-4xl font-normal tracking-tight text-[#141413] font-serif mb-4">
               How It Works
             </h2>
-            <p className="text-base text-[#6c6a64]">
-              Three simple steps to level up your lateral thinking capabilities.
+            <p className="text-base text-[#6c6a64] max-w-xl mx-auto font-sans">
+              Three simple steps to build your daily cognitive and logical frameworks.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16">
-            <div className="flex flex-col">
-              <span className="text-5xl font-light text-[#cc785c]/30 font-serif mb-6">01</span>
-              <h3 className="text-lg font-semibold text-[#141413] mb-3">Select a Riddle</h3>
-              <p className="text-sm text-[#3d3d3a] leading-relaxed">
-                Choose from easy logic warmups to complex probability questions. Filter by your target company track or puzzle category.
-              </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Step 1 */}
+            <div className="group relative flex flex-col justify-between bg-[#fdfcf7] border border-[#e6dfd8] rounded-xl p-8 transition-all duration-300 hover:border-[#cc785c] hover:shadow-[0_8px_30px_rgba(204,120,92,0.05)] hover:-translate-y-0.5">
+              <span className="absolute top-4 right-6 text-7xl font-serif font-light text-[#cc785c]/10 select-none transition-colors duration-300 group-hover:text-[#cc785c]/20">
+                01
+              </span>
+              <div>
+                <div className="w-2.5 h-2.5 rounded-full bg-[#cc785c] mb-6"></div>
+                <h3 className="font-serif text-lg font-normal text-[#141413] group-hover:text-[#cc785c] transition-colors mb-3">
+                  Select a Puzzle
+                </h3>
+                <p className="text-sm text-[#5c5952] font-sans leading-relaxed">
+                  Pick a riddle, logic puzzle, or reasoning test from our curated categories. Filter by difficulty, age-suitability, or exam track.
+                </p>
+              </div>
             </div>
 
-            <div className="flex flex-col">
-              <span className="text-5xl font-light text-[#cc785c]/30 font-serif mb-6">02</span>
-              <h3 className="text-lg font-semibold text-[#141413] mb-3">Draft Your Solution</h3>
-              <p className="text-sm text-[#3d3d3a] leading-relaxed">
-                Use our built-in code editor and editor window to experiment with inputs and outline your logical step-by-step reasoning.
-              </p>
+            {/* Step 2 */}
+            <div className="group relative flex flex-col justify-between bg-[#fdfcf7] border border-[#e6dfd8] rounded-xl p-8 transition-all duration-300 hover:border-[#cc785c] hover:shadow-[0_8px_30px_rgba(204,120,92,0.05)] hover:-translate-y-0.5">
+              <span className="absolute top-4 right-6 text-7xl font-serif font-light text-[#cc785c]/10 select-none transition-colors duration-300 group-hover:text-[#cc785c]/20">
+                02
+              </span>
+              <div>
+                <div className="w-2.5 h-2.5 rounded-full bg-[#cc785c] mb-6"></div>
+                <h3 className="font-serif text-lg font-normal text-[#141413] group-hover:text-[#cc785c] transition-colors mb-3">
+                  Solve & Reason
+                </h3>
+                <p className="text-sm text-[#5c5952] font-sans leading-relaxed">
+                  Work through the problem step-by-step. Draft your analytical thoughts and submit your answer directly on our interactive platform.
+                </p>
+              </div>
             </div>
 
-            <div className="flex flex-col">
-              <span className="text-5xl font-light text-[#cc785c]/30 font-serif mb-6">03</span>
-              <h3 className="text-lg font-semibold text-[#141413] mb-3">Analyze the Editorial</h3>
-              <p className="text-sm text-[#3d3d3a] leading-relaxed">
-                Compare your work against the official editorial. Learn the mathematical shortcuts and conceptual patterns to apply next time.
-              </p>
+            {/* Step 3 */}
+            <div className="group relative flex flex-col justify-between bg-[#fdfcf7] border border-[#e6dfd8] rounded-xl p-8 transition-all duration-300 hover:border-[#cc785c] hover:shadow-[0_8px_30px_rgba(204,120,92,0.05)] hover:-translate-y-0.5">
+              <span className="absolute top-4 right-6 text-7xl font-serif font-light text-[#cc785c]/10 select-none transition-colors duration-300 group-hover:text-[#cc785c]/20">
+                03
+              </span>
+              <div>
+                <div className="w-2.5 h-2.5 rounded-full bg-[#cc785c] mb-6"></div>
+                <h3 className="font-serif text-lg font-normal text-[#141413] group-hover:text-[#cc785c] transition-colors mb-3">
+                  Review the Editorial
+                </h3>
+                <p className="text-sm text-[#5c5952] font-sans leading-relaxed">
+                  Compare your answer with our in-depth editorials. Learn the core mathematical concepts and lateral thinking frameworks.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -286,36 +419,36 @@ export default function HomePage({
             <h2 className="text-3xl sm:text-4xl font-normal tracking-tight text-[#141413] font-serif mb-4">
               Simple, transparent plans
             </h2>
-            <p className="text-base text-[#6c6a64]">
-              Start for free and upgrade to unlock detailed step-by-step breakdowns and company filters.
+            <p className="text-base text-[#6c6a64] font-sans">
+              Start training for free and upgrade to unlock detailed step-by-step breakdowns and premium tracks.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mb-12">
             {/* Free Plan Card */}
-            <div className="rounded-xl border border-[#e6dfd8] bg-[#faf9f5] p-8 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+            <div className="group rounded-xl border border-[#e6dfd8] bg-[#fdfcf7] p-8 sm:p-10 flex flex-col justify-between transition-all duration-300 hover:bg-white hover:border-[#cc785c]/30 hover:shadow-[0_8px_30px_rgba(204,120,92,0.04)] hover:-translate-y-1">
               <div>
-                <h3 className="text-lg font-bold text-[#141413]">Free Tier</h3>
-                <p className="text-xs text-[#6c6a64] mt-1">Perfect for casual practice.</p>
-                <div className="my-6">
-                  <span className="text-4xl font-normal font-serif text-[#141413]">₹0</span>
-                  <span className="text-xs text-[#6c6a64] ml-1">/ always free</span>
+                <h3 className="font-serif text-xl font-normal text-[#141413]">Free Tier</h3>
+                <p className="text-sm text-[#6c6a64] font-sans mt-1">Perfect for casual practice.</p>
+                <div className="my-6 flex items-baseline gap-1">
+                  <span className="text-5xl font-light font-serif text-[#141413]">₹0</span>
+                  <span className="text-xs text-[#6c6a64] font-sans">/ always free</span>
                 </div>
-                <ul className="space-y-3 mb-8 border-t border-[#e6dfd8]/60 pt-6">
-                  <li className="flex items-center gap-2 text-sm text-[#3d3d3a]">
-                    <svg className="h-4.5 w-4.5 text-[#cc785c]" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+                <ul className="space-y-3.5 mb-8 border-t border-[#e6dfd8]/60 pt-6">
+                  <li className="flex items-center gap-2.5 text-sm text-[#5c5952] font-sans">
+                    <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
-                    <span>Limited questions</span>
+                    <span>5 questions per day</span>
                   </li>
-                  <li className="flex items-center gap-2 text-sm text-[#3d3d3a]">
-                    <svg className="h-4.5 w-4.5 text-[#cc785c]" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+                  <li className="flex items-center gap-2.5 text-sm text-[#5c5952] font-sans">
+                    <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
-                    <span>View problem statements</span>
+                    <span>View all problem statements</span>
                   </li>
-                  <li className="flex items-center gap-2 text-sm text-[#3d3d3a]">
-                    <svg className="h-4.5 w-4.5 text-[#cc785c]" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+                  <li className="flex items-center gap-2.5 text-sm text-[#5c5952] font-sans">
+                    <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                     <span>Daily streak tracking</span>
@@ -324,56 +457,56 @@ export default function HomePage({
               </div>
               <a
                 href="/register"
-                className="w-full h-11 inline-flex items-center justify-center rounded-md border border-[#e6dfd8] bg-[#faf9f5] px-4 text-sm font-semibold text-[#141413] hover:bg-[#f5f0e8] transition-colors"
+                className="w-full h-11 inline-flex items-center justify-center rounded-lg border border-[#e6dfd8] bg-transparent hover:bg-[#cc785c]/5 hover:border-[#cc785c] px-4 text-sm font-semibold text-[#141413] hover:text-[#cc785c] transition-all duration-300 decoration-none"
               >
                 Sign Up Now
               </a>
             </div>
 
             {/* Premium Plan Card (Featured) */}
-            <div className="rounded-xl bg-[#181715] text-[#faf9f5] p-8 flex flex-col justify-between shadow-lg relative overflow-hidden">
+            <div className="group rounded-xl bg-[#181715] text-[#faf9f5] p-8 sm:p-10 flex flex-col justify-between shadow-md relative overflow-hidden transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] hover:-translate-y-1">
               {/* Popular indicator */}
-              <div className="absolute top-0 right-0 bg-[#cc785c] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-bl-lg">
+              <div className="absolute top-4 right-4 bg-[#cc785c] text-white text-[10px] font-semibold uppercase tracking-[0.1em] px-2.5 py-1 rounded-full select-none">
                 Most Popular
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-[#faf9f5]">Premium Access</h3>
-                <p className="text-xs text-[#a09d96] mt-1">The complete interview prep toolkit.</p>
-                <div className="my-6">
-                  <span className="text-4xl font-normal font-serif text-[#faf9f5]">₹99</span>
-                  <span className="text-xs text-[#a09d96] ml-1">/ month</span>
+                <h3 className="font-serif text-xl font-normal text-white">Premium Access</h3>
+                <p className="text-sm text-[#a09d96] font-sans mt-1">The ultimate logic & brain training toolkit.</p>
+                <div className="my-6 flex items-baseline gap-1">
+                  <span className="text-5xl font-light font-serif text-[#faf9f5]">₹99</span>
+                  <span className="text-xs text-[#a09d96] font-sans">/ month</span>
                 </div>
-                <ul className="space-y-3 mb-8 border-t border-[#252320] pt-6">
-                  <li className="flex items-center gap-2 text-sm text-[#faf9f5]">
-                    <svg className="h-4.5 w-4.5 text-[#cc785c]" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+                <ul className="space-y-3.5 mb-8 border-t border-[#252320] pt-6">
+                  <li className="flex items-center gap-2.5 text-sm text-[#e6dfd8] font-sans">
+                    <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                     <span>Unlimited daily questions</span>
                   </li>
-                  <li className="flex items-center gap-2 text-sm text-[#faf9f5]">
-                    <svg className="h-4.5 w-4.5 text-[#cc785c]" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+                  <li className="flex items-center gap-2.5 text-sm text-[#e6dfd8] font-sans">
+                    <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                     <span>Full step-by-step solutions</span>
                   </li>
-                  <li className="flex items-center gap-2 text-sm text-[#faf9f5]">
-                    <svg className="h-4.5 w-4.5 text-[#cc785c]" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+                  <li className="flex items-center gap-2.5 text-sm text-[#e6dfd8] font-sans">
+                    <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                     <span>Access to all premium problems</span>
                   </li>
-                  <li className="flex items-center gap-2 text-sm text-[#faf9f5]">
-                    <svg className="h-4.5 w-4.5 text-[#cc785c]" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+                  <li className="flex items-center gap-2.5 text-sm text-[#e6dfd8] font-sans">
+                    <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
-                    <span>Company-wise filtered sets</span>
+                    <span>Curated exam & company tracks</span>
                   </li>
                 </ul>
               </div>
               <a
                 href="/pricing"
-                className="w-full h-11 inline-flex items-center justify-center rounded-md bg-[#cc785c] px-4 text-sm font-semibold text-white hover:bg-[#a9583e] transition-colors"
+                className="w-full h-11 inline-flex items-center justify-center rounded-lg bg-[#cc785c] hover:bg-[#a9583e] active:scale-[0.98] transition-all duration-300 px-4 text-sm font-semibold text-white decoration-none"
               >
                 Upgrade to Pro
               </a>
@@ -434,7 +567,7 @@ export default function HomePage({
             <details className="group py-6 [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex items-center justify-between cursor-pointer list-none text-left select-none">
                 <h3 className="text-lg font-serif text-[#141413] group-hover:text-[#cc785c] transition-colors">
-                  Are riddles for kids different from hard riddles for adults?
+                  Are these logic puzzles and riddles suitable as puzzles for kids or brain training?
                 </h3>
                 <span className="ml-4 flex-shrink-0 text-[#cc785c] transition-transform duration-200 group-open:rotate-180">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
@@ -444,10 +577,7 @@ export default function HomePage({
               </summary>
               <div className="mt-4 text-sm sm:text-base text-[#3d3d3a] leading-relaxed max-w-3xl">
                 <p>
-                  Yes, they differ in complexity and the depth of logical thinking required. Riddles for kids "what am i?" typically use concrete concepts and simple wordplay (like <em>"I have keys but open no locks, what am I?"</em> for a piano) to build foundational vocabulary and association skills. 
-                </p>
-                <p className="mt-3">
-                  Conversely, what are some hard riddles for adults? They often involve conditional logic, probability theory, or mathematical constraints that simulate real-world problem-solving. RiddlesMaster separates puzzles by difficulty, letting you easily find simple wordplay as well as hard, interview-grade brain teasers.
+                  Yes, they are excellent for curious minds of all ages. While we feature hard logic puzzles for adult career prep, we also have simpler riddles that serve as engaging puzzles for kids to develop critical thinking, spatial logic, and association skills early. Incorporating these into a daily routine acts as a fun and structured form of brain training.
                 </p>
               </div>
             </details>
@@ -508,7 +638,7 @@ export default function HomePage({
             <details className="group py-6 [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex items-center justify-between cursor-pointer list-none text-left select-none">
                 <h3 className="text-lg font-serif text-[#141413] group-hover:text-[#cc785c] transition-colors">
-                  Are puzzles good for your brain and cognitive health?
+                  Is solving daily riddles and brain teasers good for brain training?
                 </h3>
                 <span className="ml-4 flex-shrink-0 text-[#cc785c] transition-transform duration-200 group-open:rotate-180">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
@@ -518,10 +648,7 @@ export default function HomePage({
               </summary>
               <div className="mt-4 text-sm sm:text-base text-[#3d3d3a] leading-relaxed max-w-3xl">
                 <p>
-                  Absolutely. Much like physical exercise builds muscles, solving logical challenges keeps your mind active. Engaging with lateral thinking, sudoku, and riddles stimulates neuroplasticity.
-                </p>
-                <p className="mt-3">
-                  So, are puzzles good for your brain? Yes—they strengthen deductive logic, memory, and cognitive speed. Whether you are doing quick "what am i" riddles or spending hours learning how to solve cryptic puzzles, you are training your brain to identify patterns and handle complex reasoning.
+                  Absolutely. Much like physical exercise builds muscles, solving daily riddles, logic puzzles, and brain teasers serves as a powerful form of cognitive brain training. Working through diverse reasoning questions regularly stimulates neuroplasticity, which keeps your brain active, improves working memory, and sharpens analytical clarity.
                 </p>
               </div>
             </details>
@@ -530,7 +657,7 @@ export default function HomePage({
             <details className="group py-6 [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex items-center justify-between cursor-pointer list-none text-left select-none">
                 <h3 className="text-lg font-serif text-[#141413] group-hover:text-[#cc785c] transition-colors">
-                  Can I practice gaming riddles here, like in Where Winds Meet?
+                  How can I prepare for interview brain teasers and reasoning questions?
                 </h3>
                 <span className="ml-4 flex-shrink-0 text-[#cc785c] transition-transform duration-200 group-open:rotate-180">
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
@@ -540,10 +667,7 @@ export default function HomePage({
               </summary>
               <div className="mt-4 text-sm sm:text-base text-[#3d3d3a] leading-relaxed max-w-3xl">
                 <p>
-                  Open-world RPG games like <em>Where Winds Meet</em> frequently challenge players with cryptic riddles and historical puzzles to unlock secret areas or solve quests.
-                </p>
-                <p className="mt-3">
-                  While RiddlesMaster is primarily designed for tech interview prep, the core logical frameworks are identical. By practicing our lateral thinking puzzles, you'll train your mind to spot the logical connections needed to solve quest riddles in gaming. Best of all, unlike physical stores where you have to buy puzzles, our platform is fully digital and free to start solving immediately.
+                  Preparing for placement exams or company assessments is best done by practicing interview brain teasers and reasoning questions under timed conditions. Rather than memorizing answers, focus on building step-by-step logical frameworks. RiddlesMaster offers a structured environment with categorized aptitude questions and logic puzzles, complete with comprehensive editorials to guide your learning.
                 </p>
               </div>
             </details>
@@ -555,65 +679,57 @@ export default function HomePage({
       <section className="py-24 border-t border-[#e6dfd8] bg-[#efe9de]/15">
         <div className="mx-auto max-w-[800px] px-6 text-left">
           <h2 className="text-2xl sm:text-3xl font-normal tracking-tight text-[#141413] font-serif mb-6">
-            Riddles Master: The Ultimate Hub for Brain Teasers and Logic Puzzles
+            RiddlesMaster: The Ultimate Hub for Riddles, Brain Teasers & Logic Puzzles
           </h2>
           <div className="text-sm sm:text-[15px] text-[#3d3d3a] leading-relaxed space-y-6">
             <p>
-              In the fast-paced world of technical interviews and cognitive assessments, analytical thinking is your greatest asset. Welcome to <span className="font-semibold text-[#cc785c]">Riddles Master</span>, a premier platform designed to stretch your intellect, hone your lateral thinking, and prepare you for any analytical challenge. Whether you are seeking <span className="font-medium">hard riddles with answers</span> to test your limits or <span className="font-medium">easy riddles</span> for a quick warm-up, our extensive repository covers the full spectrum of cognitive training. We specialize in curating <span className="font-medium">riddles to test intelligence</span> that challenge conventional assumptions and build sharp problem-solving habits.
+              In the fast-paced world of technical assessments and cognitive tests, analytical speed is your greatest asset. Welcome to <span className="font-semibold text-[#cc785c]">RiddlesMaster</span>, a premier platform designed to challenge your intellect, build lateral thinking, and support daily <span className="font-medium">brain training</span>. Whether you are looking for hard <span className="font-medium">riddles</span> with solutions to test your limits or easy <span className="font-medium">brain teasers</span> for a quick warm-up, our repository covers the full spectrum of cognitive training. We specialize in curating puzzles that break down complex problem-solving patterns.
             </p>
             
             <h3 className="text-lg font-serif text-[#141413] pt-4 font-normal">
-              Master Technical Prep with Actual Puzzle Interview Questions
+              Master Technical Prep with Placement & Interview Brain Teasers
             </h3>
             <p>
-              Are you preparing for a career at top tech firms? Riddles Master offers actual <span className="font-medium">puzzle interview questions</span> asked at major tech companies. Candidates often face complex logical scenarios, and our repository is structured to help you succeed. Try our <span className="font-medium">google interview riddles</span>, <span className="font-medium">amazon interview riddles</span>, and <span className="font-medium">microsoft interview riddles</span> to experience the exact challenges candidates face. These <span className="font-medium">logic riddles for interviews</span> are designed to test your deduction skills, grid reasoning, and algorithmic approach.
-            </p>
-            <p>
-              Beyond tech, we cater to finance and business roles. Our <span className="font-medium">consulting interview riddles</span> provide realistic case-study frameworks and problem-solving scenarios. Every riddle comes with detailed, step-by-step <span className="font-medium">puzzle answers</span> and editorials to help you break down the mathematical proofs and assumptions. By reviewing these detailed explanations, you’ll learn how to approach tricky questions with confidence.
+              Are you preparing for a career at top tech firms? RiddlesMaster offers real <span className="font-medium">interview brain teasers</span> and logic riddles asked at major tech companies like Google, Microsoft, and Amazon. These challenges are designed to test your deduction skills, grid reasoning, and algorithmic approach. Beyond tech, we cater to finance and consulting roles, providing realistic case-study frameworks and <span className="font-medium">reasoning questions</span>. Every riddle comes with detailed, step-by-step editorials to help you break down mathematical proofs and constraints, allowing you to approach any test with confidence.
             </p>
 
             <h3 className="text-lg font-serif text-[#141413] pt-4 font-normal">
-              Explore Diverse Categories: Math, Logic, and Lateral Thinking
+              Practice Solved Aptitude Questions & Free Assessment Sets
             </h3>
             <p>
-              Puzzles come in all shapes and sizes. At Riddles Master, we categorize our content so you can focus on building specific skills:
+              An aptitude test evaluates a candidate's suitability to perform a particular task. RiddlesMaster offers a wide collection of free <span className="font-medium">aptitude questions</span> covering numerical logic, percentage charts, averages, and arithmetic reasoning. Practicing these assessment questions daily is the single most effective way to improve your score on placement tests and mechanical reasoning exams.
+            </p>
+
+            <h3 className="text-lg font-serif text-[#141413] pt-4 font-normal">
+              Explore Diverse Categories: Logic Puzzles, Math, and Lateral Thinking
+            </h3>
+            <p>
+              Puzzles come in all shapes and sizes. At RiddlesMaster, we categorize our content so you can focus on building specific cognitive dimensions:
             </p>
             <ul className="list-disc pl-5 space-y-3">
               <li>
-                <strong>Math Puzzles & Math Riddles:</strong> Perfect for quantitative developers and finance professionals. Dive into probability distributions, game theory, and algebra. Try <span className="font-medium">math riddles for adults</span> to keep your math skills sharp.
+                <strong>Logic Puzzles & Deduction:</strong> Classic grid-deduction problems and sequence puzzles. These solved <span className="font-medium">logic puzzles</span> help build rigorous, step-by-step analytical reasoning.
               </li>
               <li>
-                <strong>Logic Puzzles & Logic Riddles:</strong> Classic deduction puzzles where you use grid analysis or boolean logic. These <span className="font-medium">logic puzzles</span> and riddles help build rigorous thinking.
+                <strong>Math & Probability:</strong> Perfect for quantitative developers and finance professionals. Dive into probability distributions, game theory, and algebra.
               </li>
               <li>
-                <strong>Brain Puzzles & Brain Teasers:</strong> General problem-solving tasks. We host <span className="font-medium">brain teasers for adults</span> that demand a high degree of cognitive flexibility.
+                <strong>Linguistic Word Teasers:</strong> Tricky wordplay, classic riddles, and vocabulary-based challenges for curious minds of all ages.
               </li>
               <li>
-                <strong>Lateral Thinking Puzzles:</strong> Problems that cannot be solved by direct calculation alone. These <span className="font-medium">lateral thinking riddles</span> force you to look at variables from entirely new angles.
-              </li>
-              <li>
-                <strong>Visual Puzzles & Mystery Puzzles:</strong> Build spatial awareness and detective deduction skills with visual and scenario-based queries.
+                <strong>Puzzles for Kids & Families:</strong> Simple logical challenges, riddle games, and funny <span className="font-medium">puzzles for kids</span> to build early spatial reasoning and make learning a fun activity.
               </li>
             </ul>
 
-            <p>
-              We understand that every learner is different. That is why you can filter challenges from simple <span className="font-medium">funny riddles</span> up to extremely hard and <span className="font-medium">impossible riddles with answers</span>. Each difficulty tier provides unique value to build a robust mindset.
-            </p>
             <h3 className="text-lg font-serif text-[#141413] pt-4 font-normal">
-              Interactive Practice and Daily Puzzles
+              Deductive vs Inductive Reasoning Questions
             </h3>
             <p>
-              We believe in building habits. Our <span className="font-medium">daily puzzles</span> keep your mind active with one handpicked challenge every single day, complete with streak tracking. If you are looking for flexibility, we offer <span className="font-medium">free puzzles</span> and <span className="font-medium">online puzzles</span> that can be solved directly on our platform. Prefer offline practice? Download <span className="font-medium">printable puzzles</span> to work away from your screen.
-            </p>
-            <p>
-              We also cater to a wide audience. Explore <span className="font-medium">puzzles for adults</span> for professional growth, or <span className="font-medium">puzzles for kids</span> to build logic early. Parents can find <span className="font-medium">funny riddles for kids</span> and <span className="font-medium">educational puzzles</span> to make learning a fun activity, creating memorable <span className="font-medium">family puzzles</span> that everyone can enjoy together.
+              Understanding the difference between deductive, inductive, and abductive reasoning is essential for logical problem solving. Deductive reasoning starts with general premises and applies them to reach a guaranteed specific conclusion. Inductive reasoning looks at specific observations to form general trends, which are probable but not guaranteed. By practicing our structured <span className="font-medium">reasoning questions</span>, you'll master these critical logical frameworks.
             </p>
 
-            <h3 className="text-lg font-serif text-[#141413] pt-4 font-normal">
-              Why Solve Riddles?
-            </h3>
             <p>
-              Engaging with <span className="font-medium">tricky riddles with answers</span> stimulates neuroplasticity. When you solve <span className="font-medium">interview riddles with answers</span>, you develop frameworks that make you a better programmer, analyst, and strategist. Join Riddles Master today, start solving, and master your technical prep with the best logic challenges online.
+              Start your daily <span className="font-medium">brain training</span> routine on RiddlesMaster today, browse our collections of <span className="font-medium">riddles</span> and <span className="font-medium">brain teasers</span>, and ace your preparation with the best logic puzzles online.
             </p>
 
             <div className="pt-8 border-t border-[#e6dfd8] flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-semibold uppercase tracking-wider text-[#6c6a64]">

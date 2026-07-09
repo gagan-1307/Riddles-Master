@@ -12,12 +12,13 @@ model User {
   name           String?
   avatarUrl      String?
   role           UserRole            @default(USER)
-  createdAt      DateTime            @default(now())
-  streaks        DailyStreak[]
-  likedProblems  LikedProblem[]
-  problemViews   ProblemView[]
-  subscription   Subscription?
-  problemsStatus UserProblemStatus[]
+  createdAt        DateTime            @default(now())
+  streaks          DailyStreak[]
+  likedProblems    LikedProblem[]
+  problemViews     ProblemView[]
+  subscription     Subscription?
+  problemsStatus   UserProblemStatus[]
+  practiceAttempts PracticeAttempt[]
 }
 
 model Problem {
@@ -141,3 +142,97 @@ enum SubscriptionStatus {
   EXPIRED
   CANCELLED
 }
+
+enum PracticeGroup {
+  APTITUDE
+  LOGICAL_REASONING
+  VERBAL_REASONING
+  NONVERBAL_REASONING
+}
+
+enum QuizMode {
+  PRACTICE
+  TEST
+}
+
+model PracticeTopic {
+  id           String          @id @default(uuid())
+  name         String          @unique
+  slug         String          @unique
+  group        PracticeGroup
+  description  String?
+  icon         String?         // emoji
+  color        String?         // hex for card top bg tint
+  createdAt    DateTime        @default(now())
+  sets         PracticeSet[]
+  examTopics   ExamTopic[]
+}
+
+model PracticeSet {
+  id          String              @id @default(uuid())
+  topicId     String
+  topic       PracticeTopic       @relation(fields:[topicId], references:[id])
+  setNumber   Int      // keep for ordering/display only
+  setSlug     String   // URL-friendly name e.g. "bayes-theorem"
+  setTitle    String   // display title e.g. "Bayes Theorem"
+  createdAt   DateTime            @default(now())
+  questions   PracticeQuestion[]
+  attempts    PracticeAttempt[]
+  @@unique([topicId, setSlug])
+}
+
+model PracticeQuestion {
+  id            String          @id @default(uuid())
+  setId         String
+  set           PracticeSet     @relation(fields:[setId], references:[id])
+  order         Int
+  statement     String          @db.Text
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctOption String          // "A", "B", "C", or "D"
+  solution      String          @db.Text
+  @@unique([setId, order])
+}
+
+model PracticeAttempt {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields:[userId], references:[id])
+  setId           String
+  set             PracticeSet   @relation(fields:[setId], references:[id])
+  score           Int           // correct answers count
+  totalAttempted  Int           // total questions in set
+  timeTaken       Int           // seconds (0 for PRACTICE mode)
+  mode            QuizMode
+  completedAt     DateTime      @default(now())
+  answers         Json          // { "questionId": "A", ... }
+  // No @@unique — multiple practice attempts allowed, 
+  // test mode single attempt enforced at API level
+  @@index([userId, setId])
+  @@index([setId, mode])
+}
+
+model Exam {
+  id             String        @id @default(uuid())
+  name           String        @unique
+  slug           String        @unique
+  description    String?
+  duration       Int           // minutes
+  totalQuestions Int
+  pattern        String?       @db.Text  // JSON describing section breakdown
+  topics         ExamTopic[]
+  createdAt      DateTime      @default(now())
+  isPublished    Boolean       @default(false)
+}
+
+model ExamTopic {
+  id        String          @id @default(uuid())
+  examId    String
+  exam      Exam            @relation(fields:[examId], references:[id])
+  topicId   String
+  topic     PracticeTopic   @relation(fields:[topicId], references:[id])
+  weight    Int             @default(1)
+}
+
