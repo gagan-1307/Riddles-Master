@@ -127,10 +127,63 @@ const resolvedOgImage =
 		<SpeedInsights />
 		<Analytics />
 		<ClientRouter />
+
+		<script>
+			// Listen to Astro transition events to show/hide the premium progress loading bar
+			let intervalId: any = null;
+
+			function getBar() {
+				return document.getElementById('astro-loading-bar');
+			}
+
+			function startLoading() {
+				const bar = getBar();
+				if (!bar) return;
+				bar.style.opacity = '1';
+				bar.style.width = '0%';
+				
+				let width = 0;
+				if (intervalId) clearInterval(intervalId);
+				intervalId = setInterval(() => {
+					if (width < 30) {
+						width += 5;
+					} else if (width < 75) {
+						width += 2;
+					} else if (width < 90) {
+						width += 0.5;
+					}
+					bar.style.width = width + '%';
+				}, 100);
+			}
+
+			function stopLoading() {
+				if (intervalId) {
+					clearInterval(intervalId);
+					intervalId = null;
+				}
+				const bar = getBar();
+				if (!bar) return;
+				bar.style.width = '100%';
+				setTimeout(() => {
+					bar.style.opacity = '0';
+					setTimeout(() => {
+						bar.style.width = '0%';
+					}, 300);
+				}, 100);
+			}
+
+			// Add event listeners for Astro router transitions
+			document.addEventListener('astro:click', startLoading);
+			document.addEventListener('astro:before-preparation', startLoading);
+			document.addEventListener('astro:after-swap', stopLoading);
+			document.addEventListener('astro:page-load', stopLoading);
+		</script>
 	</head>
 	<body class="min-h-screen bg-canvas-soft font-geist text-ink antialiased">
+		<!-- Global Progress Transition Bar -->
+		<div id="astro-loading-bar" class="fixed top-0 left-0 h-[3px] bg-[#cc785c] z-[99999] w-0 opacity-0 pointer-events-none transition-all duration-300 shadow-[0_0_10px_rgba(204, 120, 92, 0.5)]"></div>
 		{!hideNavbar && <Navbar user={serializedUser} role={role} />}
-		<div transition:animate={fade({ duration: '0.2s' })}>
+		<div class={hideNavbar ? "" : "pt-14"} transition:animate={fade({ duration: '0.2s' })}>
 			<slot />
 		</div>
 		<Footer />

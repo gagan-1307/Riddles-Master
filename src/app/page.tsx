@@ -428,8 +428,8 @@ export default function HomePage({
             {/* Free Plan Card */}
             <div className="group rounded-xl border border-[#e6dfd8] bg-[#fdfcf7] p-8 sm:p-10 flex flex-col justify-between transition-all duration-300 hover:bg-white hover:border-[#cc785c]/30 hover:shadow-[0_8px_30px_rgba(204,120,92,0.04)] hover:-translate-y-1">
               <div>
-                <h3 className="font-serif text-xl font-normal text-[#141413]">Free Tier</h3>
-                <p className="text-sm text-[#6c6a64] font-sans mt-1">Perfect for casual practice.</p>
+                <h3 className="font-serif text-xl font-normal text-[#141413]">Free</h3>
+                <p className="text-sm text-[#6c6a64] font-sans mt-1">Perfect for casual solvers and daily logic practice.</p>
                 <div className="my-6 flex items-baseline gap-1">
                   <span className="text-5xl font-light font-serif text-[#141413]">₹0</span>
                   <span className="text-xs text-[#6c6a64] font-sans">/ always free</span>
@@ -439,19 +439,31 @@ export default function HomePage({
                     <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
-                    <span>5 questions per day</span>
+                    <span>Unlimited problems</span>
                   </li>
                   <li className="flex items-center gap-2.5 text-sm text-[#5c5952] font-sans">
                     <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
-                    <span>View all problem statements</span>
+                    <span>Full solutions & editorial explanations</span>
+                  </li>
+                  <li className="flex items-center gap-2.5 text-sm text-[#5c5952] font-sans">
+                    <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                    <span>Unlimited quizzes & exams</span>
                   </li>
                   <li className="flex items-center gap-2.5 text-sm text-[#5c5952] font-sans">
                     <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                     <span>Daily streak tracking</span>
+                  </li>
+                  <li className="flex items-center gap-2.5 text-sm text-[#5c5952] font-sans">
+                    <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                    <span>Access to community tags</span>
                   </li>
                 </ul>
               </div>
@@ -462,17 +474,17 @@ export default function HomePage({
                 Sign Up Now
               </a>
             </div>
-
+ 
             {/* Premium Plan Card (Featured) */}
             <div className="group rounded-xl bg-[#181715] text-[#faf9f5] p-8 sm:p-10 flex flex-col justify-between shadow-md relative overflow-hidden transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] hover:-translate-y-1">
               {/* Popular indicator */}
               <div className="absolute top-4 right-4 bg-[#cc785c] text-white text-[10px] font-semibold uppercase tracking-[0.1em] px-2.5 py-1 rounded-full select-none">
                 Most Popular
               </div>
-
+ 
               <div>
-                <h3 className="font-serif text-xl font-normal text-white">Premium Access</h3>
-                <p className="text-sm text-[#a09d96] font-sans mt-1">The ultimate logic & brain training toolkit.</p>
+                <h3 className="font-serif text-xl font-normal text-white">1 Month Premium</h3>
+                <p className="text-sm text-[#a09d96] font-sans mt-1">Level up your logic — structure, insight, and tools for serious solvers.</p>
                 <div className="my-6 flex items-baseline gap-1">
                   <span className="text-5xl font-light font-serif text-[#faf9f5]">₹99</span>
                   <span className="text-xs text-[#a09d96] font-sans">/ month</span>
@@ -482,25 +494,31 @@ export default function HomePage({
                     <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
-                    <span>Unlimited daily questions</span>
+                    <span>Curated learning tracks (SAT, Coding, Brain-training)</span>
                   </li>
                   <li className="flex items-center gap-2.5 text-sm text-[#e6dfd8] font-sans">
                     <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
-                    <span>Full step-by-step solutions</span>
+                    <span>Performance analytics dashboard</span>
                   </li>
                   <li className="flex items-center gap-2.5 text-sm text-[#e6dfd8] font-sans">
                     <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
-                    <span>Access to all premium problems</span>
+                    <span>Custom quiz builder (Experimental)</span>
                   </li>
                   <li className="flex items-center gap-2.5 text-sm text-[#e6dfd8] font-sans">
                     <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
-                    <span>Curated exam & company tracks</span>
+                    <span>PDF export of solved sets (Experimental)</span>
+                  </li>
+                  <li className="flex items-center gap-2.5 text-sm text-[#e6dfd8] font-sans">
+                    <svg className="h-4.5 w-4.5 text-[#cc785c] flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                    <span>Verified profile badge & priority support</span>
                   </li>
                 </ul>
               </div>

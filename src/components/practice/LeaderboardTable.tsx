@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy } from 'lucide-react';
-import { 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableHead, 
-  TableRow, 
-  TableCell 
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell
 } from '@/components/ui/table';
-import { 
-  Avatar, 
-  AvatarImage, 
-  AvatarFallback 
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback
 } from '@/components/ui/avatar';
 
 interface LeaderboardEntry {
@@ -48,7 +48,7 @@ export function LeaderboardTable({ topicId, currentUserId }: LeaderboardTablePro
     const fetchLeaderboard = async () => {
       try {
         setLoading(true);
-        
+
         let resolvedUserId = currentUserId;
         if (!resolvedUserId) {
           try {
@@ -68,7 +68,7 @@ export function LeaderboardTable({ topicId, currentUserId }: LeaderboardTablePro
         const res = await fetch(url);
         if (!res.ok) throw new Error('Failed to fetch leaderboard');
         const data = await res.json();
-        
+
         if (active) {
           setEntries(data.leaderboard || []);
           setCurrentUserRank(data.currentUserRank || null);
@@ -124,8 +124,8 @@ export function LeaderboardTable({ topicId, currentUserId }: LeaderboardTablePro
 
   const renderRow = (entry: LeaderboardEntry) => {
     const isCurrentUser = currentUserId === entry.userId;
-    const highlightClass = isCurrentUser 
-      ? 'bg-[#cc785c]/5 hover:bg-[#cc785c]/8' 
+    const highlightClass = isCurrentUser
+      ? 'bg-[#cc785c]/5 hover:bg-[#cc785c]/8'
       : 'hover:bg-[#faf9f5]/50';
 
     return (
@@ -134,7 +134,7 @@ export function LeaderboardTable({ topicId, currentUserId }: LeaderboardTablePro
         <TableCell className="w-12 text-center py-3.5">
           {renderRank(entry.rank, isCurrentUser)}
         </TableCell>
-        
+
         {/* User */}
         <TableCell className="py-3.5">
           <div className="flex items-center gap-3">
@@ -159,8 +159,8 @@ export function LeaderboardTable({ topicId, currentUserId }: LeaderboardTablePro
               {entry.overallAccuracy}%
             </span>
             <div className="w-full bg-[#f5f0e8] h-1 rounded-full overflow-hidden">
-              <div 
-                className={`h-full ${getAccuracyColor(entry.overallAccuracy)}`} 
+              <div
+                className={`h-full ${getAccuracyColor(entry.overallAccuracy)}`}
                 style={{ width: `${entry.overallAccuracy}%` }}
               />
             </div>
@@ -220,7 +220,7 @@ export function LeaderboardTable({ topicId, currentUserId }: LeaderboardTablePro
             </TableHeader>
             <TableBody>
               {entries.map(renderRow)}
-              
+
               {showCurrentUserAtBottom && currentUserEntry && (
                 <>
                   <TableRow className="hover:bg-transparent border-none">
