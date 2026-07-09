@@ -29,8 +29,11 @@ export default async function PricingPage({ request, isLoggedIn, userEmail }: Pr
       price: formatPrice(0, currency),
       description: 'Perfect for casual solvers and daily logic practice.',
       features: [
-        '5 questions per day',
-        'View all problem statements',
+        'Unlimited problems',
+        'Full solutions & editorial explanations',
+        'Unlimited practice quizzes',
+        'Unlimited articles',
+        'Unlimited exams',
         'Daily streak tracking',
         'Access to community tags',
       ],
@@ -45,13 +48,15 @@ export default async function PricingPage({ request, isLoggedIn, userEmail }: Pr
       price: formatPrice(oneMonthPrice, currency),
       amount: oneMonthPrice,
       period: '/mo',
-      description: 'The complete brain training and logic toolkit.',
+      description: 'Level up your logic — structure, insight, and tools for serious solvers.',
       features: [
-        'Unlimited daily questions',
-        'Full step-by-step solutions',
-        'Access to all premium problems',
-        'Curated exam & company tracks',
-        'Priority support and updates',
+        'Curated learning tracks (SAT, Coding, Brain-training)',
+        'Performance analytics dashboard',
+        'Custom quiz builder (Experimental)',
+        'PDF export of solved sets (Experimental)',
+        'Unlimited bookmarks & collections',
+        'Verified profile badge',
+        'Priority support & early content access',
       ],
       cta: 'Upgrade to Pro',
       featured: true,
@@ -66,8 +71,7 @@ export default async function PricingPage({ request, isLoggedIn, userEmail }: Pr
       features: [
         'Everything in Premium',
         `Save ${formattedSavingThree} vs monthly billing`,
-        'Best for standard prep & training',
-        'Full archive offline support',
+        'Best for steady, standard-paced training',
       ],
       cta: 'Get 3 Months',
       featured: false,
@@ -82,8 +86,7 @@ export default async function PricingPage({ request, isLoggedIn, userEmail }: Pr
       features: [
         'Everything in Premium',
         `Save ${formattedSavingSix} vs monthly billing`,
-        'Best for long-term logic training',
-        'Ultimate value for curious minds',
+        'Best for long-term logic training & lasting habits',
       ],
       cta: 'Get 6 Months',
       featured: false,
@@ -103,7 +106,7 @@ export default async function PricingPage({ request, isLoggedIn, userEmail }: Pr
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 max-w-[900px] mx-auto items-stretch">
           {plans.map((plan) => (
             <div
               key={plan.id}
