@@ -149,7 +149,7 @@ export default function DailyPage({
         </div>
 
         {/* Problem Statement text */}
-        <div className="prose max-w-none text-[#3d3d3a] leading-relaxed space-y-4 whitespace-pre-line text-[16px] border-t border-[#e6dfd8] pt-6">
+        <div className="prose max-w-none text-[#3d3d3a] leading-relaxed whitespace-pre-line text-[16px] border-t border-[#e6dfd8] pt-6">
           {problem.statement}
         </div>
       </div>

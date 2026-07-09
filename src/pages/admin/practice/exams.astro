@@ -1,0 +1,558 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import AdminLayout from "../../../app/admin/layout";
+import { prisma } from "../../../lib/db";
+import { getUser } from "../../../lib/auth/getUser";
+import { PracticeGroup } from "@prisma/client";
+
+// Authenticate user
+const dbUser = await getUser(Astro.cookies);
+const _user = Astro.locals.user || dbUser;
+const role = Astro.locals.role || (dbUser ? dbUser.role : "guest");
+const isAdmin = String(role).toLowerCase() === "admin";
+
+if (!isAdmin) {
+  Astro.response.status = 404;
+  Astro.response.statusText = "Not Found";
+}
+
+let topics: any[] = [];
+let exams: any[] = [];
+if (isAdmin) {
+  topics = await prisma.practiceTopic.findMany({
+    orderBy: { name: "asc" }
+  });
+  exams = await prisma.exam.findMany({
+    include: {
+      topics: {
+        include: {
+          topic: true
+        }
+      }
+    },
+    orderBy: { createdAt: "desc" }
+  });
+}
+
+const aptitudeTopics = topics.filter(t => t.group === PracticeGroup.APTITUDE);
+const logicalTopics = topics.filter(t => t.group === PracticeGroup.LOGICAL_REASONING);
+const verbalTopics = topics.filter(t => t.group === PracticeGroup.VERBAL_REASONING);
+const nonVerbalTopics = topics.filter(t => t.group === PracticeGroup.NONVERBAL_REASONING);
+
+const formatGroup = (group: string) => {
+  switch (group) {
+    case 'APTITUDE': return 'Aptitude';
+    case 'LOGICAL_REASONING': return 'Logical';
+    case 'VERBAL_REASONING': return 'Verbal';
+    case 'NONVERBAL_REASONING': return 'Non-Verbal';
+    default: return group;
+  }
+};
+---
+
+{
+  !isAdmin ? (
+    <Layout title="Page Not Found | RiddlesMaster">
+      <main class="flex min-h-[calc(100vh-64px)] items-center justify-center bg-[#faf9f5] px-6 py-24 text-center">
+        <div class="w-full max-w-[600px]">
+          <h1 class="font-serif text-8xl font-normal tracking-[-0.04em] text-[#141413]/10">404</h1>
+          <h2 class="mt-4 font-serif text-3xl font-normal tracking-[-0.03em] text-[#141413] sm:text-4xl">
+            Lost in the labyrinth
+          </h2>
+          <p class="mt-6 text-[16px] leading-relaxed text-[#3d3d3a] max-w-[480px] w-full mx-auto font-sans">
+            The page you seek is currently out of reach.
+          </p>
+          <div class="mt-10">
+            <a
+              href="/"
+              class="inline-flex h-10 items-center justify-center rounded-[8px] border border-[#e6dfd8] bg-[#faf9f5] px-6 text-[14px] font-semibold text-[#141413] transition-all hover:bg-[#efe9de]/30 decoration-none"
+            >
+              Go Back Home
+            </a>
+          </div>
+        </div>
+      </main>
+    </Layout>
+  ) : (
+    <Layout title="Exam Manager | RiddlesMaster" hideNavbar={true}>
+      <AdminLayout currentPath="/admin/practice/exams" userRole={role} client:load>
+        <div class="space-y-6 font-sans">
+          <div class="flex flex-col gap-1.5 border-b border-[#e6dfd8] pb-5">
+            <h2 class="text-2xl font-bold font-serif text-[#141413]">Exam Manager</h2>
+            <p class="text-sm text-[#6c6a64]">Configure technical preparation mock exams and dynamic section breakdowns.</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left panel: Add new exam form (5 cols) -->
+            <div class="lg:col-span-5">
+              <form id="create-exam-form" class="bg-white border border-[#e6dfd8] rounded-xl p-6 shadow-sm space-y-4">
+                <h3 class="text-base font-bold font-serif text-[#141413] border-b border-[#e6dfd8] pb-2 mb-4">
+                  Add New Exam
+                </h3>
+
+                <!-- Name & Auto-generated Slug -->
+                <div>
+                  <label for="exam-name" class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-1.5">
+                    Exam Name
+                  </label>
+                  <input
+                    type="text"
+                    id="exam-name"
+                    required
+                    placeholder="e.g. TCS NQT Aptitude Special"
+                    class="w-full h-10 px-3 rounded-lg border border-[#e6dfd8] bg-[#faf9f5] text-sm text-[#141413] focus:border-[#cc785c] focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label for="exam-slug" class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-1.5">
+                    URL Slug (Auto-generated)
+                  </label>
+                  <input
+                    type="text"
+                    id="exam-slug"
+                    readonly
+                    placeholder="tcs-nqt-aptitude-special"
+                    class="w-full h-10 px-3 rounded-lg border border-[#e6dfd8] bg-zinc-100 text-zinc-500 font-mono text-xs focus:outline-none cursor-not-allowed"
+                  />
+                </div>
+
+                <!-- Description -->
+                <div>
+                  <label for="exam-desc" class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-1.5">
+                    Description
+                  </label>
+                  <textarea
+                    id="exam-desc"
+                    rows="2"
+                    placeholder="e.g. Curated test pattern for TCS NQT preparation."
+                    class="w-full p-3 rounded-lg border border-[#e6dfd8] bg-[#faf9f5] text-sm text-[#141413] focus:border-[#cc785c] focus:outline-none resize-y"
+                  />
+                </div>
+
+                <!-- Duration & Total Questions -->
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label for="exam-duration" class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-1.5">
+                      Duration (mins)
+                    </label>
+                    <input
+                      type="number"
+                      id="exam-duration"
+                      min="1"
+                      required
+                      placeholder="60"
+                      class="w-full h-10 px-3 rounded-lg border border-[#e6dfd8] bg-[#faf9f5] text-sm text-[#141413] focus:border-[#cc785c] focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label for="exam-questions" class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-1.5">
+                      Total Questions
+                    </label>
+                    <input
+                      type="number"
+                      id="exam-questions"
+                      min="1"
+                      required
+                      placeholder="30"
+                      class="w-full h-10 px-3 rounded-lg border border-[#e6dfd8] bg-[#faf9f5] text-sm text-[#141413] focus:border-[#cc785c] focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <!-- Pattern Textarea -->
+                <div>
+                  <label for="exam-pattern" class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-1.5">
+                    Exam Pattern (section breakdown)
+                  </label>
+                  <textarea
+                    id="exam-pattern"
+                    rows="3"
+                    placeholder="Aptitude: 15 questions (20 min)&#10;Reasoning: 10 questions (15 min)"
+                    class="w-full p-3 rounded-lg border border-[#e6dfd8] bg-[#faf9f5] text-xs text-[#141413] font-mono focus:border-[#cc785c] focus:outline-none resize-y"
+                  />
+                </div>
+
+                <!-- Topics Checkboxes Multi-select -->
+                <div>
+                  <label class="block text-xs font-bold text-[#8e8b82] uppercase tracking-wider mb-2">
+                    Included Topics
+                  </label>
+                  <div class="max-h-[220px] overflow-y-auto border border-[#e6dfd8] bg-[#faf9f5] rounded-lg p-3.5 space-y-4">
+                    {aptitudeTopics.length > 0 && (
+                      <div>
+                        <div class="text-[10px] font-bold text-[#8e8b82] uppercase tracking-widest mb-1.5 border-b border-[#e6dfd8]/60 pb-0.5">
+                          Aptitude
+                        </div>
+                        <div class="space-y-1.5">
+                          {aptitudeTopics.map(t => (
+                            <label class="flex items-center gap-2 text-xs text-[#3d3d3a] cursor-pointer">
+                              <input type="checkbox" name="topic-checkbox" value={t.id} class="rounded border-[#e6dfd8] text-[#cc785c] focus:ring-[#cc785c]" />
+                              <span>{t.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {logicalTopics.length > 0 && (
+                      <div>
+                        <div class="text-[10px] font-bold text-[#8e8b82] uppercase tracking-widest mb-1.5 border-b border-[#e6dfd8]/60 pb-0.5">
+                          Logical Reasoning
+                        </div>
+                        <div class="space-y-1.5">
+                          {logicalTopics.map(t => (
+                            <label class="flex items-center gap-2 text-xs text-[#3d3d3a] cursor-pointer">
+                              <input type="checkbox" name="topic-checkbox" value={t.id} class="rounded border-[#e6dfd8] text-[#cc785c] focus:ring-[#cc785c]" />
+                              <span>{t.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {verbalTopics.length > 0 && (
+                      <div>
+                        <div class="text-[10px] font-bold text-[#8e8b82] uppercase tracking-widest mb-1.5 border-b border-[#e6dfd8]/60 pb-0.5">
+                          Verbal Reasoning
+                        </div>
+                        <div class="space-y-1.5">
+                          {verbalTopics.map(t => (
+                            <label class="flex items-center gap-2 text-xs text-[#3d3d3a] cursor-pointer">
+                              <input type="checkbox" name="topic-checkbox" value={t.id} class="rounded border-[#e6dfd8] text-[#cc785c] focus:ring-[#cc785c]" />
+                              <span>{t.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {nonVerbalTopics.length > 0 && (
+                      <div>
+                        <div class="text-[10px] font-bold text-[#8e8b82] uppercase tracking-widest mb-1.5 border-b border-[#e6dfd8]/60 pb-0.5">
+                          Non-Verbal Reasoning
+                        </div>
+                        <div class="space-y-1.5">
+                          {nonVerbalTopics.map(t => (
+                            <label class="flex items-center gap-2 text-xs text-[#3d3d3a] cursor-pointer">
+                              <input type="checkbox" name="topic-checkbox" value={t.id} class="rounded border-[#e6dfd8] text-[#cc785c] focus:ring-[#cc785c]" />
+                              <span>{t.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <!-- Published Toggle Switch -->
+                <div class="flex items-center justify-between border-t border-[#e6dfd8]/80 pt-3">
+                  <span class="text-xs font-semibold text-[#3d3d3a]">Publish Immediately</span>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="exam-published" class="sr-only peer" />
+                    <div class="w-9 h-5 bg-zinc-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#cc785c]"></div>
+                  </label>
+                </div>
+
+                <!-- Action Button -->
+                <button
+                  type="submit"
+                  class="w-full h-10 rounded-lg bg-[#cc785c] hover:bg-[#a9583e] text-xs font-semibold text-white shadow-md active:scale-[0.99] transition-all cursor-pointer"
+                >
+                  Create Exam
+                </button>
+              </form>
+            </div>
+
+            <!-- Right panel: Existing Exams table (7 cols) -->
+            <div class="lg:col-span-7 space-y-4">
+              <div class="bg-white border border-[#e6dfd8] rounded-xl p-6 shadow-sm">
+                <h3 class="text-base font-bold font-serif text-[#141413] border-b border-[#e6dfd8] pb-2 mb-4">
+                  Configured Exams
+                </h3>
+
+                {exams.length === 0 ? (
+                  <div class="text-center py-12">
+                    <span class="text-3xl">📝</span>
+                    <h4 class="text-sm font-bold text-[#141413] mt-2 mb-1">No Exams Defined</h4>
+                    <p class="text-xs text-zinc-500 max-w-[240px] mx-auto leading-relaxed">
+                      Use the configuration form on the left to set up mock preparation exams.
+                    </p>
+                  </div>
+                ) : (
+                  <div class="overflow-x-auto border border-[#e6dfd8] rounded-lg">
+                    <table class="w-full text-xs font-sans border-collapse">
+                      <thead>
+                        <tr class="border-b border-[#e6dfd8] bg-[#faf9f5] text-[10px] font-bold tracking-wider text-[#8e8b82] uppercase text-left">
+                          <th class="p-2.5">Name</th>
+                          <th class="p-2.5 text-center">Duration</th>
+                          <th class="p-2.5 text-center">Questions</th>
+                          <th class="p-2.5">Included Topics</th>
+                          <th class="p-2.5 text-center">Published</th>
+                          <th class="p-2.5 text-right w-24">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {exams.map(e => (
+                          <tr class="border-b border-[#e6dfd8] last:border-0 hover:bg-[#faf9f5]/40 transition-colors">
+                            <td class="p-2.5 font-medium text-[#141413]">
+                              <div>{e.name}</div>
+                              <div class="text-[10px] font-mono text-zinc-400 mt-0.5">{e.slug}</div>
+                            </td>
+                            <td class="p-2.5 text-center font-mono text-zinc-600">{e.duration}m</td>
+                            <td class="p-2.5 text-center font-mono text-zinc-600">{e.totalQuestions}</td>
+                            <td class="p-2.5 max-w-[150px]">
+                              <div class="flex flex-wrap gap-1">
+                                {e.topics.length === 0 ? (
+                                  <span class="text-zinc-400 italic text-[10px]">None</span>
+                                ) : (
+                                  e.topics.map((et: any) => (
+                                    <span class="inline-block bg-[#efe9de] text-[#181715] border border-[#e6dfd8] px-1.5 py-0.5 rounded text-[10px] font-medium leading-none">
+                                      {et.topic.name}
+                                    </span>
+                                  ))
+                                )}
+                              </div>
+                            </td>
+                            <td class="p-2.5 text-center">
+                              <label class="relative inline-flex items-center cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={e.isPublished}
+                                  data-exam-id={e.id}
+                                  data-topic-ids={JSON.stringify(e.topics.map((t: any) => t.topicId))}
+                                  class="sr-only peer publish-toggle-input"
+                                />
+                                <div class="w-8 h-4.5 bg-zinc-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-[#cc785c]"></div>
+                              </label>
+                            </td>
+                            <td class="p-2.5 text-right space-x-1.5">
+                              <a
+                                href={`/admin/practice/exams/${e.id}/edit`}
+                                class="inline-flex h-7 items-center justify-center rounded border border-[#e6dfd8] bg-white px-2.5 text-[10px] font-semibold text-[#3d3d3a] hover:bg-[#faf9f5] transition-colors decoration-none"
+                              >
+                                Edit
+                              </a>
+                              <button
+                                type="button"
+                                data-exam-id={e.id}
+                                data-exam-name={e.name}
+                                class="delete-exam-btn inline-flex h-7 items-center justify-center rounded border border-red-200 bg-white px-2.5 text-[10px] font-semibold text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Alert Delete Confirm Dialog Overlay -->
+        <div id="delete-confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 hidden">
+          <div class="bg-white border border-[#e6dfd8] rounded-xl p-6 max-w-[400px] w-full shadow-xl animate-in zoom-in-95 duration-150">
+            <h3 class="text-base font-bold font-serif text-[#141413] mb-2">Delete Exam</h3>
+            <p class="text-xs text-zinc-500 leading-relaxed mb-6" id="delete-modal-warning-text">
+              Are you sure you want to permanently delete this exam? This will remove all associated exam topic links and cannot be undone.
+            </p>
+            <div class="flex justify-end gap-3 font-sans">
+              <button
+                type="button"
+                id="delete-modal-cancel-btn"
+                class="inline-flex h-9 items-center justify-center rounded-[8px] border border-[#e6dfd8] bg-white px-4 text-xs font-semibold text-[#3d3d3a] hover:bg-[#faf9f5] cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                id="delete-modal-confirm-btn"
+                class="inline-flex h-9 items-center justify-center rounded-[8px] bg-red-600 hover:bg-red-700 text-xs font-semibold text-white px-4 shadow-md cursor-pointer"
+              >
+                Confirm Delete
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </AdminLayout>
+    </Layout>
+  )
+}
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Form items
+    const createForm = document.getElementById('create-exam-form');
+    const nameInput = document.getElementById('exam-name');
+    const slugInput = document.getElementById('exam-slug');
+    const descInput = document.getElementById('exam-desc');
+    const durationInput = document.getElementById('exam-duration');
+    const questionsInput = document.getElementById('exam-questions');
+    const patternInput = document.getElementById('exam-pattern');
+    const publishedInput = document.getElementById('exam-published');
+
+    // Auto-generate Slug Client-Side
+    nameInput?.addEventListener('input', () => {
+      slugInput.value = nameInput.value
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    });
+
+    // Handle form submit
+    createForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = nameInput.value.trim();
+      const slug = slugInput.value.trim();
+      const description = descInput.value.trim();
+      const duration = parseInt(durationInput.value, 10);
+      const totalQuestions = parseInt(questionsInput.value, 10);
+      const pattern = patternInput.value.trim();
+      const isPublished = publishedInput.checked;
+
+      // Collect topic checkboxes
+      const checkedBoxes = document.querySelectorAll('input[name="topic-checkbox"]:checked');
+      const topicIds = Array.from(checkedBoxes).map(cb => cb.value);
+
+      try {
+        const res = await fetch('/api/admin/practice/exams', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            slug,
+            description,
+            duration,
+            totalQuestions,
+            pattern,
+            topicIds,
+            isPublished
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to create exam.');
+        }
+
+        alert(`Exam "${name}" successfully created!`);
+        window.location.reload();
+      } catch (err) {
+        alert(err.message || 'An error occurred.');
+      }
+    });
+
+    // Handle Publish toggle switches in rows
+    document.querySelectorAll('.publish-toggle-input').forEach(toggle => {
+      toggle.addEventListener('change', async (e) => {
+        const input = e.target;
+        const examId = input.getAttribute('data-exam-id');
+        const isPublished = input.checked;
+
+        try {
+          // Fetch current details from the row or let the API handle partial updates.
+          // Since PUT /api/admin/practice/exams/[id] updates the entire model, we need to send name and fields.
+          // Best is to hit update with the changed published status. To simplify, we can write a dedicated endpoint,
+          // or we can fetch current exam data, but since we are client-side we can pass fields. Wait! Let's make sure
+          // PUT endpoint matches! Our PUT endpoint expects: name, slug, duration, totalQuestions.
+          // So let's extract them from the row data, or let's create a quick payload.
+          // Better: let's query the API or parse from row cells.
+          // Row details:
+          const tr = input.closest('tr');
+          const name = tr.querySelector('td:nth-child(1) div').textContent.trim();
+          const slug = tr.querySelector('td:nth-child(1) .font-mono').textContent.trim();
+          const durationStr = tr.querySelector('td:nth-child(2)').textContent.replace('m', '').trim();
+          const questionsStr = tr.querySelector('td:nth-child(3)').textContent.trim();
+          
+          // Get topics
+          const topicBadges = tr.querySelectorAll('td:nth-child(4) span');
+          // For edit toggling: to avoid resetting topics when toggling published, we must load or handle update.
+          // Oh, wait, we don't have topicIds handy on the badges unless we store them.
+          // Let's store topics in data attributes or do a quick fetch, OR we can make a lightweight request
+          // if we just fetch current exam data, but we can also store the topic IDs directly in a data-attribute on the row!
+          // Ah, yes! We can just pass the existing topicIds if we render them.
+          // Wait, let's look at how the page renders. We can render a data-topic-ids list or just reload.
+          // Let's make sure we put topic IDs on the HTML element!
+          // Let's see if we can do that. Yes! We can modify the Astro rendering to store topic IDs on the tr or the toggle:
+          // e.g. data-topic-ids={JSON.stringify(e.topics.map(t => t.topicId))}
+          // That is extremely clever and robust! Let's make sure we have that.
+          
+          const topicIds = JSON.parse(input.getAttribute('data-topic-ids') || '[]');
+
+          const res = await fetch(`/api/admin/practice/exams/${examId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name,
+              slug,
+              duration: parseInt(durationStr, 10),
+              totalQuestions: parseInt(questionsStr, 10),
+              topicIds,
+              isPublished
+            })
+          });
+
+          if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || 'Failed to update publication status.');
+          }
+        } catch (err) {
+          alert(err.message || 'Error updating status.');
+          // Revert checkbox state
+          input.checked = !isPublished;
+        }
+      });
+    });
+
+    // Delete Modal controls
+    const deleteModal = document.getElementById('delete-confirm-modal');
+    const warningText = document.getElementById('delete-modal-warning-text');
+    const cancelBtn = document.getElementById('delete-modal-cancel-btn');
+    const confirmBtn = document.getElementById('delete-modal-confirm-btn');
+    let examIdToDelete = null;
+
+    document.querySelectorAll('.delete-exam-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-exam-id');
+        const name = btn.getAttribute('data-exam-name');
+        examIdToDelete = id;
+        warningText.textContent = `Are you sure you want to permanently delete the exam "${name}"? This action will remove all associated exam topics and cannot be undone.`;
+        deleteModal.classList.remove('hidden');
+      });
+    });
+
+    cancelBtn?.addEventListener('click', () => {
+      deleteModal.classList.add('hidden');
+      examIdToDelete = null;
+    });
+
+    confirmBtn?.addEventListener('click', async () => {
+      if (!examIdToDelete) return;
+
+      try {
+        const res = await fetch(`/api/admin/practice/exams/${examIdToDelete}`, {
+          method: 'DELETE'
+        });
+
+        if (res.ok) {
+          alert('Exam successfully deleted.');
+          window.location.reload();
+        } else {
+          const data = await res.json();
+          throw new Error(data.error || 'Failed to delete exam.');
+        }
+      } catch (err) {
+        alert(err.message || 'Error occurred.');
+      } finally {
+        deleteModal.classList.add('hidden');
+        examIdToDelete = null;
+      }
+    });
+
+  });
+</script>

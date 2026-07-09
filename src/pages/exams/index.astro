@@ -1,0 +1,117 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { prisma } from '@/lib/db';
+
+// Enable hybrid caching: 5 min max-age, 10 min stale-while-revalidate, vary by user session cookie
+Astro.response.headers.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+Astro.response.headers.set('Vary', 'Cookie');
+
+const exams = await prisma.exam.findMany({
+  where: {
+    isPublished: true
+  },
+  include: {
+    topics: {
+      include: {
+        topic: true
+      }
+    }
+  },
+  orderBy: {
+    name: 'asc'
+  }
+});
+---
+
+<Layout 
+  title="Job Aptitude Tests & Exam Preparation | RiddlesMaster" 
+  description="Prepare for placement and career aptitude tests. Solve mock questions and target specific job exams with reasoning and quantitative practice."
+>
+  <main class="mx-auto max-w-[1200px] px-6 py-12">
+    <!-- Header -->
+    <div class="mb-12">
+      <h1 class="text-4xl font-bold tracking-tight font-serif text-[#141413]">Exam Preparation</h1>
+      <p class="mt-2 text-[#3d3d3a]">Practice for specific placement and interview exams</p>
+    </div>
+
+    <!-- Content Grid -->
+    {exams.length === 0 ? (
+      <div class="rounded-2xl border border-[#e6dfd8] bg-[#faf9f5] p-12 text-center text-[#6c6a64] font-sans">
+        <p class="italic text-base mb-6">Exam packs coming soon. Practice by topic in the meantime.</p>
+        <a 
+          href="/practice" 
+          class="inline-flex h-10 items-center justify-center rounded-[8px] bg-[#cc785c] px-6 text-sm font-semibold text-white transition-all hover:bg-[#a9583e] active:scale-[0.98] cursor-pointer decoration-none"
+        >
+          Go to Practice →
+        </a>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {exams.map((exam) => {
+          const firstThree = exam.topics.slice(0, 3);
+          const remainingCount = exam.topics.length - 3;
+          return (
+            <div class="group flex flex-col bg-white border border-[#e6dfd8] rounded-2xl p-6 transition-all duration-200 hover:shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:border-[#cc785c]/30 hover:-translate-y-0.5 justify-between min-h-[260px]">
+              <div>
+                <!-- Exam Title -->
+                <h3 class="font-semibold text-lg text-[#141413] group-hover:text-[#cc785c] transition-colors leading-tight font-serif">
+                  {exam.name}
+                </h3>
+                
+                <!-- Description (clamped to 2 lines) -->
+                {exam.description && (
+                  <p class="text-xs text-[#6c6a64] mt-2 font-sans leading-relaxed line-clamp-2">
+                    {exam.description}
+                  </p>
+                )}
+
+                <!-- Duration & Question Badges -->
+                <div class="flex flex-wrap gap-2 mt-4">
+                  <span class="inline-flex items-center gap-1 bg-[#f5f0e8] text-[#3d3d3a] text-[11px] px-2.5 py-1 rounded-full font-medium font-sans">
+                    <svg class="w-3.5 h-3.5 text-[#cc785c]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {exam.duration} mins
+                  </span>
+                  <span class="inline-flex items-center gap-1 bg-[#f5f0e8] text-[#3d3d3a] text-[11px] px-2.5 py-1 rounded-full font-medium font-sans">
+                    <svg class="w-3.5 h-3.5 text-[#cc785c]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    {exam.totalQuestions} Questions
+                  </span>
+                </div>
+
+                <!-- Topic Chips -->
+                {exam.topics.length > 0 && (
+                  <div class="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-[#e6dfd8]/50">
+                    {firstThree.map((et) => (
+                      <span class="text-[10px] bg-[#f5f0e8] text-[#6c6a64] px-2 py-0.5 rounded-[4px] font-medium font-sans">
+                        {et.topic.name}
+                      </span>
+                    ))}
+                    {remainingCount > 0 && (
+                      <span class="text-[10px] bg-[#efe9de] text-[#141413] px-2 py-0.5 rounded-[4px] font-semibold font-sans">
+                        +{remainingCount} more
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <!-- CTA Prepare Now -->
+              <div class="mt-6 pt-3">
+                <a 
+                  href={`/exams/${exam.slug}`} 
+                  class="inline-flex items-center gap-1 text-sm font-semibold text-[#cc785c] hover:text-[#a9583e] transition-colors decoration-none group/link"
+                >
+                  Prepare Now 
+                  <span class="transition-transform group-hover/link:translate-x-0.5 duration-200">→</span>
+                </a>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </main>
+</Layout>

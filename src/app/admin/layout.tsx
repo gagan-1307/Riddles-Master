@@ -84,27 +84,62 @@ export default function AdminLayout({ children, userRole, currentPath }: AdminLa
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-1 px-4 py-6 space-y-1">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              // Link highlights when active
-              const isActive = currentPath === link.href || (link.href !== '/admin' && currentPath.startsWith(link.href));
-              return (
+          <nav className="flex-1 px-4 py-6 space-y-4">
+            <div className="space-y-1">
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                // Link highlights when active
+                const isActive = currentPath === link.href || (link.href !== '/admin' && currentPath.startsWith(link.href));
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsSidebarOpen(false)}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors decoration-none ${
+                      isActive
+                        ? 'bg-[#efe9de] text-[#141413] border border-[#e6dfd8]/50'
+                        : 'text-[#6c6a64] hover:bg-[#efe9de]/30 hover:text-[#141413]'
+                    }`}
+                  >
+                    <Icon className={`h-5 w-5 ${isActive ? 'text-[#cc785c]' : 'text-[#6c6a64]'}`} />
+                    {link.label}
+                  </a>
+                );
+              })}
+            </div>
+
+            {/* Practice Section */}
+            <div className="pt-2 border-t border-[#e6dfd8]/40">
+              <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-[#8e8b82]">
+                Practice Setup
+              </div>
+              <div className="space-y-1">
                 <a
-                  key={link.href}
-                  href={link.href}
+                  href="/admin/practice/upload"
                   onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors decoration-none ${
-                    isActive
+                    currentPath === '/admin/practice/upload'
                       ? 'bg-[#efe9de] text-[#141413] border border-[#e6dfd8]/50'
                       : 'text-[#6c6a64] hover:bg-[#efe9de]/30 hover:text-[#141413]'
                   }`}
                 >
-                  <Icon className={`h-4 w-4 ${isActive ? 'text-[#cc785c]' : 'text-[#6c6a64]'}`} />
-                  {link.label}
+                  <Plus className={`h-5 w-5 ${currentPath === '/admin/practice/upload' ? 'text-[#cc785c]' : 'text-[#6c6a64]'}`} />
+                  Upload Questions
                 </a>
-              );
-            })}
+                <a
+                  href="/admin/practice/exams"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors decoration-none ${
+                    currentPath === '/admin/practice/exams' || currentPath.startsWith('/admin/practice/exams/')
+                      ? 'bg-[#efe9de] text-[#141413] border border-[#e6dfd8]/50'
+                      : 'text-[#6c6a64] hover:bg-[#efe9de]/30 hover:text-[#141413]'
+                  }`}
+                >
+                  <List className={`h-5 w-5 ${currentPath === '/admin/practice/exams' || currentPath.startsWith('/admin/practice/exams/') ? 'text-[#cc785c]' : 'text-[#6c6a64]'}`} />
+                  Exam Manager
+                </a>
+              </div>
+            </div>
           </nav>
 
           {/* Bottom section (Return to main site) */}
@@ -113,7 +148,7 @@ export default function AdminLayout({ children, userRole, currentPath }: AdminLa
               href="/problems"
               className="flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-[#cc785c] hover:text-[#a9583e] transition-colors decoration-none"
             >
-              <ArrowLeft className="h-3.5 w-3.5" />
+              <ArrowLeft className="h-4.5 w-4.5" />
               Exit Admin Terminal
             </a>
           </div>

@@ -3,8 +3,10 @@ import Layout from "../layouts/Layout.astro";
 
 const { supabase, user } = Astro.locals;
 
+const redirect = Astro.url.searchParams.get("redirect") || "";
+
 if (user) {
-  return Astro.redirect("/");
+  return Astro.redirect(redirect || "/");
 }
 
 let errorMsg = "";
@@ -16,10 +18,11 @@ if (Astro.request.method === "POST") {
   const provider = formData.get("provider")?.toString();
 
   if (provider === "google") {
+    const callbackUrl = `${Astro.url.origin}/auth/callback` + (redirect ? `?next=${encodeURIComponent(redirect)}` : "");
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${Astro.url.origin}/auth/callback`,
+        redirectTo: callbackUrl,
       },
     });
 
@@ -37,7 +40,7 @@ if (Astro.request.method === "POST") {
     if (error) {
       errorMsg = error.message;
     } else {
-      return Astro.redirect("/problems");
+      return Astro.redirect(redirect || "/problems");
     }
   }
 }

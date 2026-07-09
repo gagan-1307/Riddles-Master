@@ -138,10 +138,10 @@ export default function UpgradeButton({
     <button
       onClick={handleUpgrade}
       disabled={isLoading}
-      className={`block w-full py-3 text-center text-sm font-semibold rounded-md transition-all active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+      className={`block w-full py-3 text-center text-sm font-semibold rounded-lg transition-all duration-300 active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
         featured
-          ? 'bg-[#cc785c] text-white hover:bg-[#a9583e]'
-          : 'bg-[#181715] text-[#faf9f5] hover:bg-[#252320]'
+          ? 'bg-[#cc785c] text-white hover:bg-[#a9583e] hover:shadow-sm'
+          : 'bg-[#181715] text-[#faf9f5] hover:bg-[#252320] hover:shadow-sm'
       }`}
     >
       {isLoading ? 'Processing...' : ctaText}

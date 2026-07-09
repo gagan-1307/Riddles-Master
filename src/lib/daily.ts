@@ -15,11 +15,12 @@ export function getISTDateString(d: Date = new Date()): string {
 export async function getTodaysProblem() {
   const dateStr = getISTDateString();
   
-  // Hash the YYYY-MM-DD string by summing its character codes
-  let hash = 0;
-  for (let i = 0; i < dateStr.length; i++) {
-    hash += dateStr.charCodeAt(i);
-  }
+  // Calculate days since base epoch (January 1, 2026 IST)
+  const currentISTDate = new Date(`${dateStr}T00:00:00Z`);
+  const epochISTDate = new Date('2026-01-01T00:00:00Z');
+  const msInDay = 24 * 60 * 60 * 1000;
+  const daysDiff = Math.floor((currentISTDate.getTime() - epochISTDate.getTime()) / msInDay);
+  const counter = Math.max(1, daysDiff + 1);
 
   // Get total problem count from the database
   const count = await prisma.problem.count();
@@ -27,8 +28,8 @@ export async function getTodaysProblem() {
     return null;
   }
 
-  // Consistent 0-based index calculation
-  const index = hash % count;
+  // Consistent 0-based index calculation cycled via modulo
+  const index = (counter - 1) % count;
 
   // Retrieve the problem at that index, ordered consistently by 'number' ascending
   const problems = await prisma.problem.findMany({

@@ -1,0 +1,204 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { prisma } from '../../lib/db';
+import { getTopicIcon } from '../../lib/practice/icons';
+
+// Enable hybrid caching: 5 min max-age, 10 min stale-while-revalidate, vary by user session cookie
+Astro.response.headers.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+Astro.response.headers.set('Vary', 'Cookie');
+
+const { slug } = Astro.params;
+
+const exam = await prisma.exam.findUnique({
+  where: { slug },
+  include: {
+    topics: {
+      include: {
+        topic: {
+          include: {
+            sets: {
+              orderBy: {
+                createdAt: 'desc'
+              },
+              include: {
+                _count: {
+                  select: { questions: true }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+});
+
+if (!exam) {
+  return Astro.redirect('/404');
+}
+
+// Structured Pattern lines
+const patternLines = exam.pattern
+  ? exam.pattern.split('\n').map(line => line.trim()).filter(Boolean)
+  : [];
+
+// Recommended Sets (Newest 2 from each topic, max 6 total)
+const recommendedSets: any[] = [];
+exam.topics.forEach(et => {
+  const topicSets = et.topic.sets.slice(0, 2).map(set => ({
+    ...set,
+    topicName: et.topic.name,
+    topicSlug: et.topic.slug,
+  }));
+  recommendedSets.push(...topicSets);
+});
+const finalRecommendedSets = recommendedSets.slice(0, 6);
+
+const metaTitle = `${exam.name} Job Aptitude Test Practice | RiddlesMaster`;
+const metaDescription = `Prepare for the ${exam.name} assessment with free aptitude and reasoning practice questions, solved mock sets, and section breakdowns.`;
+---
+
+<Layout title={metaTitle} description={metaDescription}>
+  <main class="mx-auto max-w-[1200px] px-6 py-12">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-[#6c6a64] mb-8 font-sans">
+      <a href="/exams" class="hover:text-[#cc785c] transition-colors decoration-none">Exams</a>
+      <span class="text-[#e6dfd8]">&gt;</span>
+      <span class="text-[#141413] font-medium">{exam.name}</span>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 mb-8">
+      <h1 class="text-4xl font-bold tracking-tight font-serif text-[#141413] leading-tight">
+        {exam.name}
+      </h1>
+      {exam.description && (
+        <p class="text-[#3d3d3a] max-w-[800px] font-sans text-sm leading-relaxed">
+          {exam.description}
+        </p>
+      )}
+      
+      <!-- Duration & Questions badges -->
+      <div class="flex flex-wrap gap-2 mt-2">
+        <span class="inline-flex items-center gap-1 bg-[#f5f0e8] text-[#3d3d3a] text-xs px-3.5 py-1.5 rounded-full font-medium font-sans">
+          <svg class="w-4 h-4 text-[#cc785c]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {exam.duration} mins
+        </span>
+        <span class="inline-flex items-center gap-1 bg-[#f5f0e8] text-[#3d3d3a] text-xs px-3.5 py-1.5 rounded-full font-medium font-sans">
+          <svg class="w-4 h-4 text-[#cc785c]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          {exam.totalQuestions} Questions
+        </span>
+      </div>
+    </div>
+
+    <hr class="border-[#e6dfd8] my-8" />
+
+    <!-- Two-column content layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <!-- Left Column: Topics and Recommended Sets -->
+      <div class="lg:col-span-8 flex flex-col gap-10">
+        
+        <!-- Practice by Topic -->
+        <div>
+          <h2 class="text-2xl font-serif text-[#141413] font-normal mb-6">Practice by Topic</h2>
+          {exam.topics.length === 0 ? (
+            <div class="rounded-xl border border-[#e6dfd8] bg-[#faf9f5] p-6 text-center text-[#6c6a64] italic font-sans text-sm">
+              No topics linked to this exam yet.
+            </div>
+          ) : (
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {exam.topics.map((et) => (
+                <div class="group flex items-center justify-between p-4 bg-white border border-[#e6dfd8] rounded-xl hover:shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all">
+                  <div class="flex items-center gap-3">
+                    <div 
+                      style={`background-color: ${et.topic.color || '#FFF3E0'}1a;`}
+                      class="w-10 h-10 rounded-lg flex items-center justify-center text-[#181715] flex-shrink-0"
+                    >
+                      <Fragment set:html={getTopicIcon(et.topic.slug)} />
+                    </div>
+                    <div>
+                      <h4 class="text-sm font-semibold text-[#141413] group-hover:text-[#cc785c] transition-colors leading-tight">
+                        {et.topic.name}
+                      </h4>
+                      <p class="text-[11px] text-[#6c6a64] mt-1 font-sans">
+                        {et.topic.sets.length} sets available
+                      </p>
+                    </div>
+                  </div>
+                  <a 
+                    href={`/practice/${et.topic.slug}`}
+                    class="text-xs font-semibold text-[#cc785c] hover:text-[#a9583e] decoration-none transition-colors"
+                  >
+                    Practice →
+                  </a>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <!-- Recommended Sets -->
+        <div>
+          <h2 class="text-2xl font-serif text-[#141413] font-normal mb-6">Recommended Sets</h2>
+          {finalRecommendedSets.length === 0 ? (
+            <div class="rounded-xl border border-[#e6dfd8] bg-[#faf9f5] p-6 text-center text-[#6c6a64] italic font-sans text-sm">
+              No recommended sets available.
+            </div>
+          ) : (
+            <div class="border border-[#e6dfd8] rounded-xl bg-white overflow-hidden divide-y divide-[#e6dfd8]/60">
+              {finalRecommendedSets.map((set) => (
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-3 hover:bg-[#faf9f5]/50 transition-colors">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                    <span class="inline-flex self-start sm:self-auto text-[10px] bg-[#f5f0e8] text-[#6c6a64] px-2 py-0.5 rounded-[4px] font-medium font-sans border border-[#e6dfd8]">
+                      {set.topicName}
+                    </span>
+                    <h4 class="text-sm font-semibold text-[#141413] leading-snug">
+                      {set.setTitle}
+                    </h4>
+                    <span class="text-xs text-[#8e8b82] font-sans">
+                      ({set._count.questions} questions)
+                    </span>
+                  </div>
+                  <a 
+                    href={`/practice/${set.topicSlug}/set/${set.setSlug}`}
+                    class="inline-flex h-8 items-center justify-center rounded-[6px] bg-[#cc785c] px-4 text-xs font-semibold text-white transition-all hover:bg-[#a9583e] active:scale-[0.98] cursor-pointer decoration-none text-center sm:self-auto self-start"
+                  >
+                    Start →
+                  </a>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+      </div>
+
+      <!-- Right Column: Exam Pattern -->
+      <div class="lg:col-span-4 lg:sticky lg:top-24">
+        <div class="border border-[#e6dfd8] bg-white rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+          <h3 class="text-lg font-serif text-[#141413] font-normal mb-4 border-b border-[#e6dfd8]/60 pb-2">
+            Exam Pattern
+          </h3>
+          {patternLines.length === 0 ? (
+            <p class="text-xs text-[#6c6a64] italic font-sans leading-relaxed">
+              Section breakdown details are not specified for this exam yet.
+            </p>
+          ) : (
+            <ul class="space-y-3 font-sans text-xs text-[#3d3d3a]">
+              {patternLines.map((line) => (
+                <li class="flex items-start gap-2.5">
+                  <span class="inline-flex items-center justify-center w-1.5 h-1.5 rounded-full bg-[#cc785c] mt-1.5 flex-shrink-0" />
+                  <span>{line}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>

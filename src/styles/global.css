@@ -167,3 +167,220 @@
     font-size: 110%;
   }
 }
+
+/* ==========================================
+   Micro-animations & Premium Transitions (TASK 1)
+   ========================================== */
+
+/* Target all standard buttons, custom button classes, selects, and interactive elements */
+button,
+select,
+[data-slot="button"],
+.btn-primary,
+.btn-secondary,
+a.button,
+a[role="button"],
+#profile-dropdown-btn {
+  transition: all 150ms ease-out !important;
+}
+
+/* Active/Pressed state scale and speed */
+button:active,
+select:active,
+[data-slot="button"]:active,
+.btn-primary:active,
+.btn-secondary:active,
+a.button:active,
+a[role="button"]:active,
+#profile-dropdown-btn:active {
+  transform: scale(0.97) !important;
+  transition-duration: 80ms !important;
+}
+
+/* Focus visible state transition */
+button:focus-visible,
+select:focus-visible,
+[data-slot="button"]:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+a.button:focus-visible,
+a[role="button"]:focus-visible,
+#profile-dropdown-btn:focus-visible {
+  transition: all 150ms ease-out !important;
+}
+
+/* Reset hover transform to prevent conflicting scale animations (keeps hover clean, subtle, and non-bouncy) */
+button:hover,
+[data-slot="button"]:hover,
+.btn-primary:hover,
+.btn-secondary:hover,
+a.button:hover,
+a[role="button"]:hover,
+#profile-dropdown-btn:hover {
+  transform: none !important;
+}
+
+/* Re-apply active state scale to override hover transform when pressed */
+button:active,
+[data-slot="button"]:active,
+.btn-primary:active,
+.btn-secondary:active,
+a.button:active,
+a[role="button"]:active,
+#profile-dropdown-btn:active {
+  transform: scale(0.97) !important;
+}
+
+/* hover: brightness(0.95) on accent-colored buttons (no color hardcoding needed, just a CSS filter) */
+/* This covers primary, destructive, brand bg-[#cc785c], ink bg, active like/solved buttons, etc. */
+button.bg-primary:hover,
+[data-slot="button"][data-variant="default"]:hover,
+[data-slot="button"][data-variant="destructive"]:hover,
+.btn-primary:hover,
+button.bg-destructive:hover,
+.bg-\[\#cc785c\]:hover,
+.bg-\[\#a9583e\]:hover,
+.bg-primary:hover,
+button.bg-ink:hover,
+button[type="submit"].bg-ink:hover,
+.bg-ink:hover,
+.bg-red-50:hover,
+.bg-success:hover,
+.border-\[\#cc785c\]:hover {
+  filter: brightness(0.95) !important;
+}
+
+
+/* ==========================================
+   Card Hover States (TASK 2)
+   ========================================== */
+
+/* Target list rows, detail cards, pricing cards, problem cards, table rows */
+tr,
+[data-slot="table-row"],
+main > div.rounded-lg.border,
+main section.rounded-lg.border,
+.space-y-4 > div.rounded-lg.border,
+#pricing .grid > div.relative.border,
+div.group.relative.flex.flex-col.border,
+.card {
+  transition: border-color 200ms ease-out, box-shadow 200ms ease-out !important;
+}
+
+/* Hover state: box-shadow: 0 2px 8px rgba(0,0,0,0.04) — subtle lift only, NO transform/translateY, NO scale */
+tr:hover,
+[data-slot="table-row"]:hover,
+main > div.rounded-lg.border:hover,
+main section.rounded-lg.border:hover,
+.space-y-4 > div.rounded-lg.border:hover,
+#pricing .grid > div.relative.border:hover,
+div.group.relative.flex.flex-col.border:hover,
+.card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+  transform: none !important;
+}
+
+/* Keep the featured pricing card's default 1.02 scale on hover (preventing it from scaling up to 1.03 or down to 1.00) */
+#pricing .grid > div.relative.border.scale-\[1\.02\]:hover {
+  transform: scale(1.02) !important;
+}
+
+/* hover: border-color brightness slightly darker than current (using color-mix on hairline) */
+main > div.rounded-lg.border:hover,
+main section.rounded-lg.border:hover,
+.space-y-4 > div.rounded-lg.border:hover,
+div.group.relative.flex.flex-col.border:hover,
+.card:hover {
+  border-color: color-mix(in srgb, var(--color-hairline, #e6dfd8) 85%, black) !important;
+}
+
+/* Specific hover borders for table rows */
+tr:hover,
+[data-slot="table-row"]:hover {
+  border-bottom-color: color-mix(in srgb, var(--color-hairline, #e6dfd8) 85%, black) !important;
+}
+
+/* For dark pricing cards (featured card uses bg-surface-dark) */
+#pricing .grid > div.relative.border.bg-surface-dark:hover {
+  border-color: color-mix(in srgb, var(--color-surface-dark-elevated, #252320) 80%, black) !important;
+}
+
+/* ==========================================
+   Skeleton Loading Shimmer (TASK 4)
+   ========================================== */
+
+/* Add shimmer keyframe */
+@keyframes shimmer { 
+  0% { background-position: 200% 0; } 
+  100% { background-position: -200% 0; } 
+}
+
+/* Disable the default opacity pulse animation on container elements */
+.animate-pulse {
+  animation: none !important;
+}
+
+/* Define local currentColor for each skeleton background type */
+[data-slot="skeleton"],
+.animate-pulse .bg-muted,
+.bg-muted.animate-pulse {
+  color: var(--color-surface-card, #efe9de) !important;
+}
+
+.animate-pulse .bg-surface-card,
+.bg-surface-card.animate-pulse {
+  color: var(--color-surface-card, #efe9de) !important;
+}
+
+.animate-pulse .bg-\[\#efe9de\],
+.bg-\[\#efe9de\].animate-pulse {
+  color: #efe9de !important;
+}
+
+.animate-pulse .bg-\[\#faf9f5\]\/50,
+.bg-\[\#faf9f5\]\/50.animate-pulse {
+  color: rgba(250, 249, 245, 0.5) !important;
+}
+
+.animate-pulse .bg-\[\#cc785c\]\/10,
+.bg-\[\#cc785c\]\/10.animate-pulse {
+  color: rgba(204, 120, 92, 0.1) !important;
+}
+
+/* Apply the shimmer sweep gradient and animation to the skeletons */
+[data-slot="skeleton"],
+.animate-pulse .bg-muted,
+.bg-muted.animate-pulse,
+.animate-pulse .bg-surface-card,
+.bg-surface-card.animate-pulse,
+.animate-pulse .bg-\[\#efe9de\],
+.bg-\[\#efe9de\].animate-pulse,
+.animate-pulse .bg-\[\#faf9f5\]\/50,
+.bg-\[\#faf9f5\]\/50.animate-pulse,
+.animate-pulse .bg-\[\#cc785c\]\/10,
+.bg-\[\#cc785c\]\/10.animate-pulse {
+  background: linear-gradient(90deg, 
+    currentColor 0%, 
+    color-mix(in srgb, currentColor 65%, white) 50%, 
+    currentColor 100%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: shimmer 1.5s ease-in-out infinite !important;
+}
+
+/* ==========================================
+   Like Button Heart Pulse (TASK 5)
+   ========================================== */
+
+@keyframes heartPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.animate-heart-pulse {
+  animation: heartPulse 250ms ease-out !important;
+  display: inline-block !important;
+}
+
+
