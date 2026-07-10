@@ -2,15 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import DailyPage from '../app/daily/page';
 import { getTodaysProblem, getISTDateString } from '../lib/daily';
-import { getUser } from '../lib/auth/getUser';
 import { prisma } from '../lib/db';
 import { getStreakCount } from '../lib/auth/streak';
 
-const [problem, dbUser] = await Promise.all([
-  getTodaysProblem(),
-  getUser(Astro.cookies)
-]);
-const user = Astro.locals.user || dbUser;
+const problem = await getTodaysProblem();
+const user = Astro.locals.user;
 
 let isCompletedToday = false;
 let currentStreak = 0;

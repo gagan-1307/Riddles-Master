@@ -1,19 +1,29 @@
 import { createSupabaseServer } from '../supabase';
 import { prisma } from '../db';
 
-export async function getUser(cookies: any) {
+export async function getUser(cookies: any, localsUser?: any) {
   if (!cookies) return null;
 
   try {
-    const supabase = createSupabaseServer({ cookies });
-    const { data: { user } } = await supabase.auth.getUser();
+    // If localsUser is explicitly null, we know they are a guest (verified by middleware).
+    // Bypassing standard lookup avoids a slow external HTTPS call to Supabase.
+    if (localsUser === null) {
+      return null;
+    }
 
-    if (!user) {
+    let authUser = localsUser;
+    if (!authUser) {
+      const supabase = createSupabaseServer({ cookies });
+      const { data: { user } } = await supabase.auth.getUser();
+      authUser = user;
+    }
+
+    if (!authUser) {
       return null;
     }
 
     const dbUser = await prisma.user.findUnique({
-      where: { id: user.id },
+      where: { id: authUser.id },
       include: {
         subscription: true,
       },

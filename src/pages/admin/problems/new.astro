@@ -6,7 +6,7 @@ import { prisma } from "../../../lib/db";
 import { getUser } from "../../../lib/auth/getUser";
 
 // Authenticate user
-const dbUser = await getUser(Astro.cookies);
+const dbUser = await getUser(Astro.cookies, Astro.locals.user);
 const _user = Astro.locals.user || dbUser;
 const role = Astro.locals.role || (dbUser ? dbUser.role : "guest");
 

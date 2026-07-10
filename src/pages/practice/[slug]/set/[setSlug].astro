@@ -51,7 +51,7 @@ const questions = await prisma.practiceQuestion.findMany({
 const _questionsCount = questions.length;
 
 // Check user session
-const dbUser = await getUser(Astro.cookies);
+const dbUser = await getUser(Astro.cookies, Astro.locals.user);
 const user = Astro.locals.user || dbUser;
 
 const metaTitle = `${topic.name} — Set #${set.setNumber} | Practice | RiddlesMaster`;

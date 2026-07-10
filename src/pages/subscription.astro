@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import SubscriptionPage from "../app/subscription/page";
 import { getUser } from "../lib/auth/getUser";
 
-const dbUser = await getUser(Astro.cookies);
+const dbUser = await getUser(Astro.cookies, Astro.locals.user);
 
 if (!dbUser) {
   return Astro.redirect("/login");
