@@ -1,5 +1,10 @@
 import { prisma } from './db';
 
+// Simple in-memory cache for the daily riddle.
+// Since it only changes at midnight IST, we cache it by YYYY-MM-DD date string.
+let cachedProblem: any = null;
+let cachedDateStr: string = "";
+
 /**
  * Formats a Date object as a YYYY-MM-DD string in IST timezone (UTC+5:30).
  */
@@ -14,6 +19,11 @@ export function getISTDateString(d: Date = new Date()): string {
  */
 export async function getTodaysProblem() {
   const dateStr = getISTDateString();
+  
+  // Return cached daily problem if the date hasn't changed.
+  if (cachedProblem && cachedDateStr === dateStr) {
+    return cachedProblem;
+  }
   
   // Calculate days since base epoch (January 1, 2026 IST)
   const currentISTDate = new Date(`${dateStr}T00:00:00Z`);
@@ -47,5 +57,11 @@ export async function getTodaysProblem() {
     },
   });
 
-  return problems[0] || null;
+  const problem = problems[0] || null;
+  
+  // Update cache
+  cachedProblem = problem;
+  cachedDateStr = dateStr;
+
+  return problem;
 }

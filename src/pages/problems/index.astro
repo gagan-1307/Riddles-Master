@@ -9,7 +9,7 @@ import { checkPremium } from '../../lib/auth/checkPremium';
 const problems = await getAllProblems();
 
 // Check user's premium subscription status
-const dbUser = await getUser(Astro.cookies);
+const dbUser = await getUser(Astro.cookies, Astro.locals.user);
 const role = Astro.locals.role || (dbUser ? dbUser.role : "guest");
 const isUserPremium = dbUser ? await checkPremium(dbUser.id) : false;
 const isAdmin = String(role).toLowerCase() === "admin";

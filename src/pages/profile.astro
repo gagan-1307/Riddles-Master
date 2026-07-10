@@ -15,7 +15,7 @@ import {
 import { formatPrice } from "../lib/currency";
 
 // Authenticate user
-const dbUser = await getUser(Astro.cookies);
+const dbUser = await getUser(Astro.cookies, Astro.locals.user);
 const user = Astro.locals.user || dbUser;
 
 if (!user) {

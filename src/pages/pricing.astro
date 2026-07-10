@@ -5,7 +5,7 @@ import { getUser } from "../lib/auth/getUser";
 import { checkPremium } from "../lib/auth/checkPremium";
 import { detectCurrency } from "../lib/currency";
 
-const dbUser = await getUser(Astro.cookies);
+const dbUser = await getUser(Astro.cookies, Astro.locals.user);
 const isPremium = dbUser ? await checkPremium(dbUser.id) : false;
 const userRole = dbUser ? dbUser.role : "guest";
 const hasPremiumAccess =

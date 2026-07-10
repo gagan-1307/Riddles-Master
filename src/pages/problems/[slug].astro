@@ -22,7 +22,7 @@ if (!problem) {
 }
 
 // Get user session via getUser helper
-const dbUser = await getUser(Astro.cookies);
+const dbUser = await getUser(Astro.cookies, Astro.locals.user);
 const _user = Astro.locals.user || dbUser;
 const role = Astro.locals.role || (dbUser ? dbUser.role : "guest");
 const isAdmin = String(role).toLowerCase() === "admin";

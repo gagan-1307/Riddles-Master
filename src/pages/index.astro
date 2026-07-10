@@ -2,15 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import HomePage from '../app/page';
 import { getTodaysProblem } from '../lib/daily';
-import { getUser } from '../lib/auth/getUser';
 import { getStreakCount } from '../lib/auth/streak';
 
-// Fetch user & daily problem in parallel
-const [dbUser, problem] = await Promise.all([
-  getUser(Astro.cookies),
-  getTodaysProblem()
-]);
-const user = Astro.locals.user || dbUser;
+// Fetch the daily problem using cached service function
+const problem = await getTodaysProblem();
+const user = Astro.locals.user;
 
 let streakCount = null;
 if (user) {
