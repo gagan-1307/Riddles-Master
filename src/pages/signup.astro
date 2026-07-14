@@ -93,7 +93,7 @@ if (Astro.request.method === "POST") {
           </div>
         ) : (
           <div class="space-y-6">
-            <form method="POST">
+            <form method="POST" data-astro-reload>
               <input type="hidden" name="provider" value="google" />
               <button
                 type="submit"
