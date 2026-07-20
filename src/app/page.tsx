@@ -324,7 +324,7 @@ export default function HomePage({
             </div>
             <div className="flex flex-col items-center">
               <span className="text-5xl font-light text-[#141413] font-serif mb-2">
-                117
+                173
               </span>
               <span className="text-xs uppercase tracking-[0.1em] font-semibold text-[#6c6a64]">
                 Active Thinkers

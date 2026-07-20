@@ -23,7 +23,7 @@ export default async function sitemap(baseUrl: string = 'http://localhost:4321')
     { url: `${baseUrl}/terms`, changeFrequency: 'monthly', priority: 0.3 },
   ];
 
-  const [problems, topics, exams, articles] = await Promise.all([
+  const [problems, topics, sets, exams, articles] = await Promise.all([
     prisma.problem.findMany({
       select: {
         slug: true,
@@ -35,6 +35,15 @@ export default async function sitemap(baseUrl: string = 'http://localhost:4321')
     }),
     prisma.practiceTopic.findMany({
       select: { slug: true }
+    }),
+    prisma.practiceSet.findMany({
+      select: {
+        setSlug: true,
+        createdAt: true,
+        topic: {
+          select: { slug: true }
+        }
+      }
     }),
     prisma.exam.findMany({
       where: { isPublished: true },
@@ -58,6 +67,15 @@ export default async function sitemap(baseUrl: string = 'http://localhost:4321')
     priority: 0.8,
   }));
 
+  const setEntries = sets
+    .filter((set) => set.topic?.slug && set.setSlug)
+    .map((set) => ({
+      url: `${baseUrl}/practice/${set.topic.slug}/set/${set.setSlug}`,
+      lastModified: set.createdAt,
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }));
+
   const examEntries = exams.map((exam) => ({
     url: `${baseUrl}/exams/${exam.slug}`,
     lastModified: exam.createdAt,
@@ -76,6 +94,7 @@ export default async function sitemap(baseUrl: string = 'http://localhost:4321')
     ...staticPages,
     ...problemEntries,
     ...topicEntries,
+    ...setEntries,
     ...examEntries,
     ...articleEntries
   ];
