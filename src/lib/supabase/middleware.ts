@@ -30,7 +30,7 @@ export async function updateSession(context: APIContext) {
 
   if (user) {
     const url = new URL(context.request.url);
-    if (url.pathname.startsWith('/admin')) {
+    if (url.pathname.startsWith('/admin') || url.pathname.startsWith('/api/admin')) {
       try {
         const dbUser = await prisma.user.findUnique({
           where: { id: user.id },

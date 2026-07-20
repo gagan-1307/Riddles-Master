@@ -468,7 +468,7 @@ const formatGroup = (group: string) => {
         <div class="flex border-b border-[#e6dfd8] mb-6 gap-6 font-sans select-none">
           <button 
             type="button"
-            class="tab-btn pb-2.5 text-[13px] font-bold tracking-wider uppercase border-b-2 transition-all duration-150 cursor-pointer border-transparent text-[#8e8b82] hover:text-[#141413]" 
+            class="tab-btn pb-2.5 text-[13px] font-bold tracking-wider uppercase border-b-2 transition-all duration-150 cursor-pointer border-[#cc785c] text-[#141413]" 
             data-tab="solved"
           >
             Solved
@@ -490,7 +490,7 @@ const formatGroup = (group: string) => {
         </div>
 
         <!-- SOLVED TAB CONTENT -->
-        <div id="tab-content-solved" class="tab-panel hidden space-y-6">
+        <div id="tab-content-solved" class="tab-panel space-y-6">
           <!-- Problem Solving Progress Card -->
           <div class="rounded-lg border border-[#e6dfd8] bg-[#faf9f5] p-8 shadow-sm">
             <div class="flex items-center justify-between border-b border-[#e6dfd8] pb-4 mb-6">
@@ -788,9 +788,11 @@ const formatGroup = (group: string) => {
 
     <!-- Script Block for Tabs Switcher -->
     <script is:inline>
-      document.addEventListener('DOMContentLoaded', () => {
+      function initProfileTabs() {
         const tabs = document.querySelectorAll('.tab-btn');
         const panels = document.querySelectorAll('.tab-panel');
+
+        if (!tabs.length || !panels.length) return;
 
         function setActiveTab(tabName) {
           tabs.forEach(t => {
@@ -813,17 +815,29 @@ const formatGroup = (group: string) => {
         }
 
         tabs.forEach(t => {
-          t.addEventListener('click', () => {
+          t.onclick = () => {
             const tabName = t.getAttribute('data-tab');
-            setActiveTab(tabName);
-            localStorage.setItem('profile_active_tab', tabName);
-          });
+            if (tabName) {
+              setActiveTab(tabName);
+              try {
+                localStorage.setItem('profile_active_tab', tabName);
+              } catch (e) {}
+            }
+          };
         });
 
         // Restore active tab or default to 'solved'
-        const savedTab = localStorage.getItem('profile_active_tab') || 'solved';
+        let savedTab = 'solved';
+        try {
+          savedTab = localStorage.getItem('profile_active_tab') || 'solved';
+        } catch (e) {}
         setActiveTab(savedTab);
-      });
+      }
+
+      // Initialize tabs immediately, on DOMContentLoaded, and on Astro view transitions
+      initProfileTabs();
+      document.addEventListener('DOMContentLoaded', initProfileTabs);
+      document.addEventListener('astro:page-load', initProfileTabs);
     </script>
   </main>
 </Layout>

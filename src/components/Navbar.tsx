@@ -117,7 +117,7 @@ export default function Navbar({ user, role = 'user', streakCount = 0 }: NavbarP
                         Admin Dashboard
                       </a>
                     )}
-                    <form action="/logout" method="POST" className="m-0 border-t border-[#e6dfd8]">
+                    <form action="/logout" method="POST" data-astro-reload className="m-0 border-t border-[#e6dfd8]">
                       <button
                         type="submit"
                         className="block w-full text-left px-4 py-2 text-sm text-[#c64545] hover:bg-red-50 border-none bg-transparent cursor-pointer"

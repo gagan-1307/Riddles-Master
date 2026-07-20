@@ -14,11 +14,21 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
   }
 
-  // Protect /admin routes
+  // Protect /admin and /api/admin routes
   if (url.pathname.startsWith('/admin')) {
     const role = context.locals.role;
     if (role !== 'admin') {
       return context.redirect('/404');
+    }
+  }
+
+  if (url.pathname.startsWith('/api/admin')) {
+    const role = context.locals.role;
+    if (role !== 'admin') {
+      return new Response(JSON.stringify({ error: 'Not Found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
   }
 

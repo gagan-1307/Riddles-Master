@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db';
 import { getUser } from '@/lib/auth/getUser';
 
 export const GET: APIRoute = async ({ request, cookies, locals }) => {
-  const dbUser = await getUser(cookies);
+  const dbUser = await getUser(cookies, locals.user);
   const user = locals.user || dbUser;
 
   if (!user) {
@@ -13,8 +13,8 @@ export const GET: APIRoute = async ({ request, cookies, locals }) => {
     });
   }
 
-  const role = locals.role || user.role;
-  const isAdmin = String(role).toLowerCase() === 'admin';
+  const role = locals.role || (dbUser ? dbUser.role : 'guest');
+  const isAdmin = String(role).toLowerCase() === 'admin' || dbUser?.role === 'ADMIN';
 
   if (!isAdmin) {
     return new Response(JSON.stringify({ error: 'Not Found' }), {

@@ -1,7 +1,18 @@
 ---
 const { supabase } = Astro.locals;
 
-await supabase.auth.signOut();
+if (supabase) {
+  try {
+    await supabase.auth.signOut();
+  } catch (err: any) {
+    console.error("[Logout Endpoint Error]:", err?.message || err);
+  }
+}
 
-return Astro.redirect("/");
+// Guarantee clearing of all auth tokens/cookies
+for (const cookieName of ["sb-access-token", "sb-refresh-token", "sb-auth-token"]) {
+  Astro.cookies.delete(cookieName, { path: "/" });
+}
+
+return Astro.redirect("/", 302);
 ---
