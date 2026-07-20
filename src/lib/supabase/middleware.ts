@@ -29,17 +29,22 @@ export async function updateSession(context: APIContext) {
   context.locals.user = user;
 
   if (user) {
-    try {
-      const dbUser = await prisma.user.findUnique({
-        where: { id: user.id },
-        select: { role: true }
-      });
+    const url = new URL(context.request.url);
+    if (url.pathname.startsWith('/admin')) {
+      try {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: user.id },
+          select: { role: true }
+        });
 
-      const roleStr = dbUser?.role === 'ADMIN' ? 'admin' : 'user';
-      context.locals.role = roleStr;
-    } catch (dbError: any) {
-      console.error('[Middleware] Database query failed in middleware:', dbError.message);
-      // Fallback to guest/user if DB is temporarily unreachable
+        const roleStr = dbUser?.role === 'ADMIN' ? 'admin' : 'user';
+        context.locals.role = roleStr;
+      } catch (dbError: any) {
+        console.error('[Middleware] Database query failed in middleware:', dbError.message);
+        // Fallback to guest/user if DB is temporarily unreachable
+        context.locals.role = 'user';
+      }
+    } else {
       context.locals.role = 'user';
     }
   } else {

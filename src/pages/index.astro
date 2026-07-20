@@ -1,31 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import HomePage from '../app/page';
-import { getTodaysProblem } from '../lib/daily';
-import { getStreakCount } from '../lib/auth/streak';
 
-// Fetch the daily problem using cached service function
-const problem = await getTodaysProblem();
-const user = Astro.locals.user;
-
-let streakCount = null;
-if (user) {
-  // Disable caching for logged-in users to display live streak information
-  Astro.response.headers.set('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-  streakCount = await getStreakCount(user.id);
-} else {
-  // Cache the page for 1 hour for guests and search engine bots, but vary by cookies so auth users get fresh content
-  Astro.response.headers.set('Cache-Control', 'public, max-age=3600, must-revalidate');
-  Astro.response.headers.set('Vary', 'Cookie');
-}
+// High performance static shell caching: public cacheable on CDN edge for 1 day
+Astro.response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800');
 ---
 
 <Layout 
   title="RiddlesMaster — Riddles, Brain Teasers & Aptitude Puzzles" 
   description="RiddlesMaster offers daily riddles, brain teasers, aptitude questions, and reasoning puzzles — free for curious minds of all ages. Sharpen your thinking and ace any interview or exam."
 >
-  <HomePage
-    todaysProblem={problem}
-    streakCount={streakCount}
-  />
+  <HomePage client:load />
 </Layout>
