@@ -36,6 +36,26 @@ export default function HomePage({
   const [todaysProblem, setTodaysProblem] = useState<Problem | null>(initialProblem);
   const [streakCount, setStreakCount] = useState<number | null>(initialStreak);
   const [isLoading, setIsLoading] = useState<boolean>(!initialProblem);
+  const [stats, setStats] = useState({ riddles: 105, users: 217, companies: 12 });
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch('/api/stats')
+      .then((res) => res.json())
+      .then((data) => {
+        if (isMounted && data) {
+          setStats({
+            riddles: data.riddles ?? 105,
+            users: data.users ?? 173,
+            companies: data.companies ?? 12,
+          });
+        }
+      })
+      .catch((err) => console.error('Failed to fetch stats:', err));
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     // If initial data wasn't provided via SSR props, fetch client-side
@@ -316,7 +336,7 @@ export default function HomePage({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 text-center md:divide-x md:divide-[#e6dfd8]">
             <div className="flex flex-col items-center">
               <span className="text-5xl font-light text-[#141413] font-serif mb-2">
-                105
+                {stats.riddles}
               </span>
               <span className="text-xs uppercase tracking-[0.1em] font-semibold text-[#6c6a64]">
                 Curated Riddles
@@ -324,7 +344,7 @@ export default function HomePage({
             </div>
             <div className="flex flex-col items-center">
               <span className="text-5xl font-light text-[#141413] font-serif mb-2">
-                173
+                {stats.users}
               </span>
               <span className="text-xs uppercase tracking-[0.1em] font-semibold text-[#6c6a64]">
                 Active Thinkers
@@ -332,7 +352,7 @@ export default function HomePage({
             </div>
             <div className="flex flex-col items-center">
               <span className="text-5xl font-light text-[#141413] font-serif mb-2">
-                12
+                {stats.companies}
               </span>
               <span className="text-xs uppercase tracking-[0.1em] font-semibold text-[#6c6a64]">
                 Company Tracks
