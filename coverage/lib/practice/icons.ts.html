@@ -1,0 +1,253 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for lib/practice/icons.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">lib/practice</a> icons.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>2/2</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>2/2</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>1/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>2/2</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
+export function getTopicIcon(slug: string): string {
+  const icons: Record&lt;string, string&gt; = {
+    // APTITUDE
+    'number-system': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;line x1="4" y1="9" x2="20" y2="9" /&gt;&lt;line x1="4" y1="15" x2="20" y2="15" /&gt;&lt;line x1="10" y1="3" x2="8" y2="21" /&gt;&lt;line x1="16" y1="3" x2="14" y2="21" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'percentages': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;line x1="19" y1="5" x2="5" y2="19" stroke="#cc785c" /&gt;&lt;circle cx="6.5" cy="6.5" r="2.5" /&gt;&lt;circle cx="17.5" cy="17.5" r="2.5" /&gt;&lt;/svg&gt;`,
+    'profit-loss': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M23 6l-9.5 9.5-5-5L1 18" /&gt;&lt;polyline points="17 6 23 6 23 12" /&gt;&lt;circle cx="18" cy="16" r="3" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'simple-compound-interest': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;rect x="2" y="6" width="20" height="12" rx="2" /&gt;&lt;line x1="6" y1="12" x2="18" y2="12" /&gt;&lt;line x1="12" y1="9" x2="12" y2="15" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'time-work': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;circle cx="12" cy="12" r="10" /&gt;&lt;polyline points="12 6 12 12 16 14" stroke="#cc785c" /&gt;&lt;path d="M12 2v2" /&gt;&lt;path d="M12 20v2" /&gt;&lt;/svg&gt;`,
+    'speed-distance-time': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z" /&gt;&lt;circle cx="12" cy="10" r="3" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'ratio-proportion': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;line x1="12" y1="3" x2="12" y2="21" /&gt;&lt;line x1="3" y1="7" x2="21" y2="7" /&gt;&lt;path d="M6 7l-2 8h4l-2-8" stroke="#cc785c" /&gt;&lt;path d="M18 7l-2 8h4l-2-8" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'averages': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;line x1="2" y1="12" x2="22" y2="12" stroke="#cc785c" stroke-width="2" /&gt;&lt;circle cx="6" cy="7" r="1.5" /&gt;&lt;circle cx="12" cy="17" r="1.5" /&gt;&lt;circle cx="18" cy="8" r="1.5" /&gt;&lt;/svg&gt;`,
+    'mixtures-alligations': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M6 3h12M8 3v12a4 4 0 0 0 8 0V3" /&gt;&lt;path d="M8 11h8" stroke="#cc785c" /&gt;&lt;circle cx="12" cy="7" r="1" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'ages': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M5 2h14v3l-5 4v6l5 4v3H5v-3l5-4V9L5 5V2z" /&gt;&lt;line x1="10" y1="15" x2="14" y2="15" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'probability': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;rect x="3" y="3" width="18" height="18" rx="2" /&gt;&lt;circle cx="8.5" cy="8.5" r="1.5" stroke="#cc785c" /&gt;&lt;circle cx="15.5" cy="15.5" r="1.5" stroke="#cc785c" /&gt;&lt;circle cx="12" cy="12" r="1.5" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'permutation-combination': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;circle cx="8" cy="12" r="5" /&gt;&lt;circle cx="16" cy="12" r="5" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'geometry-mensuration': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;polygon points="3 20 21 20 12 4" /&gt;&lt;circle cx="12" cy="12" r="2" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'number-series': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M3 12h14" stroke="#cc785c" /&gt;&lt;polyline points="12 7 17 12 12 17" stroke="#cc785c" /&gt;&lt;circle cx="6" cy="12" r="2" /&gt;&lt;/svg&gt;`,
+    'data-interpretation': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;line x1="18" y1="20" x2="18" y2="10" stroke="#cc785c" /&gt;&lt;line x1="12" y1="20" x2="12" y2="4" /&gt;&lt;line x1="6" y1="20" x2="6" y2="14" /&gt;&lt;/svg&gt;`,
+&nbsp;
+    // LOGICAL REASONING
+    'blood-relations': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;circle cx="12" cy="5" r="3" /&gt;&lt;circle cx="6" cy="18" r="3" stroke="#cc785c" /&gt;&lt;circle cx="18" cy="18" r="3" stroke="#cc785c" /&gt;&lt;path d="M12 8v5M6 15v-2h12v2" /&gt;&lt;/svg&gt;`,
+    'seating-arrangement': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;circle cx="12" cy="12" r="5" stroke="#cc785c" /&gt;&lt;circle cx="12" cy="4" r="1.5" /&gt;&lt;circle cx="12" cy="20" r="1.5" /&gt;&lt;circle cx="4" cy="12" r="1.5" /&gt;&lt;circle cx="20" cy="12" r="1.5" /&gt;&lt;/svg&gt;`,
+    'direction-sense': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;circle cx="12" cy="12" r="10" /&gt;&lt;polygon points="12 6 15 12 12 10 9 12" stroke="#cc785c" /&gt;&lt;polygon points="12 18 15 12 12 14 9 12" /&gt;&lt;/svg&gt;`,
+    'coding-decoding': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;rect x="3" y="11" width="18" height="10" rx="2" /&gt;&lt;path d="M12 2v9M8 5h8" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'syllogisms': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;circle cx="9" cy="9" r="6" /&gt;&lt;circle cx="15" cy="15" r="6" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'analogies': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;circle cx="6" cy="6" r="2" /&gt;&lt;circle cx="6" cy="18" r="2" /&gt;&lt;circle cx="18" cy="6" r="2" stroke="#cc785c" /&gt;&lt;circle cx="18" cy="18" r="2" stroke="#cc785c" /&gt;&lt;line x1="12" y1="6" x2="12" y2="18" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'odd-one-out': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;circle cx="5" cy="12" r="2.5" /&gt;&lt;circle cx="12" cy="12" r="2.5" /&gt;&lt;polygon points="19 9.5 21.5 14.5 16.5 14.5" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'series-completion': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M2 12h14M11 7l5 5-5 5" stroke="#cc785c" /&gt;&lt;circle cx="20" cy="12" r="2" /&gt;&lt;/svg&gt;`,
+    'logical-deduction': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M9 18h6M10 22h4M15 6a5 5 0 1 0-6 0M12 11v4" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'input-output': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;rect x="2" y="3" width="6" height="6" rx="1" /&gt;&lt;rect x="16" y="15" width="6" height="6" rx="1" stroke="#cc785c" /&gt;&lt;path d="M8 6h5v12h3M14 15l2 3-2 3" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'puzzles': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M12 22v-4h3a3 3 0 0 0 0-6h-3V8a3 3 0 0 0 6 0h4v3a3 3 0 0 0-6 0v3h4v4h-8z" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'calendar-clocks': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;rect x="3" y="4" width="18" height="18" rx="2" /&gt;&lt;line x1="16" y1="2" x2="16" y2="6" /&gt;&lt;line x1="8" y1="2" x2="8" y2="6" /&gt;&lt;line x1="3" y1="10" x2="21" y2="10" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'ranking-order': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;rect x="3" y="11" width="4" height="9" /&gt;&lt;rect x="10" y="6" width="4" height="14" stroke="#cc785c" /&gt;&lt;rect x="17" y="14" width="4" height="6" /&gt;&lt;/svg&gt;`,
+&nbsp;
+    // VERBAL REASONING
+    'reading-comprehension': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /&gt;&lt;path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'synonyms-antonyms': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M7 4v16M3 8l4-4 4 4" stroke="#cc785c" /&gt;&lt;path d="M17 4v16M13 16l4 4 4-4" /&gt;&lt;circle cx="12" cy="12" r="1" /&gt;&lt;/svg&gt;`,
+    'fill-in-the-blanks': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;line x1="4" y1="6" x2="20" y2="6" /&gt;&lt;line x1="4" y1="12" x2="12" y2="12" stroke="#cc785c" /&gt;&lt;line x1="4" y1="18" x2="16" y2="18" /&gt;&lt;/svg&gt;`,
+    'sentence-correction': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /&gt;&lt;polyline points="14 2 14 8 20 8" /&gt;&lt;polyline points="9 15 11 17 15 13" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'para-jumbles': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;rect x="3" y="3" width="18" height="4" rx="1" /&gt;&lt;rect x="3" y="10" width="18" height="4" rx="1" stroke="#cc785c" /&gt;&lt;rect x="3" y="17" width="18" height="4" rx="1" /&gt;&lt;/svg&gt;`,
+    'idioms-phrases': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="#cc785c" /&gt;&lt;circle cx="9" cy="9" r="1.5" /&gt;&lt;circle cx="14" cy="9" r="1.5" /&gt;&lt;/svg&gt;`,
+    'one-word-substitution': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M4 12h11M11 8l4 4-4 4" stroke="#cc785c" /&gt;&lt;circle cx="18" cy="12" r="2.5" /&gt;&lt;/svg&gt;`,
+    'error-spotting': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" stroke="#cc785c" /&gt;&lt;line x1="4" y1="22" x2="4" y2="15" /&gt;&lt;/svg&gt;`,
+&nbsp;
+    // NON-VERBAL REASONING
+    'pattern-recognition': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;rect x="3" y="3" width="7" height="7" rx="1" /&gt;&lt;rect x="14" y="3" width="7" height="7" rx="1" stroke="#cc785c" /&gt;&lt;rect x="3" y="14" width="7" height="7" rx="1" stroke="#cc785c" /&gt;&lt;rect x="14" y="14" width="7" height="7" rx="1" /&gt;&lt;/svg&gt;`,
+    'mirror-images': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;line x1="12" y1="2" x2="12" y2="22" stroke-dasharray="3,3" /&gt;&lt;polygon points="4 6 9 12 4 18" /&gt;&lt;polygon points="20 6 15 12 20 18" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'paper-folding': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" /&gt;&lt;polyline points="14 2 14 8 20 8" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'figure-matrix': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;rect x="3" y="3" width="18" height="18" rx="2" /&gt;&lt;line x1="9" y1="3" x2="9" y2="21" /&gt;&lt;line x1="15" y1="3" x2="15" y2="21" /&gt;&lt;line x1="3" y1="9" x2="21" y2="9" stroke="#cc785c" /&gt;&lt;line x1="3" y1="15" x2="21" y2="15" stroke="#cc785c" /&gt;&lt;/svg&gt;`,
+    'embedded-figures': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;circle cx="12" cy="12" r="9" /&gt;&lt;rect x="8.5" y="8.5" width="7" height="7" stroke="#cc785c" /&gt;&lt;polygon points="12 10 14 13 10 13" fill="#cc785c" /&gt;&lt;/svg&gt;`,
+    'cubes-dice': `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M12 2L2 7l10 5 10-5-10-5z" /&gt;&lt;path d="M2 7v10l10 5V12" stroke="#cc785c" /&gt;&lt;path d="M22 7v10l-10 5V12" /&gt;&lt;/svg&gt;`,
+  };
+&nbsp;
+  return icons[slug] || `&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10"&gt;&lt;path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /&gt;&lt;path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /&gt;&lt;/svg&gt;`;
+}
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-10-14T15:36:25.091Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
+</html>
+    

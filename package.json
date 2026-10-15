@@ -9,7 +9,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -53,7 +57,15 @@
     "typescript": "^6.0.3"
   },
   "devDependencies": {
-    "@types/canvas-confetti": "^1.9.0"
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/canvas-confetti": "^1.9.0",
+    "@vitest/coverage-v8": "^5.0.4",
+    "@vitest/ui": "^5.0.4",
+    "jsdom": "^29.1.1",
+    "msw": "^3.0.3",
+    "vitest": "^5.0.4"
   },
   "overrides": {
     "vite": "^7"
