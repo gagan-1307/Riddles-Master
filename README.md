@@ -1,97 +1,95 @@
 # RiddlesMaster
 
-A technical puzzle and brain teaser platform for engineering interview preparation. RiddlesMaster provides a curated library of logic riddles, lateral thinking problems, and estimation challenges used in real engineering interviews at top technology companies.
+A dedicated technical puzzle and lateral thinking platform designed to sharpen analytical problem-solving and critical reasoning skills for technical and engineering interviews.
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Features](#features)
+- [What RiddlesMaster Does](#what-riddlesmaster-does)
+  - [Curated Problem Catalog](#curated-problem-catalog)
+  - [Structured Practice Sets](#structured-practice-sets)
+  - [Daily Challenges & Streak System](#daily-challenges--streak-system)
+  - [Step-by-Step Solution Frameworks](#step-by-step-solution-frameworks)
+  - [Personal Dashboard & Activity Heatmap](#personal-dashboard--activity-heatmap)
+- [How to Use RiddlesMaster](#how-to-use-riddlesmaster)
+  - [1. Discover and Filter Challenges](#1-discover-and-filter-challenges)
+  - [2. Solve Daily Riddles](#2-solve-daily-riddles)
+  - [3. Engage in Targeted Practice](#3-engage-in-targeted-practice)
+  - [4. Leverage Hints and Step-by-Step Editorials](#4-leverage-hints-and-step-by-step-editorials)
+  - [5. Monitor Growth and Save Problems](#5-monitor-growth-and-save-problems)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
+  - [System Overview](#system-overview)
+  - [Key Architecture Principles](#key-architecture-principles)
 - [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Environment Variables](#environment-variables)
-- [Database Schema](#database-schema)
-- [API Reference](#api-reference)
-- [Deployment](#deployment)
 - [License](#license)
 
 ---
 
 ## Overview
 
-RiddlesMaster targets a gap in existing interview preparation tools. While platforms like LeetCode focus on data structures and algorithms, RiddlesMaster focuses on the logical reasoning, lateral thinking, and estimation-style questions that are increasingly featured in engineering interviews at top-tier companies.
+Technical interviews at modern technology companies evaluate more than just algorithmic coding—they increasingly test logical agility, mathematical intuition, lateral thinking, and Fermi estimation. 
 
-**Target audience:** Students, job seekers, and professionals preparing for technical interviews.
-
-**Business model:** Freemium — a free tier with daily question limits and premium subscription plans with full access.
+**RiddlesMaster** provides an interactive platform dedicated specifically to these thinking frameworks. It offers a structured environment where software engineers, data scientists, and problem-solvers can practice, analyze, and master the puzzles and non-traditional reasoning challenges encountered in competitive technical evaluations.
 
 ---
 
-## Features
+## What RiddlesMaster Does
 
-### Problem Library
+### Curated Problem Catalog
+- **Diverse Problem Types**: Covers classical logic puzzles, probability paradoxes, brain teasers, grid puzzles, mathematical riddles, and estimation problems.
+- **Difficulty Grading**: Challenges graded across standard difficulty tiers (Easy, Medium, Hard) to support progressive skill building.
+- **Topic & Context Tagging**: Questions categorized by subject domain and real-world company interview contexts.
+- **Full-Text Search & Filtering**: Multi-dimensional search allowing users to quickly locate specific topics, difficulty levels, or themes.
 
-- Curated collection of technical puzzles, brain teasers, and estimation problems.
-- Each problem is tagged by company (e.g. Google, Amazon, Microsoft) and type (e.g. Logic, Math, Lateral Thinking).
-- Difficulty levels: Easy, Medium, Hard.
-- SEO-optimised individual problem pages at `/problems/[id]-[slug]`.
-- Full-text search and multi-filter browsing by company, type, and difficulty.
-- Rich-text problem statements and step-by-step editorial solutions.
+### Structured Practice Sets
+- **Thematic Practice Sets**: Curated collections of related puzzles arranged to test specific reasoning paradigms (e.g., invariant analysis, pigeonhole principle, game theory).
+- **Interactive Evaluation**: Submit answers and receive immediate validation with attempt status tracking.
 
-### User Roles and Access
+### Daily Challenges & Streak System
+- **Riddle of the Day**: A fresh challenge delivered every day to encourage consistent, bite-sized practice.
+- **Consecutive Day Streaks**: Tracks consistency over time to help users build a daily habit of logical problem-solving.
 
-| Role | Access |
-|---|---|
-| Guest | Browse problems, view problem statements, 1 daily streak question |
-| Free User | Submit answers, view hints, daily streak tracking, liked/bookmarked lists |
-| Premium User | Unlimited daily questions, all editorials, premium problems, company-wise sets |
-| Admin | Full CRUD on problems, editorials, and tags; user activity visibility |
+### Step-by-Step Solution Frameworks
+- **Structured Editorials**: Rich, formatted explanations that break down problems into their underlying principles rather than just giving away final answers.
+- **Progressive Hints**: Tiered hints that guide users toward the solution organically without spoiling the breakthrough moment.
 
-### Authentication
+### Personal Dashboard & Activity Heatmap
+- **Progress Tracking**: Clear visibility into attempted versus solved challenges.
+- **Activity Visualization**: Git-style contribution heatmap reflecting practice consistency across the year.
+- **Saved Collections**: Quick access to bookmarked puzzles for review and liked problems for future reference.
 
-- Google OAuth 2.0 (primary social login).
-- Email and password registration with forgot password flow.
-- Temporary email blocking — only Gmail, Yahoo, and Outlook domains are accepted.
-- Admin access is restricted to a secret, unlisted URL not exposed in any UI navigation.
+---
 
-### Daily Streak System
+## How to Use RiddlesMaster
 
-- One random riddle is served daily to all users, including guests.
-- Logged-in users accumulate a daily streak for consecutive days of activity.
-- User profiles display a Git-style activity heatmap, current streak, and maximum streak.
-- Streak resets at midnight IST if a day is skipped.
+### 1. Discover and Filter Challenges
+1. Navigate to the **Problems** section from the top navigation bar.
+2. Use the filter controls to narrow down problems by category, difficulty level, or topic tags.
+3. Use the search bar to find puzzles based on keywords or concepts.
+4. Click on any problem card to open its dedicated view.
 
-### User Profile
+### 2. Solve Daily Riddles
+1. Visit the **Daily** challenge section to see today's featured puzzle.
+2. Contemplate the scenario, work through the reasoning, and submit your answer.
+3. Completing the daily challenge keeps your consecutive active streak intact and updates your activity calendar.
 
-- Statistics: total problems solved and attempted.
-- Activity heatmap (GitHub contribution graph style).
-- Personal liked and bookmarked problem lists.
-- Streak history: current streak, maximum streak, active day count.
+### 3. Engage in Targeted Practice
+1. Open the **Practice** tab to access structured problem sets.
+2. Work through problems consecutively to develop confidence in specific reasoning archetypes.
+3. Review your performance and revisit unattempted or tricky questions at your own pace.
 
-### Subscription and Payments
+### 4. Leverage Hints and Step-by-Step Editorials
+1. When tackling a challenging riddle, attempt to derive the solution independently.
+2. If stuck, reveal progressive hints to point your thought process in the right direction.
+3. Once attempted, view the comprehensive editorial breakdown to learn formal problem-solving methodologies and alternative angles.
 
-- Freemium model: 5 questions per day on the free tier.
-- Premium plans: 1 month, 3 months, and 6 months.
-- Payment processing via Razorpay (India).
-- Subscription management with upgrade and cancellation support.
-
-### Admin Panel
-
-- Accessible only via a secret URL — not linked from any public-facing page.
-- Full CRUD operations for problems, editorials, and taxonomy tags.
-- User management and activity visibility.
-
-### SEO
-
-- Server-side rendered problem pages for full search engine indexing.
-- Unique, descriptive URLs for every problem: `/problems/[id]-[slug]`.
-- Per-page meta tags: `title`, `description`, `og:image`.
-- Auto-generated `sitemap.xml` from all problem slugs.
-- Configured `robots.txt` to allow indexing of problem pages.
-- Structured data (JSON-LD) for rich search result snippets.
+### 5. Monitor Growth and Save Problems
+1. Access your **Profile** to view your overall statistics, total solved count, and current streak.
+2. Use the **Bookmark** button on any problem to save it for revision prior to upcoming interviews.
+3. Use the **Like** button to curate your personal collection of favorite puzzles.
 
 ---
 
@@ -99,272 +97,106 @@ RiddlesMaster targets a gap in existing interview preparation tools. While platf
 
 | Layer | Technology |
 |---|---|
-| Framework | [Astro](https://astro.build/) v6+ |
-| UI Components | React 19 (Astro Islands) |
-| Styling | Tailwind CSS v4 |
-| Component Library | shadcn/ui + Radix UI |
-| Rich Text Editor | Tiptap |
-| Database | PostgreSQL via Supabase |
-| ORM | Prisma 7 with `@prisma/adapter-pg` |
-| Auth | Supabase Auth (Google OAuth + Email/Password) |
-| Payments | Razorpay |
-| Email | Resend |
-| Deployment | Vercel (SSR adapter) |
-| Analytics | Vercel Analytics + Speed Insights |
-| Runtime | Node.js ≥ 22.12.0 |
+| **Core Framework** | [Astro](https://astro.build/) (Server-Side Rendering) |
+| **UI Components** | React (Astro Islands Architecture) |
+| **Styling** | Tailwind CSS |
+| **Component Primitives** | Radix UI |
+| **Rich Text Engine** | Tiptap |
+| **Language** | TypeScript |
+| **Data Layer** | PostgreSQL & Prisma ORM |
 
 ---
 
 ## Architecture
 
-RiddlesMaster is built as a server-side rendered (SSR) Astro application deployed on Vercel.
+RiddlesMaster combines the performance benefits of static and server-rendered HTML with selective client-side interactivity using an Islands architecture.
+
+### System Overview
 
 ```
-Browser
-  |
-  v
-Vercel Edge Network
-  |
-  v
-Astro SSR (output: 'server')
-  |
-  +-- Static .astro pages (SSR, SEO-optimised)
-  |
-  +-- React Islands (client-side interactivity)
-  |     - Navbar.tsx
-  |     - LikeButton.tsx
-  |     - SolveButton.tsx
-  |     - UpgradeButton.tsx
-  |
-  +-- API Routes (/api/*)
-        |
-        +-- Supabase (Auth, RLS-protected data)
-        +-- Prisma ORM (PostgreSQL queries)
-        +-- Razorpay (payment verification)
-        +-- Resend (transactional email)
+┌──────────────────────────────────────────────────────────┐
+│                      Client Browser                      │
+└────────────────────────────┬─────────────────────────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────┐
+│                 Edge Distribution & CDN                  │
+└────────────────────────────┬─────────────────────────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────┐
+│                 Astro Server Runtime (SSR)               │
+│                                                          │
+│  ┌─────────────────────────┐  ┌───────────────────────┐  │
+│  │   Server-Rendered Pages │  │ React Islands Hydrate │  │
+│  │   • Problem Catalog     │  │   • Interactive UI    │  │
+│  │   • Problem Views       │  │   • Answer Inputs     │  │
+│  │   • Profile & Dashboards│  │   • Like & Save State │  │
+│  └─────────────────────────┘  └───────────────────────┘  │
+└────────────────────────────┬─────────────────────────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────┐
+│                  Application Services                    │
+│                                                          │
+│  ┌─────────────────────────┐  ┌───────────────────────┐  │
+│  │   Type-Safe ORM Layer   │  │   Auth & Access Guard │  │
+│  │   • Data Modeling       │  │   • Session Validation│  │
+│  │   • Query Execution     │  │   • User Permissions  │  │
+│  └─────────────────────────┘  └───────────────────────┘  │
+│                            │                             │
+│                            ▼                             │
+│                 PostgreSQL Persistence                   │
+└──────────────────────────────────────────────────────────┘
 ```
 
-### Key Design Decisions
+### Key Architecture Principles
 
-- **SSR by default.** All problem pages are server-rendered to maximise SEO and Core Web Vitals scores.
-- **Islands architecture.** Interactive components (like/bookmark buttons, navbar state) are React islands hydrated on the client. The majority of the page remains static HTML.
-- **Prisma over raw SQL.** Database access uses Prisma with the `@prisma/adapter-pg` serverless adapter, enabling type-safe queries on Vercel's edge runtime.
-- **Supabase Auth + RLS.** Row Level Security is enforced on every table. Auth state is propagated server-side via `@supabase/ssr` for secure SSR rendering.
-- **Prefetch on hover.** Astro's built-in prefetch is enabled globally with a `hover` strategy to improve perceived navigation speed.
+- **Server-First Delivery**: High-traffic catalog and problem pages are server-rendered to maximize page delivery speed, reduce client bundle sizes, and optimize search engine discoverability.
+- **Targeted Client Hydration**: Interactive elements (such as response verification, like/bookmark triggers, and navigation states) load as isolated React islands, keeping initial JavaScript execution to a minimum.
+- **Type-Safe Data Flow**: Centralized TypeScript data models and ORM access ensure strict end-to-end type safety across server queries and UI components.
+- **Granular Security Controls**: Server-level session verification and row-level authorization ensure user activity, bookmarks, and account records remain securely partitioned.
 
 ---
 
 ## Project Structure
 
 ```
-/
-├── public/                     # Static assets (favicon, images)
-├── prisma/
-│   └── schema.prisma           # Prisma schema definition
-├── supabase/
-│   └── SCHEMA.sql              # Supabase table definitions and RLS policies
+riddles-master/
+├── public/                 # Static assets, icons, and metadata
 ├── src/
-│   ├── assets/                 # Optimised images and SVGs
-│   ├── components/             # Shared UI components
-│   │   ├── Hero.astro
-│   │   ├── Navbar.astro / Navbar.tsx
-│   │   ├── Footer.tsx
-│   │   ├── ProblemCard.astro
-│   │   ├── Pricing.astro
-│   │   ├── LikeButton.tsx      # React island
-│   │   ├── SolveButton.tsx     # React island
-│   │   ├── UpgradeButton.tsx   # React island
-│   │   ├── admin/              # Admin panel components
-│   │   ├── practice/           # Practice mode components
-│   │   └── ui/                 # shadcn/ui base components
-│   ├── content/                # Astro content collections
-│   ├── layouts/
-│   │   └── Layout.astro        # Root layout with SEO meta tags
-│   ├── lib/
-│   │   ├── supabase.ts         # Shared Supabase client
-│   │   ├── db.ts               # Prisma client instance
-│   │   ├── daily.ts            # Daily streak logic
-│   │   ├── problems.ts         # Problem query helpers
-│   │   ├── currency.ts         # Currency / pricing utilities
-│   │   └── utils.ts            # General utility functions
-│   ├── pages/
-│   │   ├── index.astro         # Landing page
-│   │   ├── problems/
-│   │   │   ├── index.astro     # Problem listing with filters
-│   │   │   └── [slug].astro    # Individual problem page (SSR)
-│   │   ├── profile.astro       # User profile and activity
-│   │   ├── daily.astro         # Daily challenge page
-│   │   ├── pricing.astro       # Subscription plans
-│   │   ├── login.astro         # Login page
-│   │   ├── signup.astro        # Registration page
-│   │   ├── admin/              # Admin panel (secret URL)
-│   │   ├── api/
-│   │   │   ├── problems/       # Problem CRUD endpoints
-│   │   │   ├── profile/        # Profile data endpoints
-│   │   │   ├── streak/         # Streak tracking endpoints
-│   │   │   ├── payment/        # Razorpay order and verify
-│   │   │   ├── practice/       # Practice mode endpoints
-│   │   │   └── daily.ts        # Daily riddle endpoint
-│   │   ├── sitemap.xml.ts      # Dynamic sitemap generation
-│   │   └── robots.txt.ts       # robots.txt generation
-│   ├── styles/
-│   │   └── global.css          # Global styles and Tailwind imports
-│   ├── types/                  # Shared TypeScript type definitions
-│   └── middleware.ts           # Auth middleware (session validation)
-├── astro.config.mjs            # Astro configuration
-├── tsconfig.json               # TypeScript configuration
-├── vercel.json                 # Vercel deployment configuration
-└── package.json
+│   ├── assets/             # Vector graphics, brand assets, and icons
+│   ├── components/         # Reusable UI components & islands
+│   │   ├── practice/       # Practice session & problem-solving UI
+│   │   ├── ui/             # Core design system components
+│   │   ├── Footer.tsx      # Site footer component
+│   │   ├── Hero.astro      # Homepage hero section
+│   │   ├── LikeButton.tsx  # Interactive like island
+│   │   ├── Navbar.tsx      # Navigation island
+│   │   └── ProblemCard.astro # Problem preview card component
+│   ├── layouts/            # Base layouts and shared HTML shell
+│   │   └── Layout.astro    # Master layout with SEO metadata
+│   ├── lib/                # Shared utilities, client helpers, and helpers
+│   │   ├── daily.ts        # Daily puzzle logic helpers
+│   │   ├── problems.ts     # Problem query and format utilities
+│   │   └── utils.ts        # General utility functions
+│   ├── pages/              # Application routing and view templates
+│   │   ├── articles/       # Educational articles and guides
+│   │   ├── practice/       # Themed practice workflows and sets
+│   │   ├── problems/       # Problem catalog and detailed problem views
+│   │   ├── daily.astro     # Daily challenge page
+│   │   ├── profile.astro   # User stats and activity dashboard
+│   │   └── index.astro     # Main application landing page
+│   ├── styles/             # Global CSS and Tailwind configurations
+│   ├── types/              # Shared TypeScript interfaces and definitions
+│   └── middleware.ts       # Request validation and auth middleware
+├── astro.config.mjs        # Astro framework configuration
+├── tsconfig.json           # TypeScript configuration
+└── package.json            # Project dependencies and script declarations
 ```
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js ≥ 22.12.0
-- A [Supabase](https://supabase.com/) project
-- A [Razorpay](https://razorpay.com/) account (for payment features)
-- A [Resend](https://resend.com/) account (for transactional email)
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/gagan-1307/Riddles-Master.git
-cd Riddles-Master
-
-# Install dependencies
-npm install
-
-# Start the development server
-npm run dev
-```
-
-The development server will start at `http://localhost:4321`.
-
-### Available Commands
-
-| Command | Action |
-|---|---|
-| `npm run dev` | Start local development server at `localhost:4321` |
-| `npm run build` | Build the production site to `./dist/` |
-| `npm run preview` | Preview the production build locally |
-| `npm run astro` | Run Astro CLI commands |
-
----
-
-## Environment Variables
-
-Create a `.env` file in the project root with the following variables:
-
-```env
-# Supabase
-PUBLIC_SUPABASE_URL=your_supabase_project_url
-PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-
-# Database (Prisma / PostgreSQL)
-DATABASE_URL=your_postgres_connection_string
-
-# Razorpay
-RAZORPAY_KEY_ID=your_razorpay_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_key_secret
-
-# Resend (Email)
-RESEND_API_KEY=your_resend_api_key
-
-# Application
-PUBLIC_SITE_URL=http://localhost:4321
-```
-
----
-
-## Database Schema
-
-The database is managed via Prisma and hosted on Supabase (PostgreSQL). Row Level Security (RLS) is enforced on every table.
-
-### Core Tables
-
-| Table | Description |
-|---|---|
-| `users` | User profiles linked to Supabase Auth |
-| `problems` | Problem library with rich-text content and tags |
-| `submissions` | User attempt and solve records |
-| `streaks` | Daily streak and activity tracking per user |
-| `bookmarks` | User-saved problem bookmarks |
-| `likes` | User problem likes |
-| `subscriptions` | Premium subscription records and plan metadata |
-| `tags` | Company and type taxonomy tags |
-
-The full schema is defined in [`prisma/schema.prisma`](prisma/schema.prisma) and [`supabase/SCHEMA.sql`](supabase/SCHEMA.sql).
-
-### Problem Schema
-
-| Field | Type | Notes |
-|---|---|---|
-| `id` | Integer | Auto-incremented, used in URL |
-| `slug` | String | URL-safe problem identifier |
-| `title` | String | Short, descriptive title |
-| `statement` | Rich Text | Full problem description |
-| `answer` | Text | Short answer or hint |
-| `editorial` | Rich Text | Step-by-step solution (premium) |
-| `difficulty` | Enum | `EASY`, `MEDIUM`, `HARD` |
-| `is_premium` | Boolean | Locks content behind paywall |
-| `company_tags` | Array | e.g. Google, Amazon, Microsoft |
-| `type_tags` | Array | e.g. Logic, Math, Estimation |
-| `created_at` | Timestamp | Creation date |
-| `updated_at` | Timestamp | Last modified date |
-
----
-
-## API Reference
-
-All API routes are located under `src/pages/api/`.
-
-| Route | Method | Description |
-|---|---|---|
-| `/api/problems` | GET | List problems with optional filters |
-| `/api/problems/[id]` | GET, PUT, DELETE | Get, update, or delete a problem |
-| `/api/daily` | GET | Fetch today's daily riddle |
-| `/api/streak` | GET, POST | Get or update user streak |
-| `/api/profile` | GET, PUT | Get or update user profile data |
-| `/api/stats` | GET | Aggregate user statistics |
-| `/api/payment/order` | POST | Create a Razorpay payment order |
-| `/api/payment/verify` | POST | Verify payment signature and activate subscription |
-| `/api/health` | GET | Health check endpoint |
-
-Authentication is enforced at the middleware level (`src/middleware.ts`) for all protected routes.
-
----
-
-## Deployment
-
-RiddlesMaster is deployed on [Vercel](https://vercel.com/) using the `@astrojs/vercel` SSR adapter.
-
-### Deploy to Vercel
-
-```bash
-# Install Vercel CLI
-npm install -g vercel
-
-# Deploy
-vercel
-```
-
-Alternatively, connect the GitHub repository to a Vercel project for automatic deployments on every push to the main branch.
-
-Ensure all environment variables from the [Environment Variables](#environment-variables) section are configured in the Vercel project settings.
 
 ---
 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-```
-MIT License
-
-Copyright (c) 2026 Gagandeep Singh
-```
